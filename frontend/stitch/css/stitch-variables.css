@@ -1,0 +1,51 @@
+:root {
+    /* Apple-style Light Theme Colors (Default) */
+    --bg-primary: #F8F9FA;
+    /* Off-white minimal body */
+    --bg-secondary: #F1F3F5;
+    /* Subtly darker gray for section contrasts */
+    --card-bg: #FFFFFF;
+    /* Pure white cards */
+
+    --text-primary: #1C1C1E;
+    /* Soft black, Apple standard readable */
+    --text-secondary: #8E8E93;
+    /* Apple secondary gray text */
+
+    --border-color: #E5E5EA;
+    /* Light gray border */
+    --accent-color: #007AFF;
+    /* Apple ecosystem blue */
+
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    /* Soft daylight shadow */
+
+    /* Typography */
+    --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Spacing & Layout - Premium Apple Feel */
+    --header-height: 4rem;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 20px;
+
+    /* Transitions */
+    --transition-fast: 300ms cubic-bezier(0.25, 1, 0.5, 1);
+    --transition-normal: 500ms cubic-bezier(0.25, 1, 0.5, 1);
+
+    /* Shadows - Clean & Minimal */
+    --shadow-sm: 0 4px 12px var(--shadow-color);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+    --shadow-glow: 0 0 20px rgba(0, 122, 255, 0.1);
+    /* Subtle blue glow */
+
+    /* Legacy variables mapping for preexisting components if they miss updates */
+    --color-primary: var(--accent-color);
+    --color-primary-dark: #0056b3;
+    --color-secondary: #34C759;
+    /* Apple green */
+    --bg-body: var(--bg-primary);
+    --bg-surface: var(--card-bg);
+    --text-muted: var(--text-secondary);
+}

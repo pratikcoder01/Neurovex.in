@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Neurovex</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="navbar-brand">
+                    <div class="w-10 h-10 bg-gradient-medical rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        N
+                    </div>
+                    <span class="ml-3 text-gradient-primary font-bold text-xl">Neurovex</span>
+                </a>
+                <div class="navbar-nav">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="#" class="nav-link">Sessions</a>
+                    <a href="#" class="nav-link">Profile</a>
+                    <button id="logoutBtn" class="btn btn-ghost">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="dashboard-title fade-in">Welcome back!</h1>
+                <p class="dashboard-subtitle fade-in">Monitor your brain activity in real-time</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card reveal-on-scroll">
+                <div class="stat-value" id="totalSessions">0</div>
+                <div class="stat-label">Total Sessions</div>
+            </div>
+            <div class="stat-card reveal-on-scroll">
+                <div class="stat-value" id="avgFocus">0%</div>
+                <div class="stat-label">Average Focus</div>
+            </div>
+            <div class="stat-card reveal-on-scroll">
+                <div class="stat-value" id="maxFocus">0%</div>
+                <div class="stat-label">Max Focus</div>
+            </div>
+            <div class="stat-card reveal-on-scroll">
+                <div class="stat-value" id="sessionTime">00:00</div>
+                <div class="stat-label">Session Time</div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Real-time EEG Chart -->
+            <div class="chart-container reveal-on-scroll">
+                <h3 class="chart-title">Real-time EEG Signal</h3>
+                <canvas id="eegChart" width="400" height="200"></canvas>
+                <div class="flex justify-between items-center mt-6">
+                    <span class="status" id="deviceStatus">Disconnected</span>
+                    <button id="connectBtn" class="btn btn-primary btn-sm">Connect Device</button>
+                </div>
+            </div>
+
+            <!-- Focus Meter -->
+            <div class="card reveal-on-scroll">
+                <h3 class="card-title">Focus Level</h3>
+                <div class="focus-meter">
+                    <div class="focus-meter-fill" id="focusMeterFill" style="height: 0%"></div>
+                    <div class="focus-meter-value" id="focusValue">0%</div>
+                </div>
+                <div class="text-center text-sm text-gray-500 mt-4">
+                    Current focus level based on brain activity
+                </div>
+            </div>
+
+            <!-- Session Controls -->
+            <div class="card reveal-on-scroll">
+                <h3 class="card-title">Session Controls</h3>
+                <div class="session-controls">
+                    <button id="startSessionBtn" class="btn btn-secondary">Start Session</button>
+                    <button id="endSessionBtn" class="btn btn-outline" disabled>End Session</button>
+                </div>
+                <div class="session-duration" id="sessionDuration">00:00:00</div>
+                <div id="sessionMessage" class="text-center text-sm text-gray-500"></div>
+            </div>
+
+            <!-- Brain State Indicators -->
+            <div class="card reveal-on-scroll">
+                <h3 class="card-title">Brain States</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">Focus</span>
+                            <span class="text-sm text-gray-500" id="focusPercent">0%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success" id="focusBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">Relaxation</span>
+                            <span class="text-sm text-gray-500" id="relaxPercent">0%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" id="relaxBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium text-gray-700">Stress</span>
+                            <span class="text-sm text-gray-500" id="stressPercent">0%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-warning" id="stressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Sessions -->
+        <div class="card mt-8 reveal-on-scroll">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="card-title">Recent Sessions</h3>
+                <a href="#" class="btn btn-outline btn-sm">View All</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Duration</th>
+                            <th>Avg Focus</th>
+                            <th>Max Focus</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sessionsTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-gray-500">No sessions yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/eeg.js"></script>
+    <script type="module" src="js/sessions.js"></script>
+    <script type="module" src="js/utils.js"></script>
+    <script type="module" src="js/dashboard.js"></script>
+    
+    <!-- Reveal on scroll animation -->
+    <script>
+        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+        
+        const revealOnScroll = () => {
+            revealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('revealed');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+    </script>
+</body>
+</html>

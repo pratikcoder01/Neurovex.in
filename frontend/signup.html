@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Neurovex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="stitch/css/stitch-variables.css">
+
+    <style>
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: var(--font-display);
+            padding: 2rem 0;
+        }
+
+
+        .signup-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 480px;
+            padding: 0 2rem;
+            animation: fadeUp 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
+
+        .logo-container {
+            width: 56px;
+            height: 56px;
+            background: var(--card-bg);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: box-shadow 0.4s ease;
+        }
+
+        .logo-container:hover {
+            box-shadow: var(--shadow-glow);
+        }
+
+        .logo-container img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .welcome-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 8px 0;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0 0 32px 0;
+            text-align: center;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            width: 100%;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            padding: 32px 28px;
+            box-sizing: border-box;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+            box-sizing: border-box;
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: var(--card-bg);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .role-option {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background: var(--card-bg);
+            text-align: center;
+        }
+
+        .role-option:hover {
+            border-color: var(--text-secondary);
+        }
+
+        .role-option.active {
+            border-color: var(--accent-color);
+            background: rgba(0, 122, 255, 0.05);
+            color: var(--accent-color);
+        }
+
+        .role-option .material-icons {
+            font-size: 20px;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+            transition: color var(--transition-fast);
+        }
+
+        .role-option.active .material-icons {
+            color: var(--accent-color);
+        }
+
+        .role-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: color var(--transition-fast);
+        }
+
+        .role-option.active .role-text {
+            color: var(--accent-color);
+        }
+
+        /* Select styling for Purpose of Usage */
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+            color: var(--text-primary);
+        }
+
+
+        .ethics-box {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .ethics-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .ethics-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .ethics-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            accent-color: var(--accent-color);
+            margin: 2px 0 0 0;
+            flex-shrink: 0;
+            background: var(--bg-primary);
+        }
+
+        .ethics-label {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .ethics-sublabel {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .footer-link {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .footer-link a {
+            color: var(--accent-color);
+            font-weight: 500;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .footer-link a:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="signup-wrapper">
+        <!-- Headers & Logo -->
+        <div class="header-section">
+            <div class="logo-container">
+                <img src="assets/images/logo.jpeg" alt="Neurovex Logo">
+            </div>
+
+            <h1 class="welcome-text">Join the Platform</h1>
+            <p class="subtitle">Create your account to start collecting data</p>
+        </div>
+
+        <!-- Main Form Card -->
+        <div class="card">
+            <form action="#">
+                <!-- First / Last Name Row -->
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="first-name" class="form-label">First Name</label>
+                        <input type="text" id="first-name" class="form-input" required />
+                    </div>
+                    <div class="form-col">
+                        <label for="last-name" class="form-label">Last Name</label>
+                        <input type="text" id="last-name" class="form-input" required />
+                    </div>
+                </div>
+
+                <!-- Institutional Email -->
+                <div class="form-group">
+                    <label for="email" class="form-label">Institutional Email</label>
+                    <input type="email" id="email" class="form-input" required />
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" required />
+                </div>
+
+                <!-- Primary Role -->
+                <div class="form-group">
+                    <label class="form-label">Primary Role</label>
+                    <div class="role-grid">
+                        <div class="role-option active" onclick="selectRole(this)">
+                            <span class="material-icons">science</span>
+                            <span class="role-text">Researcher</span>
+                        </div>
+                        <div class="role-option" onclick="selectRole(this)">
+                            <span class="material-icons">school</span>
+                            <span class="role-text">Student</span>
+                        </div>
+                        <div class="role-option" onclick="selectRole(this)">
+                            <span class="material-icons">accessible</span>
+                            <span class="role-text">Patient</span>
+                        </div>
+                        <div class="role-option" onclick="selectRole(this)">
+                            <span class="material-icons">medical_services</span>
+                            <span class="role-text">Caregiver</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Purpose of Usage -->
+                <div class="form-group">
+                    <label for="purpose" class="form-label">Purpose of Usage</label>
+                    <select id="purpose" class="form-input">
+                        <option value="demo">Demo / Evaluation</option>
+                        <option value="research">Academic Research</option>
+                        <option value="trials">Clinical Trials</option>
+                        <option value="personal">Personal Use</option>
+                    </select>
+                </div>
+
+                <!-- Ethics & Consent Box -->
+                <div class="ethics-box">
+                    <div class="ethics-title">Ethics & Consent</div>
+
+                    <label class="ethics-item">
+                        <input type="checkbox" class="checkbox-input" required />
+                        <div>
+                            <span class="ethics-label">I consent to data collection <span class="ethics-sublabel">- I
+                                    understand that anonymized EEG data may be used for model training.</span></span>
+                        </div>
+                    </label>
+
+                    <label class="ethics-item">
+                        <input type="checkbox" class="checkbox-input" required />
+                        <div>
+                            <span class="ethics-label">Safety Acknowledgement <span class="ethics-sublabel">- I confirm
+                                    understanding that this is an investigative device and not a replacement for medical
+                                    care.</span></span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-primary"
+                    onclick="event.preventDefault(); window.location.href='pages/dashboard.html'">Create
+                    Account</button>
+
+                <!-- Footer Sign in route -->
+                <div class="footer-link">
+                    Already have an account? <a href="signin.html">Sign In</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Script to handle role selection visually -->
+    <script>
+        function selectRole(element) {
+            // Remove active class from all options
+            document.querySelectorAll('.role-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Add active class to clicked option
+            element.classList.add('active');
+        }
+    </script>
+
+
+</body>
+
+</html>

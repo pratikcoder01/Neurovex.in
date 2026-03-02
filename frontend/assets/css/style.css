@@ -1,0 +1,447 @@
+/* Neurovex Frontend Styles */
+
+/* Base imports from design system */
+@import url('../stitch/css/stitch-base.css');
+
+/* ==================================================== */
+/* NAVBAR - Exact Target Design Implementation          */
+/* ==================================================== */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 72px;
+    width: 100%;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-left .logo-link img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-left .logo-link:hover img {
+    transform: scale(1.05);
+}
+
+/* Logo styles for pages */
+.page-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    object-fit: contain;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: white;
+    padding: 8px;
+}
+
+.page-logo:hover {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+.nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-sub);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.nav-link:hover {
+    color: var(--color-primary);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.theme-toggle {
+    padding: 8px;
+    border-radius: 50%;
+    color: var(--color-text-sub);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.divider {
+    width: 1px;
+    height: 20px;
+    background: #e5e7eb;
+}
+
+.sign-in {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-sub);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.sign-in:hover {
+    color: var(--color-primary);
+}
+
+.get-started-btn {
+    background: #2563eb;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-normal);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+}
+
+.get-started-btn:hover {
+    background: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.profile-avatar:hover {
+    background: var(--primary-blue-dark);
+    transform: translateY(-1px);
+}
+
+/* ==================================================== */
+/* Live EEG Monitoring Section                         */
+/* ==================================================== */
+
+.live-eeg-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    background-color: var(--bg-gray);
+    padding: var(--spacing-lg);
+}
+
+.control-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 40px;
+    transition: all var(--transition-normal);
+}
+
+.control-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.monitor-btn {
+    background: var(--primary-blue);
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.monitor-btn:hover {
+    background: var(--primary-blue-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.hardware-btn {
+    background: #22c55e;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.hardware-btn:hover {
+    background: #16a34a;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Mobile responsiveness for Live EEG section */
+@media (max-width: 640px) {
+    .live-eeg-section {
+        min-height: 50vh;
+        padding: 48px 0;
+    }
+
+    .control-card {
+        padding: 32px 24px;
+        margin: 0 16px;
+    }
+
+    .monitor-btn,
+    .hardware-btn {
+        width: 100%;
+        padding: 12px 16px;
+    }
+}
+
+/* ==================================================== */
+/* Custom animations for scroll reveal                   */
+/* ==================================================== */
+
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+
+.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Gradient Text */
+.text-gradient-medical {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Theme variables and overrides */
+body {
+    background-color: var(--color-background-light);
+    color: var(--color-text-main);
+}
+
+/* Navigation styles */
+.navbar-sticky {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    background-color: rgba(var(--color-surface-light-rgb), 0.95);
+}
+
+/* Mobile menu transitions */
+.mobile-menu-overlay {
+    transition: transform var(--transition-normal);
+}
+
+.mobile-menu-overlay.translate-x-full {
+    transform: translateX(100%);
+}
+
+/* Button hover states */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    transition: all var(--transition-fast);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Card hover effects */
+.card-hover {
+    transition: all var(--transition-normal);
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Status indicators */
+.status-connected {
+    background-color: #10b981;
+    animation: pulse 2s infinite;
+}
+
+.status-disconnected {
+    background-color: #6b7280;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Canvas visualization styles */
+.waveform-canvas {
+    background-color: var(--color-background-light);
+    border: 1px solid var(--color-border-light);
+}
+
+/* Grid overlay for canvas */
+.grid-overlay {
+    background-image: linear-gradient(#ccc 1px, transparent 1px), linear-gradient(90deg, #ccc 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.2;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+    .mobile-hidden {
+        display: none;
+    }
+
+    .mobile-full {
+        width: 100%;
+    }
+
+    .navbar {
+        padding: 0 24px;
+        height: 64px;
+    }
+
+    .nav-links,
+    .nav-right {
+        display: none;
+    }
+}
+
+/* Dark mode support */
+.dark .text-gradient-medical {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dark .divider {
+    background: #4b5563;
+}
+
+/* Component specific styles */
+.hero-section {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-pulse {
+    animation: pulse-slow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-slow {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Metrics display */
+.metric-card {
+    background-color: var(--color-background-light);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.25rem;
+}
+
+/* Feature cards */
+.feature-card {
+    background-color: var(--color-surface-light);
+    border: 1px solid var(--color-border-light);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.feature-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+/* Footer styles */
+.footer {
+    background-color: var(--color-surface-dark);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #9ca3af;
+}
+
+.footer a:hover {
+    color: white;
+    transition: color 0.2s ease;
+}
