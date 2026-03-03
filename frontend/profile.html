@@ -205,25 +205,19 @@
     </main>
 
     <script type="module">
+        import { supabase } from './js/backend/supabase.js';
         import { getCurrentUser, signOut } from './js/backend/auth.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            let { user, error } = await getCurrentUser();
-
-            // Mock Data Fallback for fully working local UI demo
-            if (!user) {
-                user = {
-                    email: "researcher@neurovex.in",
-                    profile: {
-                        full_name: "Dr. Alan Turing",
-                        role: "Admin",
-                        purpose: "Clinical Trials"
-                    }
-                };
-            }
-
-            // Populate profile
             try {
+                const { user, error } = await getCurrentUser();
+
+                if (error || !user) {
+                    window.location.href = 'signin.html';
+                    return;
+                }
+
+                // Populate profile
                 const fullName = user.profile?.full_name || 'User';
                 const initials = fullName.substring(0, 2).toUpperCase();
 
@@ -233,53 +227,195 @@
                 document.getElementById('profile-purpose').innerText = 'Focus: ' + (user.profile?.purpose || 'Clinical Testing');
                 document.getElementById('profile-email').innerText = user.email;
 
-                // Populate mock stats
-                document.querySelector('.grid.grid-cols-2 .text-2xl:first-child').innerText = "14";
-                document.querySelector('.grid.grid-cols-2 .text-2xl:last-child').innerText = "12h";
+                // Fetch All Sessions
+                const { data: sessions, error: sessionErr } = await supabase
+                    .from('sessions')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .order('start_time', { ascending: false });
 
-                // Populate mock table
-                document.querySelector('tbody').innerHTML = `
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-slate-600">Today, 10:30 AM</td>
-                        <td class="px-6 py-4 whitespace-nowrap font-mono text-slate-500">sess-9f8a2</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-slate-700">45m, 12s</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="w-16 bg-slate-100 rounded-full h-1.5 mr-2">
-                                    <div class="bg-primary h-1.5 rounded-full" style="width: 82%"></div>
+                if (sessionErr) throw sessionErr;
+                const sessionList = sessions || [];
+
+                // Statistics Cards
+                const totalSessions = sessionList.length;
+                let totalMs = 0;
+                sessionList.forEach(s => {
+                    if (s.start_time && s.end_time) {
+                        totalMs += (new Date(s.end_time) - new Date(s.start_time));
+                    }
+                });
+                const totalHours = (totalMs / (1000 * 60 * 60)).toFixed(1);
+
+                document.querySelector('.grid.grid-cols-2 .text-2xl:first-child').innerText = totalSessions;
+                document.querySelector('.grid.grid-cols-2 .text-2xl:last-child').innerText = totalHours + 'h';
+
+                // Recent Sessions Table
+                const tbody = document.querySelector('tbody');
+                if (totalSessions === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-slate-500">No sessions recorded yet. Start a session from the Dashboard.</td></tr>`;
+                } else {
+                    const recentSessions = sessionList.slice(0, 10);
+                    tbody.innerHTML = recentSessions.map(s => {
+                        const dateObj = new Date(s.start_time);
+                        const dateStr = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const shortId = s.id ? s.id.split('-')[0] : 'Unknown';
+
+                        let durationStr = '--';
+                        if (s.start_time && s.end_time) {
+                            const diffS = Math.floor((new Date(s.end_time) - new Date(s.start_time)) / 1000);
+                            const mins = Math.floor(diffS / 60);
+                            const secs = diffS % 60;
+                            durationStr = `${mins}m, ${secs}s`;
+                        }
+
+                        const avgFocus = s.avg_focus || 0;
+
+                        return `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-slate-600">${dateStr}</td>
+                            <td class="px-6 py-4 whitespace-nowrap font-mono text-slate-500 text-xs">${shortId}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-slate-700">${durationStr}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="w-16 bg-slate-100 rounded-full h-1.5 mr-2">
+                                        <div class="bg-primary h-1.5 rounded-full" style="width: ${avgFocus}%"></div>
+                                    </div>
+                                    <span class="text-slate-600 font-medium">${Math.round(avgFocus)}%</span>
                                 </div>
-                                <span class="text-slate-600 font-medium">82%</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-primary hover:text-primary-dark">Export CSV</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-slate-600">Yesterday, 2:15 PM</td>
-                        <td class="px-6 py-4 whitespace-nowrap font-mono text-slate-500">sess-3b21c</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-slate-700">1h, 5m, 00s</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="w-16 bg-slate-100 rounded-full h-1.5 mr-2">
-                                    <div class="bg-primary h-1.5 rounded-full" style="width: 61%"></div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button class="text-primary hover:text-primary-dark" onclick="window.location.href='analysis.html?session_id=${s.id}'">View Analysis</button>
+                            </td>
+                        </tr>`;
+                    }).join('');
+                }
+
+                // Hardware Logs
+                const logContainer = document.querySelector('.grid.gap-4');
+                if (totalSessions > 0) {
+                    const sessionIds = sessionList.map(s => s.id);
+                    const recentSessionIds = sessionIds.slice(0, 50);
+
+                    const { data: logs, error: logErr } = await supabase
+                        .from('hardware_logs')
+                        .select('*')
+                        .in('session_id', recentSessionIds)
+                        .order('created_at', { ascending: false })
+                        .limit(20);
+
+                    if (logErr && logErr.code !== 'PGRST116') {
+                        console.error(logErr);
+                    }
+
+                    if (logs && logs.length > 0) {
+                        logContainer.innerHTML = logs.map(l => {
+                            const dateObj = new Date(l.created_at);
+                            const timeStr = dateObj.toLocaleTimeString();
+                            return `
+                                <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex items-start gap-4">
+                                    <div class="p-2 bg-blue-50 rounded text-primary">
+                                        <span class="material-icons text-lg">memory</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-start">
+                                            <h4 class="text-sm font-bold text-slate-800">Command: ${l.command}</h4>
+                                            <span class="text-xs text-slate-500">${timeStr}</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 font-mono mt-1">Session: ${l.session_id.split('-')[0]}</p>
+                                    </div>
                                 </div>
-                                <span class="text-slate-600 font-medium">61%</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-primary hover:text-primary-dark">Export CSV</button>
-                        </td>
-                    </tr>
-                `;
+                            `;
+                        }).join('');
+                    } else {
+                        logContainer.innerHTML = `
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex items-start gap-4">
+                                <div class="p-2 bg-slate-100 rounded text-slate-400">
+                                    <span class="material-icons text-lg">info</span>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-bold text-slate-800">No hardware logs yet.</h4>
+                                </div>
+                            </div>`;
+                    }
+                }
 
-            } catch (e) { console.error("Error populating profile:", e); }
+                // Export Button Logic
+                const exportBtn = document.querySelector('header button.bg-primary');
+                if (exportBtn) {
+                    exportBtn.addEventListener('click', async (e) => {
+                        const btn = e.currentTarget;
+                        const originalHTML = btn.innerHTML;
+                        btn.innerHTML = `<span class="material-icons text-sm animate-spin">sync</span> Preparing...`;
+                        btn.disabled = true;
 
+                        try {
+                            let csvContent = "session_id,timestamp,raw_value,focus_level\n";
+
+                            for (const session of sessionList) {
+                                if (session.csv_url) {
+                                    try {
+                                        const res = await fetch(session.csv_url);
+                                        const text = await res.text();
+                                        const lines = text.split('\n').slice(1);
+                                        for (const line of lines) {
+                                            if (line.trim()) {
+                                                csvContent += `${session.id},${line.trim()}\n`;
+                                            }
+                                        }
+                                    } catch (err) {
+                                        const { data: eegData } = await supabase
+                                            .from('eeg_data')
+                                            .select('timestamp, raw_value, focus_level')
+                                            .eq('session_id', session.id)
+                                            .order('timestamp', { ascending: true });
+                                        if (eegData) {
+                                            eegData.forEach(row => {
+                                                csvContent += `${session.id},${row.timestamp},${row.raw_value},${row.focus_level}\n`;
+                                            });
+                                        }
+                                    }
+                                } else {
+                                    const { data: eegData } = await supabase
+                                        .from('eeg_data')
+                                        .select('timestamp, raw_value, focus_level')
+                                        .eq('session_id', session.id)
+                                        .order('timestamp', { ascending: true });
+                                    if (eegData) {
+                                        eegData.forEach(row => {
+                                            csvContent += `${session.id},${row.timestamp},${row.raw_value},${row.focus_level}\n`;
+                                        });
+                                    }
+                                }
+                            }
+
+                            const blob = new Blob([csvContent], { type: 'text/csv' });
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `neurovex_export_${new Date().getTime()}.csv`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            window.URL.revokeObjectURL(url);
+                        } catch (err) {
+                            console.error("Export failed:", err);
+                            alert("Export failed: " + err.message);
+                        } finally {
+                            btn.innerHTML = originalHTML;
+                            btn.disabled = false;
+                        }
+                    });
+                }
+
+            } catch (e) {
+                console.error("Profile Load Error:", e);
+            }
         });
 
         document.getElementById('logout-btn').addEventListener('click', async () => {
             await signOut();
-            window.location.href = 'index.html';
+            window.location.href = 'signin.html';
         });
     </script>
 </body>
