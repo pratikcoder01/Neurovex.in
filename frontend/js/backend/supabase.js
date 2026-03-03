@@ -7,7 +7,10 @@ const getEnv = (key) => {
             return import.meta.env[key];
         }
     } catch (e) { }
-    return 'mock_key';
+
+    // Provide syntactically valid mock strings to prevent Supabase crash
+    if (key === 'VITE_SUPABASE_URL') return 'https://mock.supabase.co';
+    return 'mock_anon_key_for_local_testing';
 };
 
 const SUPABASE_URL = getEnv('VITE_SUPABASE_URL');

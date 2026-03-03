@@ -300,9 +300,9 @@
 
             // Populate profile
             try {
-                const fullName = user.profile?.full_name || 'User';
+                const fullName = user?.profile?.full_name || 'Demo User';
                 document.getElementById('user-name').innerText = fullName;
-                document.getElementById('user-role').innerText = (user.profile?.role || 'User').toUpperCase();
+                document.getElementById('user-role').innerText = (user?.profile?.role || 'Guest').toUpperCase();
             } catch (e) { }
 
             // Log out handler
