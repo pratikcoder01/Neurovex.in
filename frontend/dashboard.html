@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neurovex Dashboard | AI-BCI</title>
 
-    
+
     <link href="./stitch/css/stitch-base.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="./stitch/js/stitch-theme.js"></script>
 
-    
+
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
@@ -41,7 +41,7 @@
 
 <body class="bg-background-light font-display text-slate-800 h-screen flex flex-col overflow-hidden antialiased">
 
-    
+
     <header
         class="bg-surface-light border-b border-slate-200 h-16 flex items-center justify-between px-6 flex-shrink-0 z-20 shadow-sm">
         <div class="flex items-center gap-4">
@@ -89,13 +89,13 @@
         </div>
     </header>
 
-    
+
     <main class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
 
-        
+
         <aside
             class="w-full lg:w-72 bg-surface-light border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col z-10 flex-shrink-0">
-            
+
             <div class="p-5 border-b border-slate-100">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Device Status</h3>
@@ -126,7 +126,7 @@
                 </div>
             </div>
 
-            
+
             <div class="p-5 flex-1 flex flex-col scroller overflow-y-auto">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Signal Quality</h3>
                 <div class="space-y-1" id="channel-list">
@@ -154,9 +154,9 @@
             </div>
         </aside>
 
-        
+
         <section class="flex-1 flex flex-col relative bg-surface-light min-h-[300px] lg:min-h-0">
-            
+
             <div class="absolute top-4 right-4 z-10 flex gap-2">
                 <button
                     class="bg-white/90 backdrop-blur border border-slate-200 hover:border-primary/50 text-slate-600 hover:text-primary p-2 rounded-lg shadow-sm transition-all"
@@ -170,9 +170,9 @@
                 </button>
             </div>
 
-            
+
             <div class="flex-1 eeg-grid relative overflow-hidden flex flex-col justify-center" id="waveform-container">
-                
+
                 <div
                     class="absolute left-0 top-0 bottom-0 w-12 bg-surface-light/30 backdrop-blur-sm border-r border-slate-200/50 flex flex-col justify-between py-4 text-[10px] text-slate-400 font-mono text-center z-10 select-none">
                     <span>+100</span>
@@ -182,18 +182,18 @@
                     <span>-100</span>
                 </div>
 
-                
+
                 <canvas id="live-eeg-canvas" class="absolute inset-0 w-full h-full opacity-60"></canvas>
             </div>
         </section>
 
-        
+
         <aside
             class="w-full lg:w-80 bg-surface-light border-t lg:border-t-0 lg:border-l border-slate-200 flex flex-col z-10 lg:overflow-y-auto scroller flex-shrink-0">
             <div class="p-5 border-b border-slate-100">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Brain State (AI)</h3>
 
-                
+
                 <div class="mb-5">
                     <div class="flex justify-between items-end mb-1">
                         <span class="text-sm font-medium text-slate-700">Focus</span>
@@ -205,7 +205,7 @@
                     </div>
                 </div>
 
-                
+
                 <div class="mb-5">
                     <div class="flex justify-between items-end mb-1">
                         <span class="text-sm font-medium text-slate-700">Stress</span>
@@ -217,7 +217,7 @@
                     </div>
                 </div>
 
-                
+
                 <div class="mb-5">
                     <div class="flex justify-between items-end mb-1">
                         <span class="text-sm font-medium text-slate-700">Fatigue</span>
@@ -230,7 +230,7 @@
                 </div>
             </div>
 
-            
+
             <div class="p-5 flex-1">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Band Power (FFT)</h3>
                 <div class="space-y-3">
@@ -264,7 +264,7 @@
                     </div>
                 </div>
 
-                
+
                 <div class="mt-6 p-4 bg-slate-900 rounded-xl text-white">
                     <div class="text-xs font-mono text-slate-400 mb-1">CONFIDENCE SCORE</div>
                     <div class="text-3xl font-bold font-mono tracking-tighter" id="confidence-score">94.2%</div>
@@ -274,10 +274,17 @@
         </aside>
     </main>
 
-    
+
     <script type="module">
         import { getCurrentUser, signOut } from './js/backend/auth.js';
         import { beginTracking, recordFocusStream, attachLiveEEGListener, finalizeTracking } from './js/backend/dashboard.js';
+        import { SerialEngine } from './js/serialEngine.js';
+        import { SignalProcessor } from './js/signalProcessor.js';
+
+        const serial = new SerialEngine();
+        const processor = new SignalProcessor();
+
+        let isHardwareMode = false;
 
         let isRecording = false;
 
@@ -286,7 +293,7 @@
 
             if (!user) {
                 // Not logged in -> kick out to signin
-                
+
                 // window.location.href = 'signin.html';
                 // return;
             }
@@ -296,7 +303,7 @@
                 const fullName = user.profile?.full_name || 'User';
                 document.getElementById('user-name').innerText = fullName;
                 document.getElementById('user-role').innerText = (user.profile?.role || 'User').toUpperCase();
-            } catch (e) {  }
+            } catch (e) { }
 
             // Log out handler
             document.getElementById('logout-btn').addEventListener('click', async () => {
@@ -326,12 +333,38 @@
                 }
             });
 
-            // Basic UI simulation loop
-            setInterval(() => {
-                const focus = Math.floor(Math.random() * 40) + 40; // 40-80%
-                const stress = Math.floor(Math.random() * 30) + 10;
-                const fatigue = Math.floor(Math.random() * 20) + 10;
 
+            // Mode Toggle Handler
+            document.getElementById('btn-toggle-mode').addEventListener('click', async () => {
+                if (!isHardwareMode) {
+                    const connected = await serial.connect();
+                    if (connected) {
+                        isHardwareMode = true;
+                        document.getElementById('toggle-text').innerText = 'Disconnect HW';
+                        document.getElementById('mode-text').innerText = 'LIVE HARDWARE';
+                        document.getElementById('device-name').innerText = 'ESP32 Device';
+
+                        document.getElementById('mode-indicator').classList.replace('bg-primary/10', 'bg-safe-emerald/10');
+                        document.getElementById('mode-indicator').classList.replace('text-primary', 'text-safe-emerald');
+                        document.getElementById('mode-indicator').classList.replace('ring-primary/20', 'ring-safe-emerald/20');
+                        document.getElementById('mode-indicator').children[0].classList.replace('bg-primary', 'bg-safe-emerald');
+                    }
+                } else {
+                    await serial.disconnect();
+                    isHardwareMode = false;
+                    document.getElementById('toggle-text').innerText = 'Connect Hardware';
+                    document.getElementById('mode-text').innerText = 'DEMO MODE';
+                    document.getElementById('device-name').innerText = 'Simulated EEG';
+
+                    document.getElementById('mode-indicator').classList.replace('bg-safe-emerald/10', 'bg-primary/10');
+                    document.getElementById('mode-indicator').classList.replace('text-safe-emerald', 'text-primary');
+                    document.getElementById('mode-indicator').classList.replace('ring-safe-emerald/20', 'ring-primary/20');
+                    document.getElementById('mode-indicator').children[0].classList.replace('bg-safe-emerald', 'bg-primary');
+                }
+            });
+
+            // Update UI Function
+            const updateUIStats = (focus, stress, fatigue) => {
                 document.getElementById('val-focus').innerText = focus + '%';
                 document.getElementById('bar-focus').style.width = focus + '%';
 
@@ -344,15 +377,34 @@
                 document.getElementById('band-delta').innerText = (Math.random() * 10 + 5).toFixed(1) + ' µV²';
                 document.getElementById('band-theta').innerText = (Math.random() * 5 + 2).toFixed(1) + ' µV²';
                 document.getElementById('band-alpha').innerText = (Math.random() * 15 + 10).toFixed(1) + ' µV²';
-                document.getElementById('band-beta').innerText = (Math.random() * 8 + 3).toFixed(1) + ' µV²';
+                document.getElementById('band-beta').innerText = (focus / 5).toFixed(1) + ' µV²';
 
                 if (isRecording) {
                     const mockRaw = Math.random() * 100 - 50;
                     recordFocusStream(mockRaw, focus);
                 }
+            };
+
+            // Hardware Loop
+            serial.onData((data) => {
+                processor.feed(data);
+                const stats = processor.computeStats();
+                if (stats) {
+                    updateUIStats(stats.focus, stats.stress, stats.fatigue);
+                }
+            });
+
+            // Demo Simulation Loop
+            setInterval(() => {
+                if (!isHardwareMode) {
+                    const focus = Math.floor(Math.random() * 40) + 40; // 40-80%
+                    const stress = Math.floor(Math.random() * 30) + 10;
+                    const fatigue = Math.floor(Math.random() * 20) + 10;
+                    updateUIStats(focus, stress, fatigue);
+                }
             }, 1000);
 
-            // Draw dummy chart
+            // Draw chart
             const canvas = document.getElementById('live-eeg-canvas');
             if (canvas) {
                 const ctx = canvas.getContext('2d');
@@ -364,11 +416,26 @@
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.beginPath();
                     ctx.moveTo(0, canvas.height / 2);
-                    for (let i = 0; i < canvas.width; i += 5) {
-                        const y = canvas.height / 2 + Math.sin(i * 0.05 + t) * 30 + Math.random() * 15;
-                        ctx.lineTo(i, y);
+
+                    const buffer = processor.buffer;
+
+                    if (isHardwareMode && buffer.length > 0) {
+                        const step = canvas.width / buffer.length;
+                        for (let i = 0; i < buffer.length; i++) {
+                            // Map raw ADC value (0-4095) to canvas height
+                            const norm = ((buffer[i] / 4095) * 2) - 1; // -1 to 1
+                            const y = canvas.height / 2 - (norm * (canvas.height / 2));
+                            ctx.lineTo(i * step, y);
+                        }
+                    } else {
+                        // Demo mode sine wave
+                        for (let i = 0; i < canvas.width; i += 5) {
+                            const y = canvas.height / 2 + Math.sin(i * 0.05 + t) * 30 + Math.random() * 15;
+                            ctx.lineTo(i, y);
+                        }
                     }
-                    ctx.strokeStyle = '#2563eb';
+
+                    ctx.strokeStyle = isHardwareMode ? '#10b981' : '#2563eb';
                     ctx.lineWidth = 2;
                     ctx.stroke();
                     t += 0.1;
