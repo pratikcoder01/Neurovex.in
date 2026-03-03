@@ -16,4 +16,17 @@ const getEnv = (key) => {
 const SUPABASE_URL = getEnv('VITE_SUPABASE_URL');
 const SUPABASE_ANON_KEY = getEnv('VITE_SUPABASE_ANON_KEY');
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: {
+        fetch: (...args) => {
+            if (args[0].includes('mock.supabase.co')) {
+                console.warn("[Neurovex Local Dev] Mocking Supabase database call:", args[0]);
+                return Promise.resolve(new Response(JSON.stringify([]), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' }
+                }));
+            }
+            return fetch(...args);
+        }
+    }
+});
