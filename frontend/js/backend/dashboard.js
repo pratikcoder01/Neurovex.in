@@ -10,7 +10,7 @@ export const initializeDashboard = async (onEEGUpdateCallback, onSessionListUpda
     const { user, error } = await getCurrentUser();
 
     if (error || !user) {
-        
+
         return { initialized: false, user: null };
     }
 
@@ -22,7 +22,11 @@ export const initializeDashboard = async (onEEGUpdateCallback, onSessionListUpda
 
 export const beginTracking = async () => {
     const { session, error } = await startSession();
-    if (error) return 
+    if (error) {
+        // Mock fallback for local UI testing
+        currentSessionId = 'demo-' + Date.now();
+        return { id: currentSessionId };
+    }
 
     currentSessionId = session.id;
     return session;
@@ -53,7 +57,7 @@ export const finalizeTracking = async () => {
     const { session, error } = await endSession(currentSessionId, stats, csvUrl);
 
     if (!error) {
-        
+
     }
 
     const closedSessionId = currentSessionId;
