@@ -40,7 +40,7 @@
             border-radius: 16px;
             display: flex;
             justify-content: center;
-            items-center;
+            align-items: center;
             background: white;
             border: 2px solid #e2e8f0;
             color: #334155;
@@ -116,22 +116,23 @@
         </div>
     </header>
 
-    <main class="flex-1 flex overflow-hidden">
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
 
         <!-- Sidebar Navigation (Same as dashboard) -->
-        <aside class="w-64 bg-surface-light border-r border-slate-200 p-4 flex flex-col z-10 hidden md:flex">
-            <div class="space-y-1 mt-4">
+        <aside
+            class="w-full md:w-64 bg-surface-light border-b md:border-b-0 md:border-r border-slate-200 p-2 md:p-4 flex z-10 overflow-x-auto shrink-0 transition-all no-scrollbar">
+            <div class="flex flex-row md:flex-col gap-2 md:space-y-1 mt-0 md:mt-4 w-full">
                 <a href="./dashboard.html"
-                    class="flex items-center gap-3 px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-slate-100 transition-colors">
-                    <span class="material-icons-outlined">dashboard</span> Overview
+                    class="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 text-sm md:text-base text-slate-600 font-medium rounded-xl hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0">
+                    <span class="material-icons-outlined text-base md:text-xl">dashboard</span> Overview
                 </a>
                 <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 text-primary bg-primary/5 font-medium rounded-xl transition-colors">
-                    <span class="material-icons">memory</span> Hardware
+                    class="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 text-sm md:text-base text-primary bg-primary/5 font-medium rounded-xl transition-colors whitespace-nowrap shrink-0">
+                    <span class="material-icons text-base md:text-xl">memory</span> Hardware
                 </a>
                 <a href="./games.html"
-                    class="flex items-center gap-3 px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-slate-100 transition-colors">
-                    <span class="material-icons-outlined">sports_esports</span> Games
+                    class="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 text-sm md:text-base text-slate-600 font-medium rounded-xl hover:bg-slate-100 transition-colors whitespace-nowrap shrink-0">
+                    <span class="material-icons-outlined text-base md:text-xl">sports_esports</span> Games
                 </a>
             </div>
         </aside>

@@ -53,22 +53,25 @@
         </div>
     </header>
 
-    <main class="flex-1 flex overflow-hidden">
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
 
         <!-- Sidebar -->
-        <aside class="w-80 bg-surface-light border-r border-slate-200 p-6 flex flex-col z-10 overflow-y-auto shrink-0">
-            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">Game Selection</h3>
+        <aside
+            class="w-full md:w-80 bg-surface-light border-b md:border-b-0 md:border-r border-slate-200 p-4 md:p-6 flex flex-col z-10 overflow-hidden shrink-0">
+            <h3 class="hidden md:block text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">Game Selection
+            </h3>
 
-            <div class="space-y-4">
+            <div
+                class="flex flex-row md:flex-col gap-4 md:space-y-4 overflow-x-auto pb-4 md:pb-0 no-scrollbar items-stretch w-full">
                 <!-- Tab: Mind Control -->
                 <button data-tab="mind-control-arena"
-                    class="game-tab-btn w-full text-left p-4 rounded-xl border border-primary bg-primary/5 opacity-100 transition-all focus:outline-none">
-                    <div class="flex items-start gap-4">
+                    class="game-tab-btn min-w-[240px] md:min-w-0 md:w-full text-left p-4 rounded-xl border border-primary bg-primary/5 opacity-100 transition-all focus:outline-none shrink-0 h-full">
+                    <div class="flex items-start gap-4 h-full">
                         <div
                             class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
                             <span class="material-icons text-xl">open_with</span>
                         </div>
-                        <div>
+                        <div class="flex-1 flex flex-col justify-center">
                             <h4 class="font-bold text-slate-900 leading-tight">Telekinesis</h4>
                             <p class="text-xs text-slate-500 mt-1">Move objects using sheer focus via Beta waves.</p>
                         </div>
@@ -77,13 +80,13 @@
 
                 <!-- Tab: Pattern Match -->
                 <button data-tab="pattern-match-arena"
-                    class="game-tab-btn w-full text-left p-4 rounded-xl border border-slate-200 bg-white opacity-60 hover:opacity-100 hover:border-emerald-500 hover:bg-emerald-50 transition-all focus:outline-none">
-                    <div class="flex items-start gap-4">
+                    class="game-tab-btn min-w-[240px] md:min-w-0 md:w-full text-left p-4 rounded-xl border border-slate-200 bg-white opacity-60 hover:opacity-100 hover:border-emerald-500 hover:bg-emerald-50 transition-all focus:outline-none shrink-0 h-full">
+                    <div class="flex items-start gap-4 h-full">
                         <div
                             class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
                             <span class="material-icons text-xl">psychology</span>
                         </div>
-                        <div>
+                        <div class="flex-1 flex flex-col justify-center">
                             <h4 class="font-bold text-slate-900 leading-tight">Zen Match</h4>
                             <p class="text-xs text-slate-500 mt-1">Unlock patterns via Deep Relaxation (Alpha waves).
                             </p>
@@ -93,13 +96,13 @@
 
                 <!-- Tab: Reaction Time -->
                 <button data-tab="reaction-time-arena"
-                    class="game-tab-btn w-full text-left p-4 rounded-xl border border-slate-200 bg-white opacity-60 hover:opacity-100 hover:border-amber-500 hover:bg-amber-50 transition-all focus:outline-none">
-                    <div class="flex items-start gap-4">
+                    class="game-tab-btn min-w-[240px] md:min-w-0 md:w-full text-left p-4 rounded-xl border border-slate-200 bg-white opacity-60 hover:opacity-100 hover:border-amber-500 hover:bg-amber-50 transition-all focus:outline-none shrink-0 h-full">
+                    <div class="flex items-start gap-4 h-full">
                         <div
                             class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
                             <span class="material-icons text-xl">bolt</span>
                         </div>
-                        <div>
+                        <div class="flex-1 flex flex-col justify-center">
                             <h4 class="font-bold text-slate-900 leading-tight">Beta Reflex</h4>
                             <p class="text-xs text-slate-500 mt-1">Train neurological reaction to visual cues.</p>
                         </div>
@@ -108,13 +111,13 @@
 
                 <!-- Tab: Leaderboard -->
                 <button data-tab="leaderboard-arena"
-                    class="game-tab-btn w-full text-left p-4 rounded-xl border border-slate-200 bg-white opacity-60 hover:opacity-100 hover:border-purple-500 hover:bg-purple-50 transition-all focus:outline-none">
-                    <div class="flex items-start gap-4">
+                    class="game-tab-btn min-w-[240px] md:min-w-0 md:w-full text-left p-4 rounded-xl border border-slate-200 bg-white opacity-60 hover:opacity-100 hover:border-purple-500 hover:bg-purple-50 transition-all focus:outline-none shrink-0 h-full">
+                    <div class="flex items-start gap-4 h-full">
                         <div
                             class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0">
                             <span class="material-icons text-xl">emoji_events</span>
                         </div>
-                        <div>
+                        <div class="flex-1 flex flex-col justify-center">
                             <h4 class="font-bold text-slate-900 leading-tight">Global Ranks</h4>
                             <p class="text-xs text-slate-500 mt-1">View worldwide leaderboard statistics.</p>
                         </div>
@@ -122,13 +125,15 @@
                 </button>
             </div>
 
-            <div class="mt-auto">
+            <div class="mt-4 md:mt-auto">
                 <div class="p-4 bg-slate-900 rounded-xl text-white">
-                    <div class="text-[10px] font-mono text-slate-400 mb-1 uppercase tracking-wider">Live Signal Focus
+                    <div class="flex justify-between items-center mb-1">
+                        <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Live Signal Focus
+                        </div>
+                        <div class="text-xs text-emerald-400 font-mono" id="hub-state">Waiting...</div>
                     </div>
                     <div class="flex items-end justify-between">
-                        <div class="text-xl font-bold font-mono tracking-tighter" id="hub-focus">--%</div>
-                        <div class="text-xs text-emerald-400 font-mono mb-1" id="hub-state">Waiting...</div>
+                        <div class="text-2xl font-bold font-mono tracking-tighter" id="hub-focus">--%</div>
                     </div>
                 </div>
             </div>
