@@ -139,8 +139,31 @@
             </div>
         </aside>
 
+        <!-- Mobile Bottom Tab Bar -->
+        <nav
+            class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-200 z-50 flex justify-around items-center h-16 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+            <a href="./dashboard.html"
+                class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-slate-600 transition-colors">
+                <span class="material-icons-outlined text-xl mb-1">dashboard</span>
+                <span class="text-[10px] font-medium">Overview</span>
+            </a>
+            <a href="./hardware.html"
+                class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-slate-600 transition-colors">
+                <span class="material-icons-outlined text-xl mb-1">memory</span>
+                <span class="text-[10px] font-medium">Hardware</span>
+            </a>
+            <a href="#"
+                class="flex flex-col items-center justify-center w-full h-full text-primary transition-colors relative">
+                <div
+                    class="absolute -top-3 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-lg border-4 border-slate-50">
+                    <span class="material-icons text-xl">sports_esports</span>
+                </div>
+                <span class="text-[10px] font-bold mt-5 text-primary">Games</span>
+            </a>
+        </nav>
+
         <!-- Main Game Area Container -->
-        <section class="flex-1 bg-slate-50 relative overflow-hidden flex flex-col">
+        <section class="flex-1 bg-slate-50 relative overflow-hidden flex flex-col pb-20 md:pb-0">
             <div class="absolute inset-0 z-0 opacity-[0.03]"
                 style="background-image: radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0); background-size: 32px 32px;">
             </div>
