@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hardware Control | Neurovex</title>
 
-    
+
     <link href="./stitch/css/stitch-base.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="./stitch/js/stitch-theme.js"></script>
 
-    
+
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
@@ -21,7 +21,7 @@
 
 <body class="bg-background-light font-display text-slate-800 h-screen flex flex-col overflow-hidden antialiased">
 
-    
+
     <header
         class="bg-surface-light border-b border-slate-200 h-16 flex items-center justify-between px-6 flex-shrink-0 z-20 shadow-sm">
         <div class="flex items-center gap-4 cursor-pointer group" onclick="window.location.href='index.html'">
@@ -38,7 +38,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            
+
             <button id="theme-toggle"
                 class="p-2 rounded-full text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 <span class="material-icons text-xl dark:hidden">dark_mode</span>
@@ -51,7 +51,11 @@
                 System Armed
             </div>
 
-            
+            <button id="connect-hw-btn"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold shadow-sm flex items-center gap-2 transition-all">
+                <span class="material-icons">usb</span> Connect ESP32
+            </button>
+
             <button onclick="triggerEmergencyStop()"
                 class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-red-500/30 flex items-center gap-2 transition-all transform active:scale-95">
                 <span class="material-icons">pan_tool</span>
@@ -62,13 +66,13 @@
 
     <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
 
-        
+
         <aside
             class="w-full md:w-72 bg-surface-light border-b md:border-b-0 md:border-r border-slate-200 p-5 flex flex-col gap-6 z-10 overflow-y-auto">
             <div>
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Control Logic</h3>
                 <div class="space-y-4">
-                    
+
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-sm font-medium text-slate-700">Focus Threshold</label>
@@ -83,7 +87,7 @@
                 </div>
             </div>
 
-            
+
             <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
                 <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Current Input</h4>
                 <div class="flex justify-between items-center mb-1">
@@ -112,11 +116,11 @@
             </div>
         </aside>
 
-        
+
         <section class="flex-1 bg-background-light p-4 md:p-8 overflow-y-auto">
             <div class="container-fluid max-w-4xl mx-auto grid-responsive grid-cols-2">
 
-                
+
                 <div
                     class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden group">
                     <div class="absolute top-0 right-0 w-24 h-24 bg-yellow-100 rounded-bl-full -mr-4 -mt-4 transition-all opacity-0"
@@ -147,7 +151,7 @@
                     </div>
                 </div>
 
-                
+
                 <div
                     class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
                     <div class="flex justify-between items-start mb-6">
@@ -177,7 +181,7 @@
                     </div>
                 </div>
 
-                
+
                 <div
                     class="md:col-span-2 col-span-1 bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative">
                     <div class="flex justify-between items-start mb-4">
@@ -231,49 +235,83 @@
         </section>
     </main>
 
-    
-    <script>
-        // Global for button access
-        function triggerEmergencyStop() {
-            alert('Emergency stop activated! Resetting hardware...');
-            // Implement estop hardware hooks if needed
-        }
 
-        // Simple mock simulation for UI
-        setInterval(() => {
-            const val = Math.floor(Math.random() * 100);
-            const slider = document.getElementById('threshold-slider');
-            const thresh = parseInt(slider.value);
+    <script type="module">
+        import { SerialEngine } from './js/serialEngine.js';
+        import { SignalProcessor } from './js/signalProcessor.js';
+        import { HardwareController } from './js/hardwareController.js';
 
-            document.getElementById('live-focus').innerText = val + '%';
-            document.getElementById('live-focus-bar').style.width = val + '%';
+        const serial = new SerialEngine();
+        const processor = new SignalProcessor();
+        const controller = new HardwareController(serial);
 
-            if (val >= thresh) {
-                document.getElementById('status-indicator').innerText = 'TRIGGERED';
-                document.getElementById('status-indicator').className = 'inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-green-200 text-green-800';
+        window.triggerEmergencyStop = () => {
+            controller.emergencyStop();
+            document.getElementById('safety-status').innerHTML = '<span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span> Halt';
+        };
 
-                // Light
-                document.getElementById('light-state').innerText = 'ON';
-                document.getElementById('light-glow').style.opacity = '1';
+        const connectBtn = document.getElementById('connect-hw-btn');
+        let isConnected = false;
 
-                // Arm
-                document.getElementById('arm-slider').style.transform = 'translate(-24px, 0)';
+        connectBtn.addEventListener('click', async () => {
+            if (!isConnected) {
+                const connected = await serial.connect();
+                if (connected) {
+                    isConnected = true;
+                    connectBtn.innerHTML = '<span class="material-icons">usb_off</span> Disconnect';
+                    connectBtn.classList.replace('bg-blue-600', 'bg-slate-600');
+                    connectBtn.classList.replace('hover:bg-blue-700', 'hover:bg-slate-700');
 
+                    document.getElementById('ind-signal-status').className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
+                    document.getElementById('val-signal-status').innerText = 'CONNECTED';
+                }
             } else {
+                await serial.disconnect();
+                isConnected = false;
+                connectBtn.innerHTML = '<span class="material-icons">usb</span> Connect ESP32';
+                connectBtn.classList.replace('bg-slate-600', 'bg-blue-600');
+                connectBtn.classList.replace('hover:bg-slate-700', 'hover:bg-blue-700');
+
+                document.getElementById('ind-signal-status').className = 'w-2 h-2 rounded-full bg-slate-400';
+                document.getElementById('val-signal-status').innerText = 'DISCONNECTED';
+
                 document.getElementById('status-indicator').innerText = 'WAITING FOR SIGNAL';
                 document.getElementById('status-indicator').className = 'inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-600';
-
-                // Light
-                document.getElementById('light-state').innerText = 'OFF';
-                document.getElementById('light-glow').style.opacity = '0';
-
-                // Arm
-                document.getElementById('arm-slider').style.transform = 'translate(0, 0)';
             }
-        }, 800);
+        });
 
-        document.getElementById('threshold-slider').addEventListener('input', (e) => {
+        const slider = document.getElementById('threshold-slider');
+        slider.addEventListener('input', (e) => {
             document.getElementById('disp-thresh').innerText = e.target.value + '%';
+            controller.setThreshold(parseInt(e.target.value));
+        });
+
+        serial.onData((data) => {
+            processor.feed(data);
+            const stats = processor.computeStats();
+
+            if (stats) {
+                const focus = stats.focus;
+                document.getElementById('live-focus').innerText = focus + '%';
+                document.getElementById('live-focus-bar').style.width = focus + '%';
+
+                const thresh = parseInt(slider.value);
+                if (focus >= thresh) {
+                    document.getElementById('status-indicator').innerText = 'TRIGGERED';
+                    document.getElementById('status-indicator').className = 'inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-green-200 text-green-800';
+                    document.getElementById('light-state').innerText = 'ON';
+                    document.getElementById('light-glow').style.opacity = '1';
+                    document.getElementById('arm-slider').style.transform = 'translate(-24px, 0)';
+                } else {
+                    document.getElementById('status-indicator').innerText = 'WAITING FOR SIGNAL';
+                    document.getElementById('status-indicator').className = 'inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-600';
+                    document.getElementById('light-state').innerText = 'OFF';
+                    document.getElementById('light-glow').style.opacity = '0';
+                    document.getElementById('arm-slider').style.transform = 'translate(0, 0)';
+                }
+
+                controller.processFocus(focus);
+            }
         });
     </script>
 </body>
