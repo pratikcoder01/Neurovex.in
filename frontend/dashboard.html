@@ -278,7 +278,7 @@
     <script type="module">
         import { getCurrentUser, signOut } from './js/backend/auth.js';
         import { beginTracking, recordFocusStream, attachLiveEEGListener, finalizeTracking } from './js/backend/dashboard.js';
-        import { SerialEngine } from './js/serialEngine.js';
+        import { SerialEngine } from './js/hardware/serialEngine.js';
         import { SignalProcessor } from './js/signalProcessor.js';
 
         const serial = new SerialEngine();

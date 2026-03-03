@@ -268,12 +268,32 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <!-- Zen Match Completion Modal -->
+            <div id="zen-modal"
+                class="absolute inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex-col items-center justify-center">
+                <div class="bg-white p-8 rounded-3xl shadow-2xl border border-slate-200 text-center max-w-sm w-full transform transition-all scale-95 opacity-0"
+                    id="zen-modal-content">
+                    <div
+                        class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-500 shadow-inner">
+                        <span class="material-icons text-3xl">psychology_alt</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Absolute Zen!</h3>
+                    <p class="text-slate-500 text-sm mb-6">You have mastered your brainwaves and unlocked all 16
+                        patterns through deep relaxation.</p>
+                    <button onclick="document.getElementById('zen-modal').classList.add('hidden')"
+                        class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
 
         </section>
     </main>
 
     <script type="module">
-        import { SerialEngine } from './js/serialEngine.js';
+        import { SerialEngine } from './js/hardware/serialEngine.js';
         import { SignalProcessor } from './js/signalProcessor.js';
         import { BrainGameEngine } from './js/games/brainGameEngine.js';
         import { MindControlGame } from './js/games/mindControlGame.js';
@@ -333,7 +353,14 @@
                 tile.classList.add('bg-emerald-400', 'border-emerald-500', 'opacity-100', 'shadow-[0_0_15px_rgba(52,211,153,0.3)]');
             }
             if (level === 16) {
-                alert("You've mastered Zen Match!");
+                const modal = document.getElementById('zen-modal');
+                const modalContent = document.getElementById('zen-modal-content');
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
                 patternGame.stop();
             }
         });
