@@ -10,14 +10,14 @@ class DashboardController {
         this.isSimulating = false;
         this.simulationInterval = null;
         this.sessionInterval = null;
-        
+
         this.init();
     }
 
     async init() {
         // Check authentication
         if (!authManager.isAuthenticated()) {
-            Utils.redirect('login.html');
+            Utils.redirect('signin.html');
             return;
         }
 
@@ -32,10 +32,10 @@ class DashboardController {
         try {
             // Load user stats
             await this.loadUserStats();
-            
+
             // Load recent sessions
             await this.loadRecentSessions();
-            
+
             // Update UI
             this.updateUI();
         } catch (error) {
@@ -46,7 +46,7 @@ class DashboardController {
 
     async loadUserStats() {
         const result = await sessionManager.getUserSessionStats();
-        
+
         if (result.success) {
             this.userStats = result.stats;
             this.animateStats();
@@ -58,7 +58,7 @@ class DashboardController {
     async loadRecentSessions() {
         const user = authManager.getCurrentUser();
         const result = await eegManager.getSessionHistory(user.uid, 10);
-        
+
         if (result.success) {
             this.recentSessions = result.sessions;
             this.updateSessionsTable();
@@ -177,7 +177,7 @@ class DashboardController {
         if (!this.userStats) return;
 
         const stats = this.userStats;
-        
+
         // Animate numbers
         this.animateValue('totalSessions', 0, stats.totalSessions, 1000);
         this.animateValue('avgFocus', 0, Math.round(stats.averageFocus), 1000);
@@ -192,16 +192,16 @@ class DashboardController {
         const animate = (currentTime) => {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            
+
             const current = Math.round(start + (end - start) * progress);
-            element.textContent = elementId === 'avgFocus' || elementId === 'maxFocus' ? 
+            element.textContent = elementId === 'avgFocus' || elementId === 'maxFocus' ?
                 `${current}%` : current;
-            
+
             if (progress < 1) {
                 requestAnimationFrame(animate);
             }
         };
-        
+
         requestAnimationFrame(animate);
     }
 
@@ -216,14 +216,14 @@ class DashboardController {
 
         tbody.innerHTML = this.recentSessions.map(session => {
             const startTime = Utils.formatDate(session.startTime);
-            const duration = session.endTime ? 
-                Utils.formatDuration(Math.floor((session.endTime - session.startTime) / 1000)) : 
+            const duration = session.endTime ?
+                Utils.formatDuration(Math.floor((session.endTime - session.startTime) / 1000)) :
                 'In progress';
             const avgFocus = session.avgFocus ? Utils.formatPercentage(session.avgFocus) : 'N/A';
             const maxFocus = session.maxFocus ? Utils.formatPercentage(session.maxFocus) : 'N/A';
             const status = session.endTime ? 'Completed' : 'Active';
             const statusClass = session.endTime ? 'status-connected' : 'status-connecting';
-            
+
             return `
                 <tr>
                     <td>${startTime}</td>
@@ -232,10 +232,10 @@ class DashboardController {
                     <td>${maxFocus}</td>
                     <td><span class="status ${statusClass}">${status}</span></td>
                     <td>
-                        ${session.csvFileUrl ? 
-                            `<button class="btn btn-outline btn-sm" onclick="dashboard.downloadCSV('${session.id}', '${session.csvFileUrl}')">Download</button>` : 
-                            '<span class="text-gray-400">No data</span>'
-                        }
+                        ${session.csvFileUrl ?
+                    `<button class="btn btn-outline btn-sm" onclick="dashboard.downloadCSV('${session.id}', '${session.csvFileUrl}')">Download</button>` :
+                    '<span class="text-gray-400">No data</span>'
+                }
                     </td>
                 </tr>
             `;
@@ -245,7 +245,7 @@ class DashboardController {
     updateUI() {
         // Update device status
         this.updateDeviceStatus();
-        
+
         // Update session controls
         this.updateSessionControls();
     }
@@ -253,7 +253,7 @@ class DashboardController {
     updateDeviceStatus() {
         const statusElement = document.getElementById('deviceStatus');
         const connectBtn = document.getElementById('connectBtn');
-        
+
         if (!statusElement || !connectBtn) return;
 
         if (this.isDeviceConnected()) {
@@ -273,11 +273,11 @@ class DashboardController {
         const startBtn = document.getElementById('startSessionBtn');
         const endBtn = document.getElementById('endSessionBtn');
         const sessionMessage = document.getElementById('sessionMessage');
-        
+
         if (!startBtn || !endBtn || !sessionMessage) return;
 
         const sessionStatus = sessionManager.getCurrentSessionStatus();
-        
+
         if (sessionStatus.isActive) {
             startBtn.disabled = true;
             endBtn.disabled = false;
@@ -293,11 +293,11 @@ class DashboardController {
         const sessionStatus = sessionManager.getCurrentSessionStatus();
         const sessionTimeElement = document.getElementById('sessionTime');
         const sessionDurationElement = document.getElementById('sessionDuration');
-        
+
         if (sessionStatus.isActive && sessionTimeElement) {
             sessionTimeElement.textContent = sessionStatus.duration;
         }
-        
+
         if (sessionStatus.isActive && sessionDurationElement) {
             sessionDurationElement.textContent = sessionStatus.duration;
         }
@@ -310,7 +310,7 @@ class DashboardController {
 
     async toggleDeviceConnection() {
         const isConnected = this.isDeviceConnected();
-        
+
         if (isConnected) {
             this.disconnectDevice();
         } else {
@@ -334,7 +334,7 @@ class DashboardController {
 
     startEEGSimulation() {
         if (this.isSimulating) return;
-        
+
         this.isSimulating = true;
         this.simulationInterval = setInterval(() => {
             this.updateEEGData();
@@ -344,7 +344,7 @@ class DashboardController {
 
     stopEEGSimulation() {
         if (!this.isSimulating) return;
-        
+
         this.isSimulating = false;
         if (this.simulationInterval) {
             clearInterval(this.simulationInterval);
@@ -358,13 +358,13 @@ class DashboardController {
         // Generate simulated EEG data
         const timestamp = new Date().toLocaleTimeString();
         const value = Math.sin(Date.now() / 100) * 50 + Math.random() * 20;
-        
+
         // Update chart
         if (this.chart.data.labels.length > 50) {
             this.chart.data.labels.shift();
             this.chart.data.datasets[0].data.shift();
         }
-        
+
         this.chart.data.labels.push(timestamp);
         this.chart.data.datasets[0].data.push(value);
         this.chart.update('none');
@@ -375,13 +375,13 @@ class DashboardController {
         const focus = Math.random() * 100;
         const relaxation = Math.random() * 100;
         const stress = Math.random() * 100;
-        
+
         // Update focus meter
         this.updateFocusMeter(focus);
-        
+
         // Update brain state bars
         this.updateBrainStateBars(focus, relaxation, stress);
-        
+
         // Add to EEG manager if session is active
         if (sessionManager.isSessionActive()) {
             sessionManager.simulateEEGData();
@@ -393,7 +393,7 @@ class DashboardController {
         const meterValue = document.getElementById('focusValue');
         const focusPercent = document.getElementById('focusPercent');
         const focusBar = document.getElementById('focusBar');
-        
+
         if (meterFill) meterFill.style.height = `${focus}%`;
         if (meterValue) meterValue.textContent = `${Math.round(focus)}%`;
         if (focusPercent) focusPercent.textContent = `${Math.round(focus)}%`;
@@ -405,7 +405,7 @@ class DashboardController {
         const relaxBar = document.getElementById('relaxBar');
         const stressPercent = document.getElementById('stressPercent');
         const stressBar = document.getElementById('stressBar');
-        
+
         if (relaxPercent) relaxPercent.textContent = `${Math.round(relaxation)}%`;
         if (relaxBar) relaxBar.style.width = `${relaxation}%`;
         if (stressPercent) stressPercent.textContent = `${Math.round(stress)}%`;
@@ -414,7 +414,7 @@ class DashboardController {
 
     async startSession() {
         const result = await sessionManager.startSession();
-        
+
         if (result.success) {
             this.updateSessionControls();
             Utils.showSuccess('Session started successfully!');
@@ -425,11 +425,11 @@ class DashboardController {
 
     async endSession() {
         const result = await sessionManager.endSession();
-        
+
         if (result.success) {
             this.updateSessionControls();
             Utils.showSuccess('Session ended successfully!');
-            
+
             // Reload data
             await this.loadDashboardData();
         } else {
@@ -439,9 +439,9 @@ class DashboardController {
 
     async handleLogout() {
         const result = await authManager.signOut();
-        
+
         if (result.success) {
-            Utils.redirect('login.html');
+            Utils.redirect('signin.html');
         } else {
             Utils.showError('Failed to logout');
         }
@@ -454,11 +454,11 @@ class DashboardController {
     // Cleanup
     destroy() {
         this.stopEEGSimulation();
-        
+
         if (this.sessionInterval) {
             clearInterval(this.sessionInterval);
         }
-        
+
         if (this.chart) {
             this.chart.destroy();
         }
@@ -470,7 +470,7 @@ let dashboard;
 document.addEventListener('DOMContentLoaded', () => {
     Utils.init();
     dashboard = new DashboardController();
-    
+
     // Make dashboard available globally for download function
     window.dashboard = dashboard;
 });

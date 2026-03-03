@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="stitch/css/stitch-variables.css">
+    <link rel="stylesheet" href="./stitch/css/stitch-variables.css?v=2">
 
     <style>
         body {
@@ -304,20 +304,20 @@
 
 
     <div class="signin-wrapper">
-        <!-- Headers & Logo -->
+        
         <div class="header-section">
             <div class="logo-container">
-                <img src="assets/images/logo.jpeg" alt="Neurovex Logo">
+                <img src="./assets/images/logo.jpeg" alt="Neurovex Logo">
             </div>
 
             <h1 class="welcome-text">Welcome back</h1>
             <p class="subtitle">Access your research dashboard</p>
         </div>
 
-        <!-- Main Form Card -->
+        
         <div class="card">
-            <!-- Google Button -->
-            <button type="button" class="google-btn">
+            
+            <button type="button" class="google-btn" id="google-signin-btn">
                 <svg class="google-icon" viewBox="0 0 24 24">
                     <path
                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -335,7 +335,7 @@
                 Sign in with Google
             </button>
 
-            <!-- Divider -->
+            
             <div class="divider" style="margin-top: 0; margin-bottom: 24px;">
                 <span class="divider-text">Or</span>
             </div>
@@ -351,7 +351,7 @@
                     <input type="password" id="password" class="form-input" placeholder="••••••••" required />
                 </div>
 
-                <!-- Bottom form options -->
+                
                 <div class="form-options">
                     <label class="checkbox-container">
                         <input type="checkbox" class="checkbox-input" />
@@ -360,23 +360,21 @@
                     <a href="#" class="forgot-link">Forgot your password?</a>
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn-primary"
-                    onclick="event.preventDefault(); window.location.href='pages/dashboard.html'">Sign In to
-                    Platform</button>
+                
+                <button type="submit" class="btn-primary" id="email-signin-btn">Sign In to Platform</button>
 
-                <!-- Divider -->
+                
                 <div class="divider">
                     <span class="divider-text">New to Neurovex?</span>
                 </div>
 
-                <!-- Create Account -->
+                
                 <button type="button" class="btn-outline" onclick="window.location.href='signup.html'">Create Researcher
                     Account</button>
             </form>
         </div>
 
-        <!-- Footer -->
+        
         <div class="footer-compliance">
             <span class="material-icons">lock</span>
             HIPAA Compliant & End-to-End Encrypted
@@ -385,6 +383,52 @@
     </div>
 
 
+    <script type="module">
+        import { signInWithGoogle, signIn } from './js/backend/auth.js';
+
+        document.getElementById('google-signin-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('google-signin-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Connecting...';
+            btn.disabled = true;
+
+            const { data, error } = await signInWithGoogle();
+
+            if (error) {
+                alert("Google Sign-In failed: " + error.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            } else {
+                // Supabase OAuth redirects the page automatically usually
+            }
+        });
+
+        document.getElementById('email-signin-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('email-signin-btn');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                alert("Please enter both email and password");
+                return;
+            }
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Authenticating...';
+            btn.disabled = true;
+
+            const { data, error } = await signIn(email, password);
+
+            if (error) {
+                alert("Login failed: " + error.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -8,15 +8,16 @@
         content="Neurovex: Medical-Grade Brain-Computer Interface for Assistive Technology and Research.">
     <title>Neurovex | Neurovex</title>
 
-    <!-- Design System -->
-    <link href="stitch/css/stitch-base.css" rel="stylesheet">
+
+    <link href="./stitch/css/stitch-base.css?v=2" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="./stitch/js/stitch-theme.js?v=2"></script>
 
 
-    <!-- Custom Styles -->
-    <link href="assets/css/style.css" rel="stylesheet">
 
-    <!-- Fonts -->
+    <link href="./assets/css/style.css?v=2" rel="stylesheet">
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -28,29 +29,29 @@
 
 <body class="bg-background-light text-text-main antialiased selection:bg-primary selection:text-white">
 
-    <!-- Sticky Navigation start -->
+
     <nav id="navbar"
         class="fixed top-0 z-50 w-full transition-all duration-300 border-b border-transparent bg-surface-light/80 backdrop-blur-md">
         <div class="navbar">
-            <!-- Left Section: Logo -->
+
             <div class="nav-left">
                 <a href="#" class="flex items-center gap-2 group relative z-50">
-                    <img src="assets/images/logo.jpeg" alt="Neurovex Logo"
+                    <img src="./assets/images/logo.jpeg" alt="Neurovex Logo"
                         class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 shadow-sm group-hover:scale-105 transition-transform">
                     <span
                         class="font-bold text-xl tracking-tight text-text-main group-hover:text-primary transition-colors">Neurovex</span>
                 </a>
             </div>
 
-            <!-- Center Section: Navigation Links -->
-            <div class="nav-links hidden md:flex items-center space-x-8">
+
+            <div class="nav-links hidden lg:flex items-center">
                 <a href="#how-it-works"
                     class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">How It
                     Works</a>
                 <a href="#use-cases"
                     class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">Use
                     Cases</a>
-                <a href="pages/hardware.html"
+                <a href="./hardware.html"
                     class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">Hardware
                     Control</a>
                 <a href="#live-demo"
@@ -67,33 +68,33 @@
                     Ethics</a>
             </div>
 
-            <!-- Right Section: Actions -->
-            <div class="nav-right hidden md:flex items-center space-x-4">
+
+            <div class="nav-right hidden lg:flex items-center">
 
 
-                <!-- Vertical Divider -->
+
                 <div class="divider h-6 w-px bg-border-light mx-2"></div>
 
-                <!-- Sign In -->
-                <a href="login.html"
+
+                <a href="./signin.html"
                     class="sign-in text-sm font-medium text-text-sub hover:text-primary transition-colors">Sign In</a>
 
-                <!-- Get Started Button -->
-                <a href="signup.html"
+
+                <a href="./signup.html"
                     class="get-started-btn inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg shadow-lg text-sm font-semibold text-white bg-primary hover:bg-primary-dark transition-all hover:-translate-y-0.5">
                     Get Started
                 </a>
 
-                <!-- Profile Avatar -->
-                <a href="pages/profile.html"
+
+                <a href="./profile.html"
                     class="profile-avatar p-2 rounded-full text-text-sub hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
                     aria-label="User Profile">
                     <span class="material-icons text-xl">person</span>
                 </a>
             </div>
 
-            <!-- Mobile Menu Button -->
-            <div class="flex items-center gap-4 md:hidden">
+
+            <div class="flex items-center gap-4 lg:hidden">
 
                 <button id="mobile-menu-btn" class="text-text-main p-2 focus:outline-none relative z-50"
                     aria-label="Open Menu">
@@ -102,15 +103,15 @@
             </div>
         </div>
 
-        <!-- Mobile Menu Overlay -->
+
         <div id="mobile-menu"
-            class="fixed inset-0 bg-background-light z-40 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col pt-24 px-6 gap-6">
+            class="fixed inset-0 bg-background-light z-40 transform translate-x-full transition-transform duration-300 lg:hidden flex flex-col pt-24 px-6 gap-6">
             <a href="#how-it-works"
                 class="mobile-link text-lg font-medium text-text-main border-b border-border-light pb-4">How It
                 Works</a>
             <a href="#use-cases"
                 class="mobile-link text-lg font-medium text-text-main border-b border-border-light pb-4">Use Cases</a>
-            <a href="pages/hardware.html"
+            <a href="./hardware.html"
                 class="mobile-link text-lg font-medium text-text-main border-b border-border-light pb-4">Hardware
                 Control</a>
             <a href="#live-demo"
@@ -126,12 +127,12 @@
                 Ethics</a>
 
             <div class="flex flex-col gap-4 mt-4">
-                <a href="pages/signin.html"
+                <a href="./signin.html"
                     class="text-center py-3 text-text-main font-medium border border-border-light rounded-lg">Sign
                     In</a>
-                <a href="pages/signup.html"
+                <a href="./signup.html"
                     class="text-center py-3 text-white font-medium bg-primary rounded-lg shadow-md">Get Started</a>
-                <a href="pages/profile.html"
+                <a href="./profile.html"
                     class="text-center py-3 text-text-main font-medium border border-border-light rounded-lg flex items-center justify-center gap-2">
                     <span class="material-icons">person</span>
                     Profile
@@ -139,11 +140,11 @@
             </div>
         </div>
     </nav>
-    <!-- Navigation end -->
 
-    <!-- Hero Section start -->
+
+
     <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
-        <!-- Background Elements -->
+
         <div class="absolute inset-0 z-0 pointer-events-none">
             <div
                 class="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/5 blur-3xl animate-pulse-slow">
@@ -152,8 +153,8 @@
                 style="animation-delay: 2s"></div>
         </div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
-            <!-- Text Content -->
+        <div class="relative z-10 container-fluid grid-responsive grid-cols-2 items-center">
+
             <div class="text-left reveal-on-scroll">
                 <div
                     class="inline-flex items-center px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-semibold uppercase tracking-wider mb-6">
@@ -166,7 +167,7 @@
                     Neurovex
                 </h1>
 
-                <p lass="text-xl text-text-sub mb-8 font-light max-w-lg leading-relaxed">
+                <p class="text-xl text-text-sub mb-8 font-light max-w-lg leading-relaxed">
                     Control devices using your brain — no surgery, non-invasive EEG.
                     The first open-source assistive platform designed for accessibility and research applications.
                 </p>
@@ -177,7 +178,7 @@
                         Try Live Demo
                         <span class="material-icons ml-2 text-sm">arrow_downward</span>
                     </a>
-                    <a href="pages/community.html"
+                    <a href="./community.html"
                         class="inline-flex items-center justify-center px-8 py-4 text-base font-medium rounded-lg text-text-main bg-surface-light border border-border-light hover:border-primary/50 transition-all shadow-sm">
                         View Research
                     </a>
@@ -186,7 +187,7 @@
                 <div class="mt-8 pt-8 border-t border-border-light">
                     <p class="text-xs font-semibold text-text-muted uppercase tracking-widest mb-3">Powered By</p>
                     <div class="flex gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                        <!-- Simulated Logos (using text for simplicity/reliability) -->
+
                         <div class="font-display font-bold text-lg text-text-sub">NeuroTech<span
                                 class="text-primary">Lab</span></div>
                         <div class="font-display font-bold text-lg text-text-sub">Open<span
@@ -197,14 +198,14 @@
                 </div>
             </div>
 
-            <!-- Brain Visualization -->
+
             <div class="relative h-[600px] flex flex-col items-center justify-center reveal-on-scroll"
                 style="transition-delay: 200ms">
-                <!-- 3D Container -->
+
                 <div id="brain-container"
                     class="w-full h-full absolute inset-0 z-10 cursor-grab active:cursor-grabbing"></div>
 
-                <!-- Caption overlay -->
+
                 <div
                     class="absolute bottom-10 z-20 px-4 py-2 bg-surface-light/80 backdrop-blur rounded-full border border-border-light shadow-sm flex items-center gap-3">
                     <span class="flex h-3 w-3 relative">
@@ -218,16 +219,16 @@
         </div>
     </section>
 
-    <!-- How It Works -->
+
     <section id="how-it-works" class="py-24 bg-surface-highlight border-y border-border-light relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="container-fluid relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-on-scroll">
                 <h2 class="text-3xl font-bold text-text-main mb-4">How Neurovex Works</h2>
                 <p class="text-lg text-text-sub">From brainwaves to action in four milliseconds.</p>
             </div>
 
-            <div class="grid md:grid-cols-4 gap-8">
-                <!-- Step 1 -->
+            <div class="grid-responsive grid-cols-4">
+
                 <div
                     class="bg-surface-light p-6 rounded-xl border border-border-light shadow-sm hover:shadow-md transition-all reveal-on-scroll group">
                     <div
@@ -237,7 +238,7 @@
                     <p class="text-sm text-text-sub">Non-invasive EEG sensors detect micro-voltage fluctuations on the
                         scalp.</p>
                 </div>
-                <!-- Step 2 -->
+
                 <div class="bg-surface-light p-6 rounded-xl border border-border-light shadow-sm hover:shadow-md transition-all reveal-on-scroll group"
                     style="transition-delay: 100ms">
                     <div
@@ -247,7 +248,7 @@
                     <p class="text-sm text-text-sub">Hardware & software filters remove muscle artifacts (EMG) and
                         electrical noise.</p>
                 </div>
-                <!-- Step 3 -->
+
                 <div class="bg-surface-light p-6 rounded-xl border border-border-light shadow-sm hover:shadow-md transition-all reveal-on-scroll group"
                     style="transition-delay: 200ms">
                     <div
@@ -257,7 +258,7 @@
                     <p class="text-sm text-text-sub">Neural networks classify intention (Focus, Relax, Motor Imagery) in
                         real-time.</p>
                 </div>
-                <!-- Step 4 -->
+
                 <div class="bg-surface-light p-6 rounded-xl border border-border-light shadow-sm hover:shadow-md transition-all reveal-on-scroll group"
                     style="transition-delay: 300ms">
                     <div
@@ -271,22 +272,22 @@
         </div>
     </section>
 
-    <!-- Use Cases -->
+
     <section id="use-cases" class="py-24 bg-background-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="container-fluid">
             <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal-on-scroll">
                 <div>
                     <h2 class="text-3xl font-bold text-text-main mb-4">Clinical Applications</h2>
                     <p class="text-lg text-text-sub max-w-xl">Designed for research labs and daily assistive use.</p>
                 </div>
-                <a href="community.html"
+                <a href="./community.html"
                     class="hidden md:inline-flex text-primary font-medium items-center hover:underline mt-4 md:mt-0">
                     Explore Research Library <span class="material-icons text-sm ml-1">arrow_forward</span>
                 </a>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Case 1 -->
+            <div class="grid-responsive">
+
                 <div
                     class="group relative overflow-hidden rounded-2xl bg-surface-light border border-border-light shadow-sm hover:shadow-lg transition-all reveal-on-scroll">
                     <div class="p-8">
@@ -303,7 +304,7 @@
                     </div>
                 </div>
 
-                <!-- Case 2 -->
+
                 <div class="group relative overflow-hidden rounded-2xl bg-surface-light border border-border-light shadow-sm hover:shadow-lg transition-all reveal-on-scroll"
                     style="transition-delay: 100ms">
                     <div class="p-8">
@@ -320,7 +321,7 @@
                     </div>
                 </div>
 
-                <!-- Case 3 -->
+
                 <div class="group relative overflow-hidden rounded-2xl bg-surface-light border border-border-light shadow-sm hover:shadow-lg transition-all reveal-on-scroll"
                     style="transition-delay: 200ms">
                     <div class="p-8">
@@ -340,54 +341,54 @@
         </div>
     </section>
 
-    <!-- Live EEG Monitoring Section -->
+
     <section class="live-eeg-section py-24 bg-background-light">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <!-- Title Badge -->
+        <div class="container-fluid text-center max-w-4xl mx-auto">
+
             <div
                 class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wider mb-6">
                 <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
                 LIVE MONITORING
             </div>
 
-            <!-- Main Heading -->
+
             <h2 class="text-4xl md:text-5xl font-bold text-text-main mb-6">Live EEG Monitoring</h2>
 
-            <!-- Subtitle -->
+
             <p class="text-lg text-gray-500 mb-16 max-w-2xl mx-auto">Real-time brainwave visualization and analysis</p>
 
-            <!-- Control Center Card -->
+
             <div class="control-card bg-white rounded-2xl shadow-lg p-10 max-w-md mx-auto">
                 <h3 class="text-2xl font-semibold text-text-main mb-8">Control Center</h3>
 
-                <!-- Buttons Container -->
+
                 <div class="flex flex-col sm:flex-row gap-4 mb-6">
-                    <!-- Monitor Button -->
-                    <a href="pages/dashboard.html"
+
+                    <a href="./dashboard.html"
                         class="monitor-btn flex items-center justify-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200">
                         <span class="material-icons mr-2">monitor_heart</span>
                         Monitor
                     </a>
 
-                    <!-- Hardware Control Button -->
-                    <a href="pages/hardware.html"
+
+                    <a href="./hardware.html"
                         class="hardware-btn flex items-center justify-center px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200">
                         <span class="material-icons mr-2">settings_remote</span>
                         Hardware Control
                     </a>
                 </div>
 
-                <!-- Description Text -->
+
                 <p class="text-sm text-gray-500">Monitor brainwaves or control hardware devices</p>
             </div>
         </div>
     </section>
 
-    <!-- LIVE DEMO SECTION -->
+
     <section id="live-demo" class="py-24 bg-surface-highlight border-y border-border-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-12 gap-12">
-                <!-- Controls & Context -->
+        <div class="container-fluid">
+            <div class="dashboard-grid">
+
                 <div class="lg:col-span-4 reveal-on-scroll">
                     <div
                         class="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-6">
@@ -424,7 +425,7 @@
                     </div>
                 </div>
 
-                <!-- Dashboard Graphic -->
+
                 <div class="lg:col-span-8 reveal-on-scroll" style="transition-delay: 200ms">
                     <div
                         class="bg-surface-light rounded-xl shadow-lg border border-border-light p-6 h-full flex flex-col">
@@ -438,17 +439,17 @@
                             </div>
                         </div>
 
-                        <!-- Canvas for Waveform -->
+
                         <div
                             class="relative flex-1 bg-background-light rounded-lg border border-border-light overflow-hidden mb-6 h-64">
                             <canvas id="sim-canvas" class="w-full h-full"></canvas>
-                            <!-- Grid Lines Overlay -->
+
                             <div class="absolute inset-0 pointer-events-none opacity-20"
                                 style="background-image: linear-gradient(#ccc 1px, transparent 1px), linear-gradient(90deg, #ccc 1px, transparent 1px); background-size: 20px 20px;">
                             </div>
                         </div>
 
-                        <!-- Metrics -->
+
                         <div class="grid grid-cols-3 gap-4">
                             <div class="p-4 bg-background-light rounded-lg text-center">
                                 <div class="text-xs text-text-muted mb-1">ATTENTION</div>
@@ -469,17 +470,17 @@
         </div>
     </section>
 
-    <!-- Study Focus Mode Section -->
+
     <section id="study-focus" class="py-24 bg-surface-highlight border-y border-border-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="container-fluid">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-on-scroll">
                 <h2 class="text-3xl font-bold text-text-main mb-4">Study Focus Mode</h2>
                 <p class="text-lg text-text-sub">Optimize your learning sessions with real-time focus monitoring and
                     adaptive feedback.</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Feature 1 -->
+            <div class="grid-responsive">
+
                 <div class="feature-card card-hover reveal-on-scroll">
                     <div class="feature-icon bg-primary/10 text-primary">
                         <span class="material-icons">visibility</span>
@@ -489,7 +490,7 @@
                         when focus drifts.</p>
                 </div>
 
-                <!-- Feature 2 -->
+
                 <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 100ms">
                     <div class="feature-icon bg-medical-teal/10 text-medical-teal">
                         <span class="material-icons">schedule</span>
@@ -499,7 +500,7 @@
                         cognitive performance.</p>
                 </div>
 
-                <!-- Feature 3 -->
+
                 <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 200ms">
                     <div class="feature-icon bg-accent/10 text-accent">
                         <span class="material-icons">analytics</span>
@@ -512,62 +513,61 @@
         </div>
     </section>
 
-    <!-- Neurovex Games Section -->
+
     <section id="games" class="py-24 bg-background-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="container-fluid">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-on-scroll">
                 <h2 class="text-3xl font-bold text-text-main mb-4">Neurovex Games</h2>
                 <p class="text-lg text-text-sub">Train your brain control skills through engaging games and interactive
                     challenges.</p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Game 1 -->
+            <div class="grid-responsive grid-cols-4">
+
                 <div class="feature-card card-hover reveal-on-scroll">
                     <div class="feature-icon bg-primary/10 text-primary">
                         <span class="material-icons">psychology</span>
                     </div>
                     <h3 class="text-lg font-semibold text-text-main mb-2">Mind Control</h3>
                     <p class="text-sm text-text-sub mb-4">Control game elements using focus and relaxation states.</p>
-                    <a href="pages/games.html"
-                        class="inline-flex items-center text-primary font-medium hover:underline">
+                    <a href="./games.html" class="inline-flex items-center text-primary font-medium hover:underline">
                         Play Now <span class="material-icons text-sm ml-1">arrow_forward</span>
                     </a>
                 </div>
 
-                <!-- Game 2 -->
+
                 <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 100ms">
                     <div class="feature-icon bg-medical-teal/10 text-medical-teal">
                         <span class="material-icons">grid_view</span>
                     </div>
                     <h3 class="text-lg font-semibold text-text-main mb-2">Pattern Match</h3>
                     <p class="text-sm text-text-sub mb-4">Train pattern recognition and cognitive flexibility.</p>
-                    <a href="pages/games.html"
+                    <a href="./games.html"
                         class="inline-flex items-center text-medical-teal font-medium hover:underline">
                         Play Now <span class="material-icons text-sm ml-1">arrow_forward</span>
                     </a>
                 </div>
 
-                <!-- Game 3 -->
+
                 <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 200ms">
                     <div class="feature-icon bg-accent/10 text-accent">
                         <span class="material-icons">speed</span>
                     </div>
                     <h3 class="text-lg font-semibold text-text-main mb-2">Reaction Time</h3>
                     <p class="text-sm text-text-sub mb-4">Improve response speed and mental processing.</p>
-                    <a href="pages/games.html" class="inline-flex items-center text-accent font-medium hover:underline">
+                    <a href="./games.html" class="inline-flex items-center text-accent font-medium hover:underline">
                         Play Now <span class="material-icons text-sm ml-1">arrow_forward</span>
                     </a>
                 </div>
 
-                <!-- Game 4 -->
+
                 <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 300ms">
                     <div class="feature-icon bg-safe-emerald/10 text-safe-emerald">
                         <span class="material-icons">emoji_events</span>
                     </div>
                     <h3 class="text-lg font-semibold text-text-main mb-2">Leaderboard</h3>
                     <p class="text-sm text-text-sub mb-4">Compete with others and track your progress.</p>
-                    <a href="pages/games.html"
+                    <a href="./games.html"
                         class="inline-flex items-center text-safe-emerald font-medium hover:underline">
                         View Stats <span class="material-icons text-sm ml-1">arrow_forward</span>
                     </a>
@@ -576,9 +576,9 @@
         </div>
     </section>
 
-    <!-- Safety & Footer -->
+
     <section id="research" class="py-24 bg-background-light">
-        <div class="max-w-4xl mx-auto px-4 text-center reveal-on-scroll">
+        <div class="container-fluid text-center reveal-on-scroll" style="max-width: 64rem">
             <span class="material-icons text-4xl text-text-muted mb-4">verified_user</span>
             <h2 class="text-2xl font-bold text-text-main mb-4">Safety & Ethics First</h2>
             <p class="text-text-sub mb-8">
@@ -597,8 +597,7 @@
     </section>
 
     <footer class="bg-surface-dark border-t border-white/10 py-12">
-        <div
-            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+        <div class="container-fluid flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
             <div class="flex items-center gap-4 mb-4 md:mb-0">
                 <span class="font-bold text-white">Neurovex Project</span>
                 <span>•</span>
@@ -612,12 +611,11 @@
         </div>
     </footer>
 
-    <!-- Three.js Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js?v=2"></script>
 
-    <!-- Core Scripts -->
-    <script src="stitch/js/brain-vis.js"></script>
-    <script src="assets/js/main.js"></script>
+
+    <script type="module" src="./stitch/js/brain-vis.js?v=2"></script>
+    <script type="module" src="./assets/js/main.js?v=2"></script>
 </body>
 
 </html>

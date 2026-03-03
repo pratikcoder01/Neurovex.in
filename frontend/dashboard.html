@@ -1,192 +1,383 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Neurovex</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="bg-gray-50 text-gray-800 antialiased">
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="flex justify-between items-center">
-                <a href="index.html" class="navbar-brand">
-                    <div class="w-10 h-10 bg-gradient-medical rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                        N
-                    </div>
-                    <span class="ml-3 text-gradient-primary font-bold text-xl">Neurovex</span>
-                </a>
-                <div class="navbar-nav">
-                    <a href="dashboard.html" class="nav-link">Dashboard</a>
-                    <a href="#" class="nav-link">Sessions</a>
-                    <a href="#" class="nav-link">Profile</a>
-                    <button id="logoutBtn" class="btn btn-ghost">Logout</button>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurovex Dashboard | AI-BCI</title>
+
+    
+    <link href="./stitch/css/stitch-base.css?v=2" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="./stitch/js/stitch-theme.js?v=2"></script>
+
+    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .eeg-grid {
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(36, 99, 235, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(36, 99, 235, 0.05) 1px, transparent 1px);
+        }
+
+        .scroller::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroller::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light font-display text-slate-800 h-screen flex flex-col overflow-hidden antialiased">
+
+    
+    <header
+        class="bg-surface-light border-b border-slate-200 h-16 flex items-center justify-between px-6 flex-shrink-0 z-20 shadow-sm">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 text-primary font-bold text-xl tracking-tight cursor-pointer"
+                onclick="window.location.href='index.html'">
+                <img src="./assets/images/logo.jpeg" alt="Logo" class="w-8 h-8 object-contain rounded">
+                <span>NEUROVEX</span>
+            </div>
+            <div class="hidden md:flex ml-4">
+                <button id="btn-record"
+                    class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors text-sm font-medium">
+                    <span class="material-icons text-[16px]">radio_button_checked</span>
+                    <span id="btn-record-text">Start Recording</span>
+                </button>
+            </div>
+            <div class="h-6 w-px bg-slate-200 mx-2"></div>
+            <div class="flex items-center gap-3">
+                <div id="mode-indicator"
+                    class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-2 ring-1 ring-primary/20">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span id="mode-text">DEMO MODE</span>
                 </div>
+                <button id="btn-toggle-mode"
+                    class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-1 rounded transition-colors">
+                    <span class="material-icons text-[12px]">switch_access_shortcut</span>
+                    <span id="toggle-text">Connect Hardware</span>
+                </button>
+                <div class="text-sm text-slate-500">Session ID: <span class="font-mono text-slate-700"
+                        id="session-id">---</span></div>
             </div>
         </div>
-    </nav>
 
-    <!-- Dashboard Header -->
-    <header class="dashboard-header">
-        <div class="container">
-            <div class="text-center">
-                <h1 class="dashboard-title fade-in">Welcome back!</h1>
-                <p class="dashboard-subtitle fade-in">Monitor your brain activity in real-time</p>
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 cursor-pointer hover:bg-slate-100 transition"
+                onclick="window.location.href='profile.html'">
+                <span class="material-icons-outlined text-slate-400 text-lg">person</span>
+                <div class="flex flex-col text-right">
+                    <span class="text-xs font-medium text-slate-700" id="user-name">Loading...</span>
+                    <span class="text-[10px] text-slate-400 uppercase tracking-wider" id="user-role">...</span>
+                </div>
             </div>
+            <button class="text-slate-400 hover:text-primary transition-colors" id="logout-btn">
+                <span class="material-icons-outlined">logout</span>
+            </button>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="container">
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card reveal-on-scroll">
-                <div class="stat-value" id="totalSessions">0</div>
-                <div class="stat-label">Total Sessions</div>
-            </div>
-            <div class="stat-card reveal-on-scroll">
-                <div class="stat-value" id="avgFocus">0%</div>
-                <div class="stat-label">Average Focus</div>
-            </div>
-            <div class="stat-card reveal-on-scroll">
-                <div class="stat-value" id="maxFocus">0%</div>
-                <div class="stat-label">Max Focus</div>
-            </div>
-            <div class="stat-card reveal-on-scroll">
-                <div class="stat-value" id="sessionTime">00:00</div>
-                <div class="stat-label">Session Time</div>
-            </div>
-        </div>
+    
+    <main class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
 
-        <!-- Main Dashboard Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Real-time EEG Chart -->
-            <div class="chart-container reveal-on-scroll">
-                <h3 class="chart-title">Real-time EEG Signal</h3>
-                <canvas id="eegChart" width="400" height="200"></canvas>
-                <div class="flex justify-between items-center mt-6">
-                    <span class="status" id="deviceStatus">Disconnected</span>
-                    <button id="connectBtn" class="btn btn-primary btn-sm">Connect Device</button>
+        
+        <aside
+            class="w-full lg:w-72 bg-surface-light border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col z-10 flex-shrink-0">
+            
+            <div class="p-5 border-b border-slate-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Device Status</h3>
+                    <span class="text-safe-emerald flex items-center gap-1 text-xs font-medium">
+                        <span class="material-icons text-[14px]">battery_full</span> <span
+                            id="device-battery">100%</span>
+                    </span>
                 </div>
-            </div>
-
-            <!-- Focus Meter -->
-            <div class="card reveal-on-scroll">
-                <h3 class="card-title">Focus Level</h3>
-                <div class="focus-meter">
-                    <div class="focus-meter-fill" id="focusMeterFill" style="height: 0%"></div>
-                    <div class="focus-meter-value" id="focusValue">0%</div>
-                </div>
-                <div class="text-center text-sm text-gray-500 mt-4">
-                    Current focus level based on brain activity
-                </div>
-            </div>
-
-            <!-- Session Controls -->
-            <div class="card reveal-on-scroll">
-                <h3 class="card-title">Session Controls</h3>
-                <div class="session-controls">
-                    <button id="startSessionBtn" class="btn btn-secondary">Start Session</button>
-                    <button id="endSessionBtn" class="btn btn-outline" disabled>End Session</button>
-                </div>
-                <div class="session-duration" id="sessionDuration">00:00:00</div>
-                <div id="sessionMessage" class="text-center text-sm text-gray-500"></div>
-            </div>
-
-            <!-- Brain State Indicators -->
-            <div class="card reveal-on-scroll">
-                <h3 class="card-title">Brain States</h3>
-                <div class="space-y-4">
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-gray-700">Focus</span>
-                            <span class="text-sm text-gray-500" id="focusPercent">0%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-success" id="focusBar" style="width: 0%"></div>
-                        </div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400">
+                        <span class="material-icons-outlined text-2xl">router</span>
                     </div>
                     <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-gray-700">Relaxation</span>
-                            <span class="text-sm text-gray-500" id="relaxPercent">0%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar" id="relaxBar" style="width: 0%"></div>
-                        </div>
+                        <div class="font-bold text-slate-800" id="device-name">Simulated EEG</div>
+                        <div class="text-xs text-slate-500 font-mono" id="device-specs">8 Channel • 250Hz</div>
                     </div>
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-gray-700">Stress</span>
-                            <span class="text-sm text-gray-500" id="stressPercent">0%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-warning" id="stressBar" style="width: 0%"></div>
-                        </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mt-4">
+                    <div class="bg-background-light p-2 rounded flex flex-col items-center justify-center">
+                        <span class="text-[10px] text-slate-500 uppercase">Impedance</span>
+                        <span class="font-mono font-medium text-slate-700 text-sm" id="device-impedance">Good</span>
+                    </div>
+                    <div class="bg-background-light p-2 rounded flex flex-col items-center justify-center">
+                        <span class="text-[10px] text-slate-500 uppercase">Lag</span>
+                        <span class="font-mono font-medium text-slate-700 text-sm" id="device-lag">2ms</span>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Recent Sessions -->
-        <div class="card mt-8 reveal-on-scroll">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="card-title">Recent Sessions</h3>
-                <a href="#" class="btn btn-outline btn-sm">View All</a>
+            
+            <div class="p-5 flex-1 flex flex-col scroller overflow-y-auto">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Signal Quality</h3>
+                <div class="space-y-1" id="channel-list">
+                    <div class="flex justify-between items-center text-sm py-1"><span
+                            class="text-slate-600 font-mono text-xs">CH1 (Fp1)</span><span
+                            class="w-2 h-2 rounded-full bg-emerald-500"></span></div>
+                    <div class="flex justify-between items-center text-sm py-1"><span
+                            class="text-slate-600 font-mono text-xs">CH2 (Fp2)</span><span
+                            class="w-2 h-2 rounded-full bg-emerald-500"></span></div>
+                    <div class="flex justify-between items-center text-sm py-1"><span
+                            class="text-slate-600 font-mono text-xs">CH3 (C3)</span><span
+                            class="w-2 h-2 rounded-full bg-emerald-500"></span></div>
+                    <div class="flex justify-between items-center text-sm py-1"><span
+                            class="text-slate-600 font-mono text-xs">CH4 (C4)</span><span
+                            class="w-2 h-2 rounded-full bg-amber-500"></span></div>
+                </div>
             </div>
-            <div class="overflow-x-auto">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Duration</th>
-                            <th>Avg Focus</th>
-                            <th>Max Focus</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="sessionsTableBody">
-                        <tr>
-                            <td colspan="6" class="text-center text-gray-500">No sessions yet</td>
-                        </tr>
-                    </tbody>
-                </table>
+
+            <div class="p-4 border-t border-slate-100">
+                <a href="./hardware.html"
+                    class="flex items-center justify-center w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg text-sm font-medium transition-colors border border-slate-200">
+                    <span class="material-icons-outlined text-sm mr-2">settings_remote</span>
+                    Hardware Control
+                </a>
             </div>
-        </div>
+        </aside>
+
+        
+        <section class="flex-1 flex flex-col relative bg-surface-light min-h-[300px] lg:min-h-0">
+            
+            <div class="absolute top-4 right-4 z-10 flex gap-2">
+                <button
+                    class="bg-white/90 backdrop-blur border border-slate-200 hover:border-primary/50 text-slate-600 hover:text-primary p-2 rounded-lg shadow-sm transition-all"
+                    title="Toggle Grid">
+                    <span class="material-icons-outlined text-sm">grid_on</span>
+                </button>
+                <button
+                    class="bg-white/90 backdrop-blur border border-slate-200 hover:border-primary/50 text-slate-600 hover:text-primary p-2 rounded-lg shadow-sm transition-all"
+                    title="Filter Settings">
+                    <span class="material-icons-outlined text-sm">tune</span>
+                </button>
+            </div>
+
+            
+            <div class="flex-1 eeg-grid relative overflow-hidden flex flex-col justify-center" id="waveform-container">
+                
+                <div
+                    class="absolute left-0 top-0 bottom-0 w-12 bg-surface-light/30 backdrop-blur-sm border-r border-slate-200/50 flex flex-col justify-between py-4 text-[10px] text-slate-400 font-mono text-center z-10 select-none">
+                    <span>+100</span>
+                    <span>+50</span>
+                    <span>0 µV</span>
+                    <span>-50</span>
+                    <span>-100</span>
+                </div>
+
+                
+                <canvas id="live-eeg-canvas" class="absolute inset-0 w-full h-full opacity-60"></canvas>
+            </div>
+        </section>
+
+        
+        <aside
+            class="w-full lg:w-80 bg-surface-light border-t lg:border-t-0 lg:border-l border-slate-200 flex flex-col z-10 lg:overflow-y-auto scroller flex-shrink-0">
+            <div class="p-5 border-b border-slate-100">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Brain State (AI)</h3>
+
+                
+                <div class="mb-5">
+                    <div class="flex justify-between items-end mb-1">
+                        <span class="text-sm font-medium text-slate-700">Focus</span>
+                        <span class="text-lg font-mono font-bold text-primary" id="val-focus">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div class="bg-primary h-2 rounded-full transition-all duration-300" id="bar-focus"
+                            style="width: 0%"></div>
+                    </div>
+                </div>
+
+                
+                <div class="mb-5">
+                    <div class="flex justify-between items-end mb-1">
+                        <span class="text-sm font-medium text-slate-700">Stress</span>
+                        <span class="text-lg font-mono font-bold text-rose-500" id="val-stress">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div class="bg-rose-500 h-2 rounded-full transition-all duration-300" id="bar-stress"
+                            style="width: 0%"></div>
+                    </div>
+                </div>
+
+                
+                <div class="mb-5">
+                    <div class="flex justify-between items-end mb-1">
+                        <span class="text-sm font-medium text-slate-700">Fatigue</span>
+                        <span class="text-lg font-mono font-bold text-amber-500" id="val-fatigue">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div class="bg-amber-500 h-2 rounded-full transition-all duration-300" id="bar-fatigue"
+                            style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="p-5 flex-1">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Band Power (FFT)</h3>
+                <div class="space-y-3">
+                    <div class="bg-slate-50 p-3 rounded border border-slate-100 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                            <span class="text-xs font-bold text-slate-600">Delta</span>
+                        </div>
+                        <span class="font-mono text-xs text-slate-800" id="band-delta">0.0 µV²</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded border border-slate-100 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                            <span class="text-xs font-bold text-slate-600">Theta</span>
+                        </div>
+                        <span class="font-mono text-xs text-slate-800" id="band-theta">0.0 µV²</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded border border-slate-100 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                            <span class="text-xs font-bold text-slate-600">Alpha</span>
+                        </div>
+                        <span class="font-mono text-xs text-slate-800" id="band-alpha">0.0 µV²</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded border border-slate-100 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                            <span class="text-xs font-bold text-slate-600">Beta</span>
+                        </div>
+                        <span class="font-mono text-xs text-slate-800" id="band-beta">0.0 µV²</span>
+                    </div>
+                </div>
+
+                
+                <div class="mt-6 p-4 bg-slate-900 rounded-xl text-white">
+                    <div class="text-xs font-mono text-slate-400 mb-1">CONFIDENCE SCORE</div>
+                    <div class="text-3xl font-bold font-mono tracking-tighter" id="confidence-score">94.2%</div>
+                    <div class="text-[10px] text-slate-500 mt-2">Based on signal quality & artifact rejection</div>
+                </div>
+            </div>
+        </aside>
     </main>
 
-    <!-- Scripts -->
-    <script type="module" src="js/firebase.js"></script>
-    <script type="module" src="js/auth.js"></script>
-    <script type="module" src="js/eeg.js"></script>
-    <script type="module" src="js/sessions.js"></script>
-    <script type="module" src="js/utils.js"></script>
-    <script type="module" src="js/dashboard.js"></script>
     
-    <!-- Reveal on scroll animation -->
-    <script>
-        const revealElements = document.querySelectorAll('.reveal-on-scroll');
-        
-        const revealOnScroll = () => {
-            revealElements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
+    <script type="module">
+        import { getCurrentUser, signOut } from './js/backend/auth.js';
+        import { beginTracking, recordFocusStream, attachLiveEEGListener, finalizeTracking } from './js/backend/dashboard.js';
+
+        let isRecording = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { user, error } = await getCurrentUser();
+
+            if (!user) {
+                // Not logged in -> kick out to signin
                 
-                if (elementTop < window.innerHeight - elementVisible) {
-                    element.classList.add('revealed');
+                // window.location.href = 'signin.html';
+                // return;
+            }
+
+            // Populate profile
+            try {
+                const fullName = user.profile?.full_name || 'User';
+                document.getElementById('user-name').innerText = fullName;
+                document.getElementById('user-role').innerText = (user.profile?.role || 'User').toUpperCase();
+            } catch (e) {  }
+
+            // Log out handler
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                await signOut();
+                window.location.href = 'signin.html';
+            });
+
+            // Record handler
+            document.getElementById('btn-record').addEventListener('click', async () => {
+                if (!isRecording) {
+                    const session = await beginTracking();
+                    if (session) {
+                        isRecording = true;
+                        document.getElementById('btn-record-text').innerText = 'Stop Recording';
+                        document.getElementById('btn-record').classList.replace('bg-rose-50', 'bg-red-500');
+                        document.getElementById('btn-record').classList.replace('text-rose-600', 'text-white');
+                        document.getElementById('session-id').innerText = session.id.split('-')[0].toUpperCase();
+                    }
+                } else {
+                    document.getElementById('btn-record-text').innerText = 'Saving...';
+                    await finalizeTracking();
+                    isRecording = false;
+                    document.getElementById('btn-record-text').innerText = 'Start Recording';
+                    document.getElementById('btn-record').classList.replace('bg-red-500', 'bg-rose-50');
+                    document.getElementById('btn-record').classList.replace('text-white', 'text-rose-600');
+                    document.getElementById('session-id').innerText = '---';
                 }
             });
-        };
-        
-        window.addEventListener('scroll', revealOnScroll);
-        revealOnScroll(); // Initial check
+
+            // Basic UI simulation loop
+            setInterval(() => {
+                const focus = Math.floor(Math.random() * 40) + 40; // 40-80%
+                const stress = Math.floor(Math.random() * 30) + 10;
+                const fatigue = Math.floor(Math.random() * 20) + 10;
+
+                document.getElementById('val-focus').innerText = focus + '%';
+                document.getElementById('bar-focus').style.width = focus + '%';
+
+                document.getElementById('val-stress').innerText = stress + '%';
+                document.getElementById('bar-stress').style.width = stress + '%';
+
+                document.getElementById('val-fatigue').innerText = fatigue + '%';
+                document.getElementById('bar-fatigue').style.width = fatigue + '%';
+
+                document.getElementById('band-delta').innerText = (Math.random() * 10 + 5).toFixed(1) + ' µV²';
+                document.getElementById('band-theta').innerText = (Math.random() * 5 + 2).toFixed(1) + ' µV²';
+                document.getElementById('band-alpha').innerText = (Math.random() * 15 + 10).toFixed(1) + ' µV²';
+                document.getElementById('band-beta').innerText = (Math.random() * 8 + 3).toFixed(1) + ' µV²';
+
+                if (isRecording) {
+                    const mockRaw = Math.random() * 100 - 50;
+                    recordFocusStream(mockRaw, focus);
+                }
+            }, 1000);
+
+            // Draw dummy chart
+            const canvas = document.getElementById('live-eeg-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+
+                let t = 0;
+                function drawWave() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.beginPath();
+                    ctx.moveTo(0, canvas.height / 2);
+                    for (let i = 0; i < canvas.width; i += 5) {
+                        const y = canvas.height / 2 + Math.sin(i * 0.05 + t) * 30 + Math.random() * 15;
+                        ctx.lineTo(i, y);
+                    }
+                    ctx.strokeStyle = '#2563eb';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    t += 0.1;
+                    requestAnimationFrame(drawWave);
+                }
+                drawWave();
+            }
+        });
     </script>
 </body>
+
 </html>
