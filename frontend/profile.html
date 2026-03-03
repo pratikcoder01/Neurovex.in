@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | Neurovex</title>
 
-    
+
     <link href="./stitch/css/stitch-base.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="./stitch/js/stitch-theme.js"></script>
 
-    
+
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
@@ -21,7 +21,7 @@
 
 <body class="bg-background-light font-display text-slate-800 h-screen flex flex-col overflow-hidden antialiased">
 
-    
+
     <header
         class="bg-surface-light border-b border-slate-200 h-16 flex items-center justify-between px-6 flex-shrink-0 z-20 shadow-sm">
         <div class="flex items-center gap-4 cursor-pointer group" onclick="window.location.href='index.html'">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="flex items-center gap-6">
-            
+
             <button id="theme-toggle"
                 class="p-2 rounded-full text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 <span class="material-icons text-xl dark:hidden">dark_mode</span>
@@ -54,7 +54,7 @@
 
     <main class="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
 
-        
+
         <aside
             class="w-full md:w-80 bg-surface-light border-b md:border-b-0 md:border-r border-slate-200 p-6 flex flex-col gap-6 z-10 flex-shrink-0 md:overflow-y-auto">
             <div class="text-center pb-6 border-b border-slate-100">
@@ -101,11 +101,11 @@
             </div>
         </aside>
 
-        
-        <section class="flex-1 bg-background-light p-4 md:p-8 md:overflow-y-auto">
+
+        <section class="flex-1 bg-background-light p-4 pb-24 md:p-8 md:overflow-y-auto">
             <div class="max-w-5xl mx-auto">
 
-                
+
                 <div class="mb-8">
                     <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                         <span class="material-icons text-primary">history</span>
@@ -156,7 +156,7 @@
                     </div>
                 </div>
 
-                
+
                 <div>
                     <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                         <span class="material-icons text-slate-500">precision_manufacturing</span>
@@ -179,19 +179,47 @@
 
             </div>
         </section>
+
+        <!-- Mobile Bottom Tab Bar -->
+        <nav
+            class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-200 z-50 flex justify-around items-center h-16 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+            <a href="./dashboard.html"
+                class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-slate-600 transition-colors">
+                <span class="material-icons-outlined text-xl mb-1">dashboard</span>
+                <span class="text-[10px] font-medium">Overview</span>
+            </a>
+            <a href="./hardware.html"
+                class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-slate-600 transition-colors">
+                <span class="material-icons-outlined text-xl mb-1">memory</span>
+                <span class="text-[10px] font-medium">Hardware</span>
+            </a>
+            <a href="./profile.html"
+                class="flex flex-col items-center justify-center w-full h-full text-primary transition-colors relative">
+                <div
+                    class="absolute -top-3 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-lg border-4 border-slate-50">
+                    <span class="material-icons text-xl">person</span>
+                </div>
+                <span class="text-[10px] font-bold mt-5 text-primary">Profile</span>
+            </a>
+        </nav>
     </main>
 
     <script type="module">
         import { getCurrentUser, signOut } from './js/backend/auth.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const { user, error } = await getCurrentUser();
+            let { user, error } = await getCurrentUser();
 
+            // Mock Data Fallback for fully working local UI demo
             if (!user) {
-                // Not logged in -> kick out to signin
-                
-                // window.location.href = 'signin.html';
-                // return;
+                user = {
+                    email: "researcher@neurovex.in",
+                    profile: {
+                        full_name: "Dr. Alan Turing",
+                        role: "Admin",
+                        purpose: "Clinical Trials"
+                    }
+                };
             }
 
             // Populate profile
@@ -201,16 +229,57 @@
 
                 document.getElementById('profile-name').innerText = fullName;
                 document.getElementById('profile-initials').innerText = initials;
-                document.getElementById('profile-role').innerText = (user.profile?.role || 'User').toUpperCase();
-                document.getElementById('profile-purpose').innerText = 'Purpose: ' + (user.profile?.purpose || 'Research');
+                document.getElementById('profile-role').innerText = (user.profile?.role || 'Researcher').toUpperCase();
+                document.getElementById('profile-purpose').innerText = 'Focus: ' + (user.profile?.purpose || 'Clinical Testing');
                 document.getElementById('profile-email').innerText = user.email;
-            } catch (e) {  }
+
+                // Populate mock stats
+                document.querySelector('.grid.grid-cols-2 .text-2xl:first-child').innerText = "14";
+                document.querySelector('.grid.grid-cols-2 .text-2xl:last-child').innerText = "12h";
+
+                // Populate mock table
+                document.querySelector('tbody').innerHTML = `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-slate-600">Today, 10:30 AM</td>
+                        <td class="px-6 py-4 whitespace-nowrap font-mono text-slate-500">sess-9f8a2</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-slate-700">45m, 12s</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-16 bg-slate-100 rounded-full h-1.5 mr-2">
+                                    <div class="bg-primary h-1.5 rounded-full" style="width: 82%"></div>
+                                </div>
+                                <span class="text-slate-600 font-medium">82%</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-primary hover:text-primary-dark">Export CSV</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-slate-600">Yesterday, 2:15 PM</td>
+                        <td class="px-6 py-4 whitespace-nowrap font-mono text-slate-500">sess-3b21c</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-slate-700">1h, 5m, 00s</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-16 bg-slate-100 rounded-full h-1.5 mr-2">
+                                    <div class="bg-primary h-1.5 rounded-full" style="width: 61%"></div>
+                                </div>
+                                <span class="text-slate-600 font-medium">61%</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-primary hover:text-primary-dark">Export CSV</button>
+                        </td>
+                    </tr>
+                `;
+
+            } catch (e) { console.error("Error populating profile:", e); }
 
         });
 
         document.getElementById('logout-btn').addEventListener('click', async () => {
             await signOut();
-            window.location.href = 'signin.html';
+            window.location.href = 'index.html';
         });
     </script>
 </body>
