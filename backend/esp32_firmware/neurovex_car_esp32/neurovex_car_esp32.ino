@@ -1,5 +1,5 @@
 // neurovex_car_esp32.ino
-// Custom Firmware for Neurovex Car using L298N and USB Serial
+// Production Real-Time Firmware for Neurovex Car
 
 #include <ArduinoJson.h>
 
@@ -18,9 +18,26 @@
 #define EEG_PIN 34
 
 // --- Configuration ---
-const int BAUD_RATE = 115200;      
-const unsigned long SAMPLE_RATE_MS = 4; // Approx 250Hz sampling
-unsigned long lastSampleTime = 0;
+const int BAUD_RATE = 115200;
+const unsigned long TIMEOUT_MS = 1000; 
+
+// --- Real-Time State ---
+hw_timer_t * timer = NULL;
+volatile int latestAdcValue = 0;
+volatile bool sampleReady = false;
+
+// --- Serial Buffer ---
+String inputBuffer = "";
+
+// --- Safety Tracking ---
+unsigned long lastCommandTime = 0;
+
+// --- ISR: Hardware Timer ---
+// Triggers exactly every 4ms (250Hz)
+void IRAM_ATTR onTimer() {
+    latestAdcValue = analogRead(EEG_PIN);
+    sampleReady = true;
+}
 
 void setup() {
     Serial.begin(BAUD_RATE);
@@ -39,34 +56,61 @@ void setup() {
     
     stopAllMotors(); // Failsafe startup
 
-    // Loop until serial connected (for certain esp32 variants)
-    while (!Serial) { delay(10); } 
+    // Configure Timer 0
+    // ESP32 clock is 80MHz. Prescaler = 80 means 1 tick = 1 microsecond.
+    timer = timerBegin(0, 80, true); 
+    timerAttachInterrupt(timer, &onTimer, true);
+    // 4ms = 4000 microseconds
+    timerAlarmWrite(timer, 4000, true);
+    timerAlarmEnable(timer);
+
+    lastCommandTime = millis();
 }
 
 void loop() {
-    unsigned long currentMillis = millis();
-    
-    // 1. Maintain Continuous 250Hz EEG Sampling
-    if (currentMillis - lastSampleTime >= SAMPLE_RATE_MS) {
-        lastSampleTime = currentMillis;
-        int raw_adc_value = analogRead(EEG_PIN);
+    // 1. Check strict 250Hz sampling flag
+    if (sampleReady) {
+        sampleReady = false;
+        int adc = latestAdcValue; // Atomic read
         
         StaticJsonDocument<64> doc;
-        doc["value"] = raw_adc_value;
+        doc["value"] = adc;
         serializeJson(doc, Serial);
-        Serial.println();     // Must send newline for Web Serial Parser
+        Serial.println(); 
     }
 
-    // 2. Read Incoming Commands from Browser (via USB)
-    if (Serial.available() > 0) {
-        String command = Serial.readStringUntil('\n');
-        command.trim();
-        handleMovement(command);
+    // 2. Non-blocking Serial Parsing
+    handleSerialInput();
+
+    // 3. Safety Timeout
+    if (millis() - lastCommandTime > TIMEOUT_MS) {
+        stopAllMotors();
     }
 }
 
-// --- L298N Motor Control Logic ---
-void handleMovement(String cmd) {
+// --- Serial Handling ---
+void handleSerialInput() {
+    while (Serial.available() > 0) {
+        char c = Serial.read();
+        if (c == '\n') {
+            inputBuffer.trim();
+            if (inputBuffer.length() > 0) {
+                processCommand(inputBuffer);
+            }
+            inputBuffer = "";
+        } else if (c != '\r') {
+            inputBuffer += c;
+            // Prevent buffer overflow
+            if (inputBuffer.length() > 64) {
+                inputBuffer = "";
+            }
+        }
+    }
+}
+
+void processCommand(String cmd) {
+    lastCommandTime = millis();
+
     if (cmd == "FORWARD") {
         moveForward();
     } else if (cmd == "BACKWARD") {
@@ -80,32 +124,28 @@ void handleMovement(String cmd) {
     }
 }
 
+// --- L298N Motor Control Logic ---
 void moveForward() {
-    // Motor A
     digitalWrite(IN1, HIGH);
     digitalWrite(IN2, LOW);
-    analogWrite(ENA, 255); // Full Speed
+    analogWrite(ENA, 255);
     
-    // Motor B
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
-    analogWrite(ENB, 255); // Full Speed
+    analogWrite(ENB, 255);
 }
 
 void moveBackward() {
-    // Motor A
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, HIGH);
     analogWrite(ENA, 255);
     
-    // Motor B
     digitalWrite(IN3, LOW);
     digitalWrite(IN4, HIGH);
     analogWrite(ENB, 255);
 }
 
 void moveLeft() {
-    // Pivot Left (Motor A Forward, Motor B Stopped/Slow)
     digitalWrite(IN1, HIGH);
     digitalWrite(IN2, LOW);
     analogWrite(ENA, 200);
@@ -116,7 +156,6 @@ void moveLeft() {
 }
 
 void moveRight() {
-    // Pivot Right (Motor B Forward, Motor A Stopped/Slow)
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, LOW);
     analogWrite(ENA, 0);
@@ -127,7 +166,6 @@ void moveRight() {
 }
 
 void stopAllMotors() {
-    // Emergency / Idle
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, LOW);
     analogWrite(ENA, 0);
