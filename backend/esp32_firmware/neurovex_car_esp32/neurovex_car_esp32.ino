@@ -1,116 +1,49 @@
 // neurovex_car_esp32.ino
-// Production Real-Time Firmware for Neurovex Car
+// Firmware for the Neurovex Car ESP32
+// Listens for serial commands from the dashboard to control the L298N Motor Driver
 
-#include <ArduinoJson.h>
-
-// --- Pin Definitions ---
-// Motor A (Right Motor)
-#define ENA 25
-#define IN1 26
-#define IN2 27
-
-// Motor B (Left Motor)
-#define ENB 32
-#define IN3 33
-#define IN4 14
-
-// EEG Analog Input
-#define EEG_PIN 34
-
-// --- Configuration ---
 const int BAUD_RATE = 115200;
-const unsigned long TIMEOUT_MS = 1000; 
 
-// --- Real-Time State ---
-hw_timer_t * timer = NULL;
-volatile int latestAdcValue = 0;
-volatile bool sampleReady = false;
+// --- Motor Pins (e.g. L298N Motor Driver) ---
+const int MOTOR_A_DIR1 = 12;
+const int MOTOR_A_DIR2 = 13;
+const int MOTOR_A_PWM  = 14;
 
-// --- Serial Buffer ---
-String inputBuffer = "";
-
-// --- Safety Tracking ---
-unsigned long lastCommandTime = 0;
-
-// --- ISR: Hardware Timer ---
-// Triggers exactly every 4ms (250Hz)
-void IRAM_ATTR onTimer() {
-    latestAdcValue = analogRead(EEG_PIN);
-    sampleReady = true;
-}
+const int MOTOR_B_DIR1 = 27;
+const int MOTOR_B_DIR2 = 26;
+const int MOTOR_B_PWM  = 25;
 
 void setup() {
     Serial.begin(BAUD_RATE);
-    
-    // Motor pin setups
-    pinMode(ENA, OUTPUT);
-    pinMode(IN1, OUTPUT);
-    pinMode(IN2, OUTPUT);
-    
-    pinMode(ENB, OUTPUT);
-    pinMode(IN3, OUTPUT);
-    pinMode(IN4, OUTPUT);
-    
-    // EEG Input
-    pinMode(EEG_PIN, INPUT);
-    
-    stopAllMotors(); // Failsafe startup
 
-    // Configure Timer 0
-    // ESP32 clock is 80MHz. Prescaler = 80 means 1 tick = 1 microsecond.
-    timer = timerBegin(0, 80, true); 
-    timerAttachInterrupt(timer, &onTimer, true);
-    // 4ms = 4000 microseconds
-    timerAlarmWrite(timer, 4000, true);
-    timerAlarmEnable(timer);
-
-    lastCommandTime = millis();
+    // Motor setup
+    pinMode(MOTOR_A_DIR1, OUTPUT);
+    pinMode(MOTOR_A_DIR2, OUTPUT);
+    pinMode(MOTOR_A_PWM, OUTPUT);
+    
+    pinMode(MOTOR_B_DIR1, OUTPUT);
+    pinMode(MOTOR_B_DIR2, OUTPUT);
+    pinMode(MOTOR_B_PWM, OUTPUT);
+    
+    stopMotors();
+    
+    // Wait for Serial before starting loop
+    while (!Serial) { delay(10); }
+    Serial.println("CAR_READY");
 }
 
 void loop() {
-    // 1. Check strict 250Hz sampling flag
-    if (sampleReady) {
-        sampleReady = false;
-        int adc = latestAdcValue; // Atomic read
-        
-        StaticJsonDocument<64> doc;
-        doc["value"] = adc;
-        serializeJson(doc, Serial);
-        Serial.println(); 
-    }
-
-    // 2. Non-blocking Serial Parsing
-    handleSerialInput();
-
-    // 3. Safety Timeout
-    if (millis() - lastCommandTime > TIMEOUT_MS) {
-        stopAllMotors();
+    // Listen for Incoming Command Strings from Dashboard
+    if (Serial.available() > 0) {
+        String command = Serial.readStringUntil('\n');
+        command.trim();
+        handleCommand(command);
     }
 }
 
-// --- Serial Handling ---
-void handleSerialInput() {
-    while (Serial.available() > 0) {
-        char c = Serial.read();
-        if (c == '\n') {
-            inputBuffer.trim();
-            if (inputBuffer.length() > 0) {
-                processCommand(inputBuffer);
-            }
-            inputBuffer = "";
-        } else if (c != '\r') {
-            inputBuffer += c;
-            // Prevent buffer overflow
-            if (inputBuffer.length() > 64) {
-                inputBuffer = "";
-            }
-        }
-    }
-}
+// --- Motor Control Logic ---
 
-void processCommand(String cmd) {
-    lastCommandTime = millis();
-
+void handleCommand(String cmd) {
     if (cmd == "FORWARD") {
         moveForward();
     } else if (cmd == "BACKWARD") {
@@ -120,57 +53,61 @@ void processCommand(String cmd) {
     } else if (cmd == "RIGHT") {
         moveRight();
     } else if (cmd == "STOP" || cmd == "ESTOP") {
-        stopAllMotors();
+        stopMotors();
     }
 }
 
-// --- L298N Motor Control Logic ---
 void moveForward() {
-    digitalWrite(IN1, HIGH);
-    digitalWrite(IN2, LOW);
-    analogWrite(ENA, 255);
-    
-    digitalWrite(IN3, HIGH);
-    digitalWrite(IN4, LOW);
-    analogWrite(ENB, 255);
+    // Both motors forward
+    digitalWrite(MOTOR_A_DIR1, HIGH);
+    digitalWrite(MOTOR_A_DIR2, LOW);
+    digitalWrite(MOTOR_A_PWM, HIGH);
+
+    digitalWrite(MOTOR_B_DIR1, HIGH);
+    digitalWrite(MOTOR_B_DIR2, LOW);
+    digitalWrite(MOTOR_B_PWM, HIGH);
 }
 
 void moveBackward() {
-    digitalWrite(IN1, LOW);
-    digitalWrite(IN2, HIGH);
-    analogWrite(ENA, 255);
-    
-    digitalWrite(IN3, LOW);
-    digitalWrite(IN4, HIGH);
-    analogWrite(ENB, 255);
+    // Both motors backward
+    digitalWrite(MOTOR_A_DIR1, LOW);
+    digitalWrite(MOTOR_A_DIR2, HIGH);
+    digitalWrite(MOTOR_A_PWM, HIGH);
+
+    digitalWrite(MOTOR_B_DIR1, LOW);
+    digitalWrite(MOTOR_B_DIR2, HIGH);
+    digitalWrite(MOTOR_B_PWM, HIGH);
 }
 
 void moveLeft() {
-    digitalWrite(IN1, HIGH);
-    digitalWrite(IN2, LOW);
-    analogWrite(ENA, 200);
-    
-    digitalWrite(IN3, LOW);
-    digitalWrite(IN4, LOW);
-    analogWrite(ENB, 0);
+    // Left wheel back, Right wheel forward
+    digitalWrite(MOTOR_A_DIR1, LOW);
+    digitalWrite(MOTOR_A_DIR2, HIGH);
+    digitalWrite(MOTOR_A_PWM, HIGH);
+
+    digitalWrite(MOTOR_B_DIR1, HIGH);
+    digitalWrite(MOTOR_B_DIR2, LOW);
+    digitalWrite(MOTOR_B_PWM, HIGH);
 }
 
 void moveRight() {
-    digitalWrite(IN1, LOW);
-    digitalWrite(IN2, LOW);
-    analogWrite(ENA, 0);
-    
-    digitalWrite(IN3, HIGH);
-    digitalWrite(IN4, LOW);
-    analogWrite(ENB, 200);
+    // Left wheel forward, Right wheel back
+    digitalWrite(MOTOR_A_DIR1, HIGH);
+    digitalWrite(MOTOR_A_DIR2, LOW);
+    digitalWrite(MOTOR_A_PWM, HIGH);
+
+    digitalWrite(MOTOR_B_DIR1, LOW);
+    digitalWrite(MOTOR_B_DIR2, HIGH);
+    digitalWrite(MOTOR_B_PWM, HIGH);
 }
 
-void stopAllMotors() {
-    digitalWrite(IN1, LOW);
-    digitalWrite(IN2, LOW);
-    analogWrite(ENA, 0);
+void stopMotors() {
+    // Emergency / Safe state
+    digitalWrite(MOTOR_A_PWM, LOW);
+    digitalWrite(MOTOR_B_PWM, LOW);
     
-    digitalWrite(IN3, LOW);
-    digitalWrite(IN4, LOW);
-    analogWrite(ENB, 0);
+    digitalWrite(MOTOR_A_DIR1, LOW);
+    digitalWrite(MOTOR_A_DIR2, LOW);
+    digitalWrite(MOTOR_B_DIR1, LOW);
+    digitalWrite(MOTOR_B_DIR2, LOW);
 }

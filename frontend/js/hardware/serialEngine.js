@@ -35,14 +35,20 @@ export class SerialEngine {
     async disconnect() {
         this.keepReading = false;
 
-        // Immediately STOP motors on software disconnect request
-        await this.send("STOP");
+        // Try to safely stop motors, ignore errors if forcefully disconnected
+        try {
+            if (this.port && this.port.writable) {
+                await this.send("STOP");
+            }
+        } catch (e) {
+            // device might already be gone
+        }
 
         if (this.reader) {
             try { await this.reader.cancel(); } catch (e) { }
         }
         if (this.writer) {
-            this.writer.releaseLock();
+            try { this.writer.releaseLock(); } catch (e) { }
             this.writer = null;
         }
         if (this.port) {

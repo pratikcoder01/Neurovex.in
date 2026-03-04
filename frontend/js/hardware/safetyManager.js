@@ -23,7 +23,7 @@ export class SafetyManager {
 
     updateSignal(confidence) {
         this.lastSignalTime = performance.now();
-        if (this.isConnected) {
+        if (this.isConnected && this.brainEngine.isActive) {
             if (confidence < 50) {
                 this.emergencyStop("Signal Lost / High Noise");
                 document.dispatchEvent(new CustomEvent('neurovex:safetyAlert', { detail: "Weak Signal (Confidence < 50%)!" }));
@@ -35,8 +35,8 @@ export class SafetyManager {
         if (!this.isConnected) return;
 
         const now = performance.now();
-        // If 1 second passes with no EEG data
-        if (now - this.lastSignalTime > 1000) {
+        // If 1 second passes with no EEG data and we are relying on Mind Control
+        if (now - this.lastSignalTime > 1000 && this.brainEngine.isActive) {
             this.emergencyStop("EEG Stream Timeout");
             document.dispatchEvent(new CustomEvent('neurovex:safetyAlert', { detail: "Sensor Offline" }));
         }
