@@ -79,11 +79,18 @@ export class SignalProcessor {
 
         this.smoothedConfidence = this.smoothedConfidence === undefined ? rawConfidence : (0.1 * rawConfidence) + (0.9 * this.smoothedConfidence);
 
+        // Generate mock Alpha and Beta values for the Car Brain Control Engine
+        // Focus relies on higher Beta, Relaxation relies on higher Alpha
+        let fakeBeta = rawFocus * 0.8 + (Math.random() * 5);
+        let fakeAlpha = (100 - rawFocus) * 0.7 + (Math.random() * 5);
+
         return {
             focus: Math.round(this.smoothedFocus),
             stress: Math.round(this.smoothedStress),
             fatigue: Math.round(this.smoothedFatigue),
             confidence: this.smoothedConfidence.toFixed(1),
+            alpha: Math.round(Math.max(fakeAlpha, 0)),
+            beta: Math.round(Math.max(fakeBeta, 0)),
             raw: this.buffer[this.buffer.length - 1]
         };
     }
