@@ -393,7 +393,7 @@
             });
 
             // Update UI Function
-            const updateUIStats = (focus, stress, fatigue) => {
+            const updateUIStats = (focus, stress, fatigue, confidence = "94.2") => {
                 document.getElementById('val-focus').innerText = focus + '%';
                 document.getElementById('bar-focus').style.width = focus + '%';
 
@@ -402,6 +402,8 @@
 
                 document.getElementById('val-fatigue').innerText = fatigue + '%';
                 document.getElementById('bar-fatigue').style.width = fatigue + '%';
+
+                document.getElementById('confidence-score').innerText = confidence + '%';
 
                 document.getElementById('band-delta').innerText = (Math.random() * 10 + 5).toFixed(1) + ' µV²';
                 document.getElementById('band-theta').innerText = (Math.random() * 5 + 2).toFixed(1) + ' µV²';
@@ -419,7 +421,7 @@
                 processor.feed(data);
                 const stats = processor.computeStats();
                 if (stats) {
-                    updateUIStats(stats.focus, stats.stress, stats.fatigue);
+                    updateUIStats(stats.focus, stats.stress, stats.fatigue, stats.confidence);
                 }
             });
 
@@ -429,7 +431,8 @@
                     const focus = Math.floor(Math.random() * 40) + 40; // 40-80%
                     const stress = Math.floor(Math.random() * 30) + 10;
                     const fatigue = Math.floor(Math.random() * 20) + 10;
-                    updateUIStats(focus, stress, fatigue);
+                    const fakeConf = (Math.random() * 5 + 90).toFixed(1);
+                    updateUIStats(focus, stress, fatigue, fakeConf);
                 }
             }, 1000);
 
@@ -450,9 +453,22 @@
 
                     if (isHardwareMode && buffer.length > 0) {
                         const step = canvas.width / buffer.length;
+
+                        // Calculate mean to auto-center the wave
+                        let sum = 0;
+                        for (let i = 0; i < buffer.length; i++) sum += buffer[i];
+                        const mean = sum / buffer.length;
+
+                        // Calculate max deviation to auto-scale the wave (makes small signals visible)
+                        let maxDev = 10; // Base margin to prevent dividing by 0 or zooming extreme noise
                         for (let i = 0; i < buffer.length; i++) {
-                            // Map raw ADC value (0-4095) to canvas height
-                            const norm = ((buffer[i] / 4095) * 2) - 1; // -1 to 1
+                            const dev = Math.abs(buffer[i] - mean);
+                            if (dev > maxDev) maxDev = dev;
+                        }
+
+                        for (let i = 0; i < buffer.length; i++) {
+                            // Map centered value dynamically to canvas height
+                            const norm = (buffer[i] - mean) / (maxDev * 1.2);
                             const y = canvas.height / 2 - (norm * (canvas.height / 2));
                             ctx.lineTo(i * step, y);
                         }
