@@ -169,20 +169,56 @@
             </div>
 
             <!-- 1. Telekinesis Arena -->
-            <div id="mind-control-arena" class="arena-section active flex-1 flex-col p-8 relative z-10 w-full h-full">
-                <div class="flex justify-between items-center mb-12">
+            <div id="mind-control-arena"
+                class="arena-section active flex-1 flex-col p-4 md:p-8 relative z-10 w-full h-full overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
                     <div>
-                        <h2 class="text-2xl font-bold text-slate-900">Telekinesis</h2>
-                        <p class="text-slate-500">Focus entirely on the cube to thrust it forward.</p>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-1">Telekinesis Protocol</h2>
+                        <p class="text-slate-500 font-medium">Harness sustained high Beta-wave frequencies to exert
+                            physical force.</p>
                     </div>
                     <button id="start-mc-btn"
-                        class="bg-slate-900 text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-slate-800 transition-colors opacity-50 pointer-events-none">Signal
+                        class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-slate-800 hover:-translate-y-0.5 transition-all opacity-50 pointer-events-none tracking-wide text-sm hidden md:block">Signal
                         Required</button>
                 </div>
+
+                <button id="start-mc-btn-mobile"
+                    class="md:hidden bg-slate-900 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg opacity-50 pointer-events-none">Signal
+                    Required</button>
+
+                <!-- Briefing -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8 shrink-0">
+                    <div class="bg-blue-50/70 border border-blue-100 p-5 rounded-2xl flex gap-4 shadow-sm">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                            <span class="material-icons">menu_book</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-blue-900 mb-1">How to Play</h4>
+                            <p class="text-sm text-blue-700 leading-relaxed">Fixate your vision entirely on the object.
+                                Do not blink often. Perform complex mental tasks (like multiplying numbers) to
+                                consciously spike your Beta waves. The cube moves forward only while focus is critically
+                                high.</p>
+                        </div>
+                    </div>
+                    <div class="bg-indigo-50/70 border border-indigo-100 p-5 rounded-2xl flex gap-4 shadow-sm">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
+                            <span class="material-icons">psychology</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-indigo-900 mb-1">Cognitive Benefits</h4>
+                            <p class="text-sm text-indigo-700 leading-relaxed">Trains sustained attention, improves the
+                                ability to enter "flow" or deep work states, and strengthens prefrontal cortex
+                                activation resistance against everyday distractions.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Track -->
                 <div
-                    class="flex-1 bg-white rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden flex items-center px-12">
-                    <div class="absolute left-12 right-12 h-2 bg-slate-100 rounded-full"></div>
+                    class="min-h-[160px] flex-1 bg-white rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden flex items-center px-4 md:px-12 shrink-0">
+                    <div class="absolute left-6 right-6 md:left-12 md:right-12 h-2 bg-slate-100 rounded-full"></div>
                     <div class="absolute w-px bg-emerald-500 border-r border-dashed border-emerald-400 top-0 bottom-0"
                         style="left: 80%"></div>
                     <div class="absolute text-emerald-600 font-mono text-xs font-bold pt-4"
@@ -195,18 +231,53 @@
             </div>
 
             <!-- 2. Zen Match Arena -->
-            <div id="pattern-match-arena" class="arena-section flex-1 flex-col p-8 relative z-10 w-full h-full">
-                <div class="flex justify-between items-center mb-8">
+            <div id="pattern-match-arena"
+                class="arena-section flex-1 flex-col p-4 md:p-8 relative z-10 w-full h-full overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
                     <div>
-                        <h2 class="text-2xl font-bold text-slate-900">Zen Match</h2>
-                        <p class="text-slate-500">Sustain high Alpha waves to continuously unlock patterns.</p>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-1">Zen Mastery</h2>
+                        <p class="text-slate-500 font-medium">Sustain deep Alpha-wave states to subconsciously unlock
+                            patterns.</p>
                     </div>
                     <button id="start-pm-btn"
-                        class="bg-slate-900 text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-slate-800 transition-colors opacity-50 pointer-events-none">Signal
+                        class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-slate-800 hover:-translate-y-0.5 transition-all opacity-50 pointer-events-none tracking-wide text-sm hidden md:block">Signal
                         Required</button>
                 </div>
 
-                <div class="mb-8 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <button id="start-pm-btn-mobile"
+                    class="md:hidden bg-slate-900 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg opacity-50 pointer-events-none">Signal
+                    Required</button>
+
+                <!-- Briefing -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8 shrink-0">
+                    <div class="bg-emerald-50/70 border border-emerald-100 p-5 rounded-2xl flex gap-4 shadow-sm">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                            <span class="material-icons">self_improvement</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-emerald-900 mb-1">How to Play</h4>
+                            <p class="text-sm text-emerald-700 leading-relaxed">Close your eyes, take slow deep breaths,
+                                and empty your mind. Do not attempt to "force" the game. If you sustain deep relaxation
+                                (high Alpha waves) for a continuous 2 seconds, a tile unlocks. Stress spikes reset your
+                                lock.</p>
+                        </div>
+                    </div>
+                    <div class="bg-teal-50/70 border border-teal-100 p-5 rounded-2xl flex gap-4 shadow-sm">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center shrink-0">
+                            <span class="material-icons">spa</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-teal-900 mb-1">Cognitive Benefits</h4>
+                            <p class="text-sm text-teal-700 leading-relaxed">Lowers resting heart rate, reduces
+                                circulating cortisol (stress hormone) levels, and trains the brain to consciously invoke
+                                parasympathetic relaxation responses under pressure.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-8 p-6 shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm">
                     <div class="flex justify-between mb-2">
                         <h4 class="text-xs font-bold text-slate-500 uppercase">Alpha Sustenance Meter</h4>
                         <span class="text-xs font-bold text-emerald-500">LOCK: 2 SECONDS</span>
@@ -224,19 +295,53 @@
             </div>
 
             <!-- 3. Reaction Time Arena -->
-            <div id="reaction-time-arena" class="arena-section flex-1 flex-col p-8 relative z-10 w-full h-full">
-                <div class="flex justify-between items-center mb-8">
+            <div id="reaction-time-arena"
+                class="arena-section flex-1 flex-col p-4 md:p-8 relative z-10 w-full h-full overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
                     <div>
-                        <h2 class="text-2xl font-bold text-slate-900">Beta Reflex</h2>
-                        <p class="text-slate-500">Mentally react to the visual cue. Spike your focus as fast as
-                            possible.</p>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-1">Beta Reflex Drill</h2>
+                        <p class="text-slate-500 font-medium">Measure neurological latency between a visual stimulus and
+                            Beta spike.</p>
                     </div>
                     <button id="start-rt-btn"
-                        class="bg-slate-900 text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-slate-800 transition-colors opacity-50 pointer-events-none">Signal
+                        class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-slate-800 hover:-translate-y-0.5 transition-all opacity-50 pointer-events-none tracking-wide text-sm hidden md:block">Signal
                         Required</button>
                 </div>
+
+                <button id="start-rt-btn-mobile"
+                    class="md:hidden bg-slate-900 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg opacity-50 pointer-events-none">Signal
+                    Required</button>
+
+                <!-- Briefing -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8 shrink-0">
+                    <div class="bg-amber-50/70 border border-amber-100 p-5 rounded-2xl flex gap-4 shadow-sm">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                            <span class="material-icons">visibility</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-amber-900 mb-1">How to Play</h4>
+                            <p class="text-sm text-amber-700 leading-relaxed">Stare intensely at the center. The glowing
+                                orb will vanish randomly. The exact millisecond your brain registers its sudden return
+                                and spikes a surprise Beta wave, the system logs your neurological reaction time.</p>
+                        </div>
+                    </div>
+                    <div class="bg-orange-50/70 border border-orange-100 p-5 rounded-2xl flex gap-4 shadow-sm">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
+                            <span class="material-icons">speed</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-orange-900 mb-1">Cognitive Benefits</h4>
+                            <p class="text-sm text-orange-700 leading-relaxed">Enhances visual-motor integration,
+                                shortens sensory processing latency, and functionally conditions the brain for
+                                high-alert recognition tasks used in esports and performance driving.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div
-                    class="flex-1 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center p-8">
+                    class="flex-1 min-h-[300px] shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center p-8">
                     <div id="reflex-cue"
                         class="w-48 h-48 rounded-full bg-red-500 shadow-[0_0_50px_rgba(239,68,68,0.6)] flex items-center justify-center text-white text-5xl opacity-0 transition-opacity duration-75">
                         <span class="material-icons text-6xl">bolt</span>
@@ -365,6 +470,33 @@
         const patternGame = new PatternMatchGame(engine, document.getElementById('alpha-meter'));
         const reactionGame = new ReactionTimeGame(engine, document.getElementById('reflex-cue'));
 
+        // SOUND ENGINE (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSfx(type) {
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'start') {
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(440, now); osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
+                    gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(0.2, now + 0.05); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now); osc.stop(now + 0.3);
+                } else if (type === 'unlock') {
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, now); osc.frequency.setValueAtTime(659.25, now + 0.1);
+                    gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now + 0.4);
+                    osc.start(now); osc.stop(now + 0.4);
+                } else if (type === 'record') {
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                    gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now + 0.2);
+                    osc.start(now); osc.stop(now + 0.2);
+                }
+            } catch (e) { }
+        }
+
         // GAME 2 (Zen grid init)
         const grid = document.getElementById('pattern-grid');
         for (let i = 0; i < 16; i++) {
@@ -374,6 +506,7 @@
         }
 
         document.addEventListener('neurovex:tileUnlocked', (e) => {
+            playSfx('unlock');
             const level = e.detail.level;
             if (level <= 16) {
                 const tile = grid.children[level - 1];
@@ -381,6 +514,7 @@
                 tile.classList.add('bg-emerald-400', 'border-emerald-500', 'opacity-100', 'shadow-[0_0_15px_rgba(52,211,153,0.3)]');
             }
             if (level === 16) {
+                playSfx('start'); // Win sound
                 const modal = document.getElementById('zen-modal');
                 const modalContent = document.getElementById('zen-modal-content');
                 modal.classList.remove('hidden');
@@ -395,6 +529,7 @@
 
         // GAME 3 (Reaction Time listener)
         document.addEventListener('neurovex:reactionRecorded', (e) => {
+            playSfx('record');
             const time = e.detail.time.toFixed(0);
             document.getElementById('rt-last').innerText = time + ' ms';
             document.getElementById('rt-best').innerText = reactionGame.bestTime.toFixed(0) + ' ms';
@@ -451,6 +586,7 @@
         let mcRunning = false, pmRunning = false, rtRunning = false;
 
         document.getElementById('start-mc-btn').addEventListener('click', (e) => {
+            playSfx('start');
             const btn = e.target;
             if (!mcRunning) {
                 mindGame.position = 0; mindGame.start(); mcRunning = true;
@@ -462,6 +598,7 @@
         });
 
         document.getElementById('start-pm-btn').addEventListener('click', (e) => {
+            playSfx('start');
             const btn = e.target;
             if (!pmRunning) {
                 patternGame.start(); pmRunning = true;
@@ -473,6 +610,7 @@
         });
 
         document.getElementById('start-rt-btn').addEventListener('click', (e) => {
+            playSfx('start');
             const btn = e.target;
             if (!rtRunning) {
                 reactionGame.start(); rtRunning = true;
