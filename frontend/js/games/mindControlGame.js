@@ -23,9 +23,10 @@ export class MindControlGame {
         this.isActive = false;
     }
 
-    handleFocus({ focus, stress, fatigue }) {
+    handleFocus(data) {
         if (!this.isActive) return;
 
+        const { focus, stress, fatigue } = data;
         let targetSpeed = 0;
 
         // Base thrust logic
