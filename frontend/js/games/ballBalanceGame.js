@@ -77,8 +77,8 @@ export class BallBalanceGame {
             let targetTilt = 0;
 
             if (this.currentFocus >= 45) { // Lower threshold for playability
-                // Focus is high: balance the ball by countering its position
-                targetTilt = (this.position / this.maxDistance) * 20; // Gentler stabilization
+                // Focus is high: balance the ball by countering its position (NEGATIVE sign so tilt pushes it back to middle)
+                targetTilt = -(this.position / this.maxDistance) * 30; // Stronger stabilization
                 // Add minor jitter that reduces as focus nears 100
                 targetTilt += (Math.random() - 0.5) * Math.max(0, (90 - this.currentFocus) * 0.1);
             } else {
