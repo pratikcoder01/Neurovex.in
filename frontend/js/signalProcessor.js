@@ -44,7 +44,7 @@ export class SignalProcessor {
             // Small waves (stdDev < 30) = Relaxed / Fatigue
 
             rawFocus = (stdDev > 20 && stdDev < 100) ? ((stdDev - 20) / 80) * 100 : (stdDev >= 100 ? 60 : 20);
-            rawStress = stdDev > 80 ? ((stdDev - 80) / 100) * 100 : 10;
+            rawStress = stdDev > 120 ? ((stdDev - 120) / 100) * 60 : 5; // Significantly reduced stress sensitivity
 
             // Artificial suppression of Fatigue (kept very low as requested)
             rawFatigue = stdDev < 15 ? 15 - stdDev : 5;
