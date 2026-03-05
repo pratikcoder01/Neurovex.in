@@ -52,16 +52,10 @@ export class BrainGameEngine {
 
         // Mock confidence drop if signal varies too wildly (artifact) or stress spikes abruptly
         const variance = Math.abs(focus - (this.history.focus[this.history.focus.length - 1] || focus));
-        if (variance > 40) {
+        if (variance > 80) { // Keep very high to prevent casual lockouts
             this.currentConfidence = Math.max(0, this.currentConfidence - 10);
         } else {
             this.currentConfidence = Math.min(100, this.currentConfidence + 2);
-        }
-
-        // Force Drop if extreme variance
-        if (this.currentConfidence < this.confidenceThreshold) {
-            this.emit('onConfidenceDrop', this.currentConfidence);
-            return; // Pause processing valid game commands if noise is high
         }
 
         // Add to history
