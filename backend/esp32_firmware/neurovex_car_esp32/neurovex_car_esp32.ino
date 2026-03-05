@@ -30,7 +30,7 @@ void setup() {
     // Wait for Serial before starting loop
     while (!Serial) { delay(10); }
     Serial.println("CAR_READY");
-}
+}   
 
 void loop() {
     // Listen for Incoming Command Strings from Dashboard

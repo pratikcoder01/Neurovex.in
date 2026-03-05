@@ -396,13 +396,19 @@
         });
 
         // Loop: Raw Data -> Processor -> Brain Engine
+        let lastHWUITime = 0;
         serialEngine.onData((rawVal) => {
             processor.feed(rawVal);
             const stats = processor.computeStats();
             if (stats) {
                 safetyMgr.updateSignal(stats.confidence);
                 brainEngine.processSignal(stats);
-                updateTelemetryUI(stats);
+
+                const now = Date.now();
+                if (now - lastHWUITime > 100) {
+                    updateTelemetryUI(stats);
+                    lastHWUITime = now;
+                }
             }
         });
 

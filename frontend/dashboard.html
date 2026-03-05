@@ -417,11 +417,16 @@
             };
 
             // Hardware Loop
+            let lastUITime = 0;
             serial.onData((data) => {
                 processor.feed(data);
                 const stats = processor.computeStats();
                 if (stats) {
-                    updateUIStats(stats.focus, stats.stress, stats.fatigue, stats.confidence);
+                    const now = Date.now();
+                    if (now - lastUITime > 100) { // Limit DOM and DB updates to 10fps
+                        updateUIStats(stats.focus, stats.stress, stats.fatigue, stats.confidence);
+                        lastUITime = now;
+                    }
                 }
             });
 

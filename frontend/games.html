@@ -42,12 +42,12 @@
 
         <div class="flex items-center gap-4">
             <div class="bg-slate-100 rounded-lg px-3 py-1.5 flex items-center gap-2 border border-slate-200">
-                <span id="hw-status-indicator" class="w-2 h-2 rounded-full bg-slate-400"></span>
-                <span id="hw-status-text" class="text-xs font-mono font-bold text-slate-500">OFFLINE</span>
+                <span id="hw-status-indicator" class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                <span id="hw-status-text" class="text-xs font-mono font-bold text-slate-500">DEMO MODE</span>
             </div>
 
             <button id="connect-hw-btn"
-                class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow-sm flex items-center gap-2 transition-all">
+                class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg font-bold shadow-sm flex items-center gap-2 transition-all">
                 <span class="material-icons">cable</span> Connect ESP32
             </button>
         </div>
@@ -105,6 +105,21 @@
                         <div class="flex-1 flex flex-col justify-center">
                             <h4 class="font-bold text-slate-900 leading-tight">Beta Reflex</h4>
                             <p class="text-xs text-slate-500 mt-1">Train neurological reaction to visual cues.</p>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Tab: Ball Balance -->
+                <button data-tab="ball-balance-arena"
+                    class="game-tab-btn min-w-[240px] md:min-w-0 md:w-full text-left p-4 rounded-xl border border-slate-200 bg-white opacity-60 hover:opacity-100 hover:border-blue-500 hover:bg-blue-50 transition-all focus:outline-none shrink-0 h-full">
+                    <div class="flex items-start gap-4 h-full">
+                        <div
+                            class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                            <span class="material-icons text-xl">fitness_center</span>
+                        </div>
+                        <div class="flex-1 flex flex-col justify-center">
+                            <h4 class="font-bold text-slate-900 leading-tight">Focus Balance</h4>
+                            <p class="text-xs text-slate-500 mt-1">Sustain high focus to keep the ball balanced.</p>
                         </div>
                     </div>
                 </button>
@@ -178,13 +193,13 @@
                             physical force.</p>
                     </div>
                     <button id="start-mc-btn"
-                        class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-slate-800 hover:-translate-y-0.5 transition-all opacity-50 pointer-events-none tracking-wide text-sm hidden md:block">Signal
-                        Required</button>
+                        class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-emerald-700 hover:-translate-y-0.5 transition-all tracking-wide text-sm hidden md:block">Start
+                        Level</button>
                 </div>
 
                 <button id="start-mc-btn-mobile"
-                    class="md:hidden bg-slate-900 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg opacity-50 pointer-events-none">Signal
-                    Required</button>
+                    class="md:hidden bg-emerald-600 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg">Start
+                    Level</button>
 
                 <!-- Briefing -->
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8 shrink-0">
@@ -240,13 +255,13 @@
                             patterns.</p>
                     </div>
                     <button id="start-pm-btn"
-                        class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-slate-800 hover:-translate-y-0.5 transition-all opacity-50 pointer-events-none tracking-wide text-sm hidden md:block">Signal
-                        Required</button>
+                        class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-emerald-700 hover:-translate-y-0.5 transition-all tracking-wide text-sm hidden md:block">Start
+                        Match</button>
                 </div>
 
                 <button id="start-pm-btn-mobile"
-                    class="md:hidden bg-slate-900 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg opacity-50 pointer-events-none">Signal
-                    Required</button>
+                    class="md:hidden bg-emerald-600 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg">Start
+                    Match</button>
 
                 <!-- Briefing -->
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8 shrink-0">
@@ -304,13 +319,13 @@
                             Beta spike.</p>
                     </div>
                     <button id="start-rt-btn"
-                        class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-slate-800 hover:-translate-y-0.5 transition-all opacity-50 pointer-events-none tracking-wide text-sm hidden md:block">Signal
-                        Required</button>
+                        class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-emerald-700 hover:-translate-y-0.5 transition-all tracking-wide text-sm hidden md:block">Start
+                        Drill</button>
                 </div>
 
                 <button id="start-rt-btn-mobile"
-                    class="md:hidden bg-slate-900 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg opacity-50 pointer-events-none">Signal
-                    Required</button>
+                    class="md:hidden bg-emerald-600 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg">Start
+                    Drill</button>
 
                 <!-- Briefing -->
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8 shrink-0">
@@ -360,7 +375,84 @@
                 </div>
             </div>
 
-            <!-- 4. Leaderboard Arena -->
+            <!-- 4. Ball Balance Arena -->
+            <div id="ball-balance-arena"
+                class="arena-section flex-1 flex-col p-4 md:p-8 relative z-10 w-full h-full overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-1">Focus Balance</h2>
+                        <p class="text-slate-500 font-medium">Test continuous sustained focus by preventing the ball
+                            from falling.</p>
+                    </div>
+                    <button id="start-bb-btn"
+                        class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-emerald-700 hover:-translate-y-0.5 transition-all tracking-wide text-sm hidden md:block pointer-events-none opacity-50">Start
+                        Level</button>
+                </div>
+
+                <button id="start-bb-btn-mobile"
+                    class="md:hidden bg-emerald-600 text-white w-full py-3 mb-6 rounded-xl font-bold shadow-lg pointer-events-none opacity-50">Start
+                    Level</button>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8 shrink-0">
+                    <div class="bg-blue-50/70 border border-blue-100 p-5 rounded-2xl flex gap-4 shadow-sm">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                            <span class="material-icons">visibility</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-blue-900 mb-1">How to Play</h4>
+                            <p class="text-sm text-blue-700 leading-relaxed">Focus your mind entirely on the blue ball.
+                                As long as your focus remains above 55%, the AI will balance the plank. If you get
+                                distracted or stressed, the plank will tilt and the ball will fall!</p>
+                        </div>
+                    </div>
+
+                    <!-- Live Signal Gauges -->
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl flex flex-col gap-4 shadow-sm w-full">
+                        <div class="flex flex-col w-full">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-bold text-slate-500 uppercase">Focus (Balancing Power)</span>
+                                <span class="text-xs font-bold text-blue-500" id="bb-focus-val">--%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden relative">
+                                <div id="bb-focus-bar"
+                                    class="bg-blue-500 h-full transition-all duration-100 ease-linear"
+                                    style="width: 0%"></div>
+                                <!-- 55% threshold line -->
+                                <div class="absolute top-0 bottom-0 left-[55%] w-[2px] bg-rose-500 z-10 w-1"></div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-bold text-slate-500 uppercase">Relax (Alpha Power)</span>
+                                <span class="text-xs font-bold text-teal-500" id="bb-relax-val">--%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                                <div id="bb-relax-bar"
+                                    class="bg-teal-400 h-full transition-all duration-100 ease-linear"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="flex-1 flex items-center justify-center p-8 bg-slate-900 rounded-2xl relative overflow-hidden h-64 border border-slate-800 shadow-inner">
+                    <!-- Center Pivot -->
+                    <div class="absolute bottom-10 w-4 h-16 bg-slate-600 rounded-t-full"></div>
+
+                    <!-- Plank -->
+                    <div id="balance-plank" class="w-64 h-4 bg-slate-400 rounded-full relative"
+                        style="transform-origin: center;">
+                        <!-- Ball -->
+                        <div id="balance-ball"
+                            class="w-8 h-8 rounded-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.8)] absolute left-1/2 -ml-4"
+                            style="bottom: 4px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Leaderboard Arena -->
             <div id="leaderboard-arena" class="arena-section flex-1 flex-col p-8 relative z-10 w-full h-full">
                 <div class="flex justify-between items-center mb-8">
                     <div>
@@ -432,6 +524,7 @@
         import { MindControlGame } from './js/games/mindControlGame.js';
         import { PatternMatchGame } from './js/games/patternMatchGame.js';
         import { ReactionTimeGame } from './js/games/reactionTimeGame.js';
+        import { BallBalanceGame } from './js/games/ballBalanceGame.js';
         import { LeaderboardManager } from './js/games/leaderboard.js';
 
         // Initialize Core Engines
@@ -469,6 +562,7 @@
         const mindGame = new MindControlGame(engine, document.getElementById('game-object'));
         const patternGame = new PatternMatchGame(engine, document.getElementById('alpha-meter'));
         const reactionGame = new ReactionTimeGame(engine, document.getElementById('reflex-cue'));
+        const ballGame = new BallBalanceGame(engine, document.getElementById('balance-ball'), document.getElementById('balance-plank'));
 
         // SOUND ENGINE (Web Audio API)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -540,8 +634,13 @@
         const startBtns = [
             document.getElementById('start-mc-btn'),
             document.getElementById('start-pm-btn'),
-            document.getElementById('start-rt-btn')
-        ];
+            document.getElementById('start-rt-btn'),
+            document.getElementById('start-mc-btn-mobile'),
+            document.getElementById('start-pm-btn-mobile'),
+            document.getElementById('start-rt-btn-mobile'),
+            document.getElementById('start-bb-btn'),
+            document.getElementById('start-bb-btn-mobile')
+        ].filter(Boolean);
 
         connectBtn.addEventListener('click', async () => {
             if (!isConnected) {
@@ -549,14 +648,13 @@
                 if (connected) {
                     isConnected = true;
                     connectBtn.innerHTML = '<span class="material-icons">cable</span> Disconnect';
-                    connectBtn.classList.replace('bg-primary', 'bg-slate-700');
-                    connectBtn.classList.replace('hover:bg-blue-600', 'hover:bg-slate-800');
+                    connectBtn.classList.replace('bg-slate-700', 'bg-emerald-600');
+                    connectBtn.classList.replace('hover:bg-slate-800', 'hover:bg-emerald-700');
                     document.getElementById('hw-status-indicator').className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
-                    document.getElementById('hw-status-text').innerText = 'STREAMING...';
+                    document.getElementById('hw-status-text').innerText = 'LIVE STREAMING';
 
                     startBtns.forEach(b => {
                         b.classList.remove('pointer-events-none', 'opacity-50');
-                        b.innerText = 'Start Level';
                         b.classList.replace('bg-slate-900', 'bg-emerald-600');
                         b.classList.replace('hover:bg-slate-800', 'hover:bg-emerald-700');
                     });
@@ -564,61 +662,115 @@
             } else {
                 await serial.disconnect();
                 isConnected = false;
-                mindGame.stop(); patternGame.stop(); reactionGame.stop();
+                mindGame.stop(); patternGame.stop(); reactionGame.stop(); ballGame.stop();
 
                 connectBtn.innerHTML = '<span class="material-icons">cable</span> Connect ESP32';
-                connectBtn.classList.replace('bg-slate-700', 'bg-primary');
-                document.getElementById('hw-status-indicator').className = 'w-2 h-2 rounded-full bg-slate-400';
-                document.getElementById('hw-status-text').innerText = 'OFFLINE';
+                connectBtn.classList.replace('bg-emerald-600', 'bg-slate-700');
+                connectBtn.classList.replace('hover:bg-emerald-700', 'hover:bg-slate-800');
+                document.getElementById('hw-status-indicator').className = 'w-2 h-2 rounded-full bg-primary animate-pulse';
+                document.getElementById('hw-status-text').innerText = 'DEMO MODE';
 
                 startBtns.forEach(b => {
-                    b.classList.add('pointer-events-none', 'opacity-50');
-                    b.innerText = 'Signal Required';
-                    b.classList.replace('bg-emerald-600', 'bg-slate-900');
-                    b.classList.replace('bg-rose-600', 'bg-slate-900');
+                    b.classList.remove('pointer-events-none', 'opacity-50');
+                    b.innerText = b.id.includes('mc') || b.id.includes('bb') ? 'Start Level' : b.id.includes('pm') ? 'Start Match' : 'Start Drill';
+                    b.classList.replace('bg-rose-600', 'bg-emerald-600');
                 });
 
                 document.getElementById('hub-focus').innerText = '--%';
             }
         });
 
+        // Demo Mode Loop
+        setInterval(() => {
+            if (!isConnected) {
+                // Always feed data for competition presentation
+                const focus = Math.floor(Math.random() * 40) + 40; // 40-80%
+                const alpha = Math.floor(Math.random() * 50) + 30; // 30-80%
+                const beta = Math.floor(Math.random() * 40) + 50;  // 50-90%
+                const stress = Math.floor(Math.random() * 30) + 10;
+                const fatigue = Math.floor(Math.random() * 20) + 10;
+
+                engine.feedProcessedSignal({ focus, alpha, beta, stress, fatigue });
+            }
+        }, 500);
+
         // GAME STATE TOGGLES
-        let mcRunning = false, pmRunning = false, rtRunning = false;
+        let mcRunning = false, pmRunning = false, rtRunning = false, bbRunning = false;
 
         document.getElementById('start-mc-btn').addEventListener('click', (e) => {
             playSfx('start');
             const btn = e.target;
+            const mobileBtn = document.getElementById('start-mc-btn-mobile');
             if (!mcRunning) {
                 mindGame.position = 0; mindGame.start(); mcRunning = true;
                 btn.innerText = 'Stop'; btn.classList.replace('bg-emerald-600', 'bg-rose-600');
+                if (mobileBtn) { mobileBtn.innerText = 'Stop'; mobileBtn.classList.replace('bg-emerald-600', 'bg-rose-600'); }
             } else {
                 mindGame.stop(); mcRunning = false;
                 btn.innerText = 'Start Level'; btn.classList.replace('bg-rose-600', 'bg-emerald-600');
+                if (mobileBtn) { mobileBtn.innerText = 'Start Level'; mobileBtn.classList.replace('bg-rose-600', 'bg-emerald-600'); }
             }
+        });
+
+        document.getElementById('start-mc-btn-mobile')?.addEventListener('click', (e) => {
+            document.getElementById('start-mc-btn').click();
         });
 
         document.getElementById('start-pm-btn').addEventListener('click', (e) => {
             playSfx('start');
             const btn = e.target;
+            const mobileBtn = document.getElementById('start-pm-btn-mobile');
             if (!pmRunning) {
                 patternGame.start(); pmRunning = true;
                 btn.innerText = 'Stop Match'; btn.classList.replace('bg-emerald-600', 'bg-rose-600');
+                if (mobileBtn) { mobileBtn.innerText = 'Stop Match'; mobileBtn.classList.replace('bg-emerald-600', 'bg-rose-600'); }
             } else {
                 patternGame.stop(); pmRunning = false;
                 btn.innerText = 'Start Match'; btn.classList.replace('bg-rose-600', 'bg-emerald-600');
+                if (mobileBtn) { mobileBtn.innerText = 'Start Match'; mobileBtn.classList.replace('bg-rose-600', 'bg-emerald-600'); }
             }
+        });
+
+        document.getElementById('start-pm-btn-mobile')?.addEventListener('click', (e) => {
+            document.getElementById('start-pm-btn').click();
+        });
+
+        document.getElementById('start-bb-btn').addEventListener('click', (e) => {
+            playSfx('start');
+            const btn = e.target;
+            const mobileBtn = document.getElementById('start-bb-btn-mobile');
+            if (!bbRunning) {
+                ballGame.start(); bbRunning = true;
+                btn.innerText = 'Stop'; btn.classList.replace('bg-emerald-600', 'bg-rose-600');
+                if (mobileBtn) { mobileBtn.innerText = 'Stop'; mobileBtn.classList.replace('bg-emerald-600', 'bg-rose-600'); }
+            } else {
+                ballGame.stop(); bbRunning = false;
+                btn.innerText = 'Start Level'; btn.classList.replace('bg-rose-600', 'bg-emerald-600');
+                if (mobileBtn) { mobileBtn.innerText = 'Start Level'; mobileBtn.classList.replace('bg-rose-600', 'bg-emerald-600'); }
+            }
+        });
+
+        document.getElementById('start-bb-btn-mobile')?.addEventListener('click', (e) => {
+            document.getElementById('start-bb-btn').click();
         });
 
         document.getElementById('start-rt-btn').addEventListener('click', (e) => {
             playSfx('start');
             const btn = e.target;
+            const mobileBtn = document.getElementById('start-rt-btn-mobile');
             if (!rtRunning) {
                 reactionGame.start(); rtRunning = true;
                 btn.innerText = 'Stop Drill'; btn.classList.replace('bg-emerald-600', 'bg-rose-600');
+                if (mobileBtn) { mobileBtn.innerText = 'Stop Drill'; mobileBtn.classList.replace('bg-emerald-600', 'bg-rose-600'); }
             } else {
                 reactionGame.stop(); rtRunning = false;
                 btn.innerText = 'Start Drill'; btn.classList.replace('bg-rose-600', 'bg-emerald-600');
+                if (mobileBtn) { mobileBtn.innerText = 'Start Drill'; mobileBtn.classList.replace('bg-rose-600', 'bg-emerald-600'); }
             }
+        });
+
+        document.getElementById('start-rt-btn-mobile')?.addEventListener('click', (e) => {
+            document.getElementById('start-rt-btn').click();
         });
 
         // Real-Time Hardware Loop
@@ -628,12 +780,17 @@
             if (stats) engine.feedProcessedSignal(stats);
         });
 
+        let lastGameUITime = 0;
         engine.on('onFocusChange', (data) => {
-            document.getElementById('hub-focus').innerText = data.focus + '%';
-            if (data.stress > 70) document.getElementById('hub-state').innerText = 'Stressed';
-            else if (data.fatigue > 70) document.getElementById('hub-state').innerText = 'Fatigued';
-            else if (data.focus >= 60) document.getElementById('hub-state').innerText = 'Locked In';
-            else document.getElementById('hub-state').innerText = 'Drifting';
+            const now = Date.now();
+            if (now - lastGameUITime > 100) {
+                document.getElementById('hub-focus').innerText = data.focus + '%';
+                if (data.stress > 70) document.getElementById('hub-state').innerText = 'Stressed';
+                else if (data.fatigue > 70) document.getElementById('hub-state').innerText = 'Fatigued';
+                else if (data.focus >= 60) document.getElementById('hub-state').innerText = 'Locked In';
+                else document.getElementById('hub-state').innerText = 'Drifting';
+                lastGameUITime = now;
+            }
         });
 
         // LEADERBOARD UI FETCH
