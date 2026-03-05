@@ -37,7 +37,9 @@ export class BallBalanceGame {
         this.isActive = false;
     }
 
-    handleFocus({ focus }) {
+    handleFocus(data) {
+        if (!data || typeof data.focus === 'undefined') return;
+        const focus = data.focus;
         this.currentFocus = focus;
 
         // UI Updates for Real-time Signal Gauges
@@ -48,7 +50,7 @@ export class BallBalanceGame {
             if (focusVal) focusVal.innerText = focus.toFixed(0) + '%';
             if (focusBar) {
                 focusBar.style.width = focus + '%';
-                focusBar.className = `h-full transition-all duration-100 ease-linear ${focus >= 55 ? 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]' : 'bg-slate-400'}`;
+                focusBar.className = `h-full transition-all duration-100 ease-linear ${focus >= 45 ? 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]' : 'bg-slate-400'}`;
             }
             this.lastFocusUI = now;
         }
@@ -71,26 +73,26 @@ export class BallBalanceGame {
         const dt = (timestamp - this.lastFrame) / 1000;
         this.lastFrame = timestamp;
 
-        if (dt > 0 && dt < 0.1) {
+        if (dt > 0 && dt < 0.5) { // Relax frame-drop barrier to 500ms
             let targetTilt = 0;
 
-            if (this.currentFocus >= 55) {
+            if (this.currentFocus >= 45) { // Lower threshold for playability
                 // Focus is high: balance the ball by countering its position
-                targetTilt = (this.position / this.maxDistance) * 30;
+                targetTilt = (this.position / this.maxDistance) * 20; // Gentler stabilization
                 // Add minor jitter that reduces as focus nears 100
-                targetTilt += (Math.random() - 0.5) * Math.max(0, (90 - this.currentFocus) * 0.2);
+                targetTilt += (Math.random() - 0.5) * Math.max(0, (90 - this.currentFocus) * 0.1);
             } else {
                 // Focus is low: plank sways and loses balance
                 const direction = this.position > 0 ? 1 : (this.position < 0 ? -1 : (Math.random() > 0.5 ? 1 : -1));
-                targetTilt = direction * 20;
-                targetTilt += (Math.random() - 0.5) * 15;
+                targetTilt = direction * 12; // Slow down the failure snap
+                targetTilt += (Math.random() - 0.5) * 5;
             }
 
             // smooth tilt transition
-            this.tilt += (targetTilt - this.tilt) * dt * 4;
+            this.tilt += (targetTilt - this.tilt) * dt * 3; // slightly slower transition
 
             // Physics
-            const gravityForce = Math.sin(this.tilt * Math.PI / 180) * 1000;
+            const gravityForce = Math.sin(this.tilt * Math.PI / 180) * 800; // soften gravity
             this.velocity += gravityForce * dt;
             this.velocity *= 0.98; // friction
 
