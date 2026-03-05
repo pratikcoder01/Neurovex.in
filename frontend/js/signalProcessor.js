@@ -49,10 +49,10 @@ export class SignalProcessor {
             // Artificial suppression of Fatigue (kept very low as requested)
             rawFatigue = stdDev < 15 ? 15 - stdDev : 5;
 
-            // Add slight random organic movement
-            rawFocus += (Math.random() * 10 - 5);
-            rawStress += (Math.random() * 10 - 5);
-            rawFatigue += (Math.random() * 4 - 2); // Less random noise for fatigue so it stays very low
+            // Add slight random organic movement (reduced to prevent jumpiness)
+            rawFocus += (Math.random() * 4 - 2);
+            rawStress += (Math.random() * 4 - 2);
+            rawFatigue += (Math.random() * 2 - 1);
         }
 
         // Keep values strictly within 0 - 100%
@@ -61,7 +61,9 @@ export class SignalProcessor {
         rawFatigue = Math.min(Math.max(rawFatigue, 0), 100);
 
         // Apply Exponential Moving Average (EMA) smoothing for each state
-        this.smoothedFocus = (this.alphaEMA * rawFocus) + ((1 - this.alphaEMA) * this.smoothedFocus);
+        // Use a slightly softer EMA constant for focus so it doesn't snap rapidly
+        const focusEMA = 0.03;
+        this.smoothedFocus = (focusEMA * rawFocus) + ((1 - focusEMA) * this.smoothedFocus);
         this.smoothedStress = this.smoothedStress === undefined ? rawStress : (this.alphaEMA * rawStress) + ((1 - this.alphaEMA) * this.smoothedStress);
         this.smoothedFatigue = this.smoothedFatigue === undefined ? rawFatigue : (this.alphaEMA * rawFatigue) + ((1 - this.alphaEMA) * this.smoothedFatigue);
 
@@ -80,17 +82,20 @@ export class SignalProcessor {
         this.smoothedConfidence = this.smoothedConfidence === undefined ? rawConfidence : (0.1 * rawConfidence) + (0.9 * this.smoothedConfidence);
 
         // Generate mock Alpha and Beta values for the Car Brain Control Engine
-        // Focus relies on higher Beta, Relaxation relies on higher Alpha
-        let fakeBeta = rawFocus * 0.8 + (Math.random() * 5);
-        let fakeAlpha = (100 - rawFocus) * 0.7 + (Math.random() * 5);
+        // Base them on the SMOOTHED focus, not raw focus, to inherently stabilize them
+        let rawBeta = this.smoothedFocus * 0.85 + (Math.random() * 2);
+        let rawAlpha = (100 - this.smoothedFocus) * 0.85 + (Math.random() * 2);
+
+        this.smoothedAlpha = this.smoothedAlpha === undefined ? rawAlpha : (this.alphaEMA * rawAlpha) + ((1 - this.alphaEMA) * this.smoothedAlpha);
+        this.smoothedBeta = this.smoothedBeta === undefined ? rawBeta : (this.alphaEMA * rawBeta) + ((1 - this.alphaEMA) * this.smoothedBeta);
 
         return {
             focus: Math.round(this.smoothedFocus),
             stress: Math.round(this.smoothedStress),
             fatigue: Math.round(this.smoothedFatigue),
             confidence: this.smoothedConfidence.toFixed(1),
-            alpha: Math.round(Math.max(fakeAlpha, 0)),
-            beta: Math.round(Math.max(fakeBeta, 0)),
+            alpha: Math.round(Math.max(this.smoothedAlpha, 0)),
+            beta: Math.round(Math.max(this.smoothedBeta, 0)),
             raw: this.buffer[this.buffer.length - 1]
         };
     }
