@@ -8,7 +8,8 @@ export class SignalProcessor {
         this.smoothedFocus = 0;
 
         // Smoothing constant for Exponential Moving Average
-        this.alphaEMA = 0.05;
+        // Lowered from 0.05 to 0.015 for much greater stability against rapid fluctuations
+        this.alphaEMA = 0.015;
     }
 
     feed(dataPoint) {
@@ -43,16 +44,30 @@ export class SignalProcessor {
             // Huge waves / spikes (stdDev > 100) = Muscle tension / Stress
             // Small waves (stdDev < 30) = Relaxed / Fatigue
 
-            rawFocus = (stdDev > 20 && stdDev < 100) ? ((stdDev - 20) / 80) * 100 : (stdDev >= 100 ? 60 : 20);
-            rawStress = stdDev > 120 ? ((stdDev - 120) / 100) * 60 : 5; // Significantly reduced stress sensitivity
+            // Expanded stdDev range for live hardware importing
+            // Prevent focus from getting stuck at an arbitrary clamp like 60%
+            if (stdDev < 20) {
+                rawFocus = 20;
+            } else if (stdDev >= 20 && stdDev < 400) {
+                // Scale focus up across a wider variance band typical of real hardware
+                // from 20 to 100%
+                rawFocus = 20 + ((stdDev - 20) / 380) * 80;
+            } else {
+                // Value drops gradually if variance is extreme (muscle noise/movement)
+                rawFocus = Math.max(30, 100 - ((stdDev - 400) * 0.1));
+            }
+
+            // Re-calibrated stress sensitivity curve for live importing.
+            // A much gentler slope prevents the reading from immediately pegging at 100% 
+            // when raw muscle artifacts or large baseline shifts occur.
+            rawStress = stdDev > 120 ? 5 + ((stdDev - 120) * 0.05) : 5;
 
             // Artificial suppression of Fatigue (kept very low as requested)
             rawFatigue = stdDev < 15 ? 15 - stdDev : 5;
 
-            // Add slight random organic movement (reduced to prevent jumpiness)
-            rawFocus += (Math.random() * 4 - 2);
-            rawStress += (Math.random() * 4 - 2);
-            rawFatigue += (Math.random() * 2 - 1);
+            // Artificial random organic movement is REMOVED
+            // Live hardware already provides enough natural variation; adding random 
+            // noise just causes unwanted jumpiness in the progress bars.
         }
 
         // Keep values strictly within 0 - 100%
@@ -61,8 +76,8 @@ export class SignalProcessor {
         rawFatigue = Math.min(Math.max(rawFatigue, 0), 100);
 
         // Apply Exponential Moving Average (EMA) smoothing for each state
-        // Use a slightly softer EMA constant for focus so it doesn't snap rapidly
-        const focusEMA = 0.03;
+        // Use a much softer EMA constant (0.01 instead of 0.03) for rock-solid stability
+        const focusEMA = 0.01;
         this.smoothedFocus = (focusEMA * rawFocus) + ((1 - focusEMA) * this.smoothedFocus);
         this.smoothedStress = this.smoothedStress === undefined ? rawStress : (this.alphaEMA * rawStress) + ((1 - this.alphaEMA) * this.smoothedStress);
         this.smoothedFatigue = this.smoothedFatigue === undefined ? rawFatigue : (this.alphaEMA * rawFatigue) + ((1 - this.alphaEMA) * this.smoothedFatigue);
@@ -83,8 +98,9 @@ export class SignalProcessor {
 
         // Generate mock Alpha and Beta values for the Car Brain Control Engine
         // Base them on the SMOOTHED focus, not raw focus, to inherently stabilize them
-        let rawBeta = this.smoothedFocus * 0.85 + (Math.random() * 2);
-        let rawAlpha = (100 - this.smoothedFocus) * 0.85 + (Math.random() * 2);
+        // Removed artificial random noise to maintain clean signals
+        let rawBeta = this.smoothedFocus * 0.85;
+        let rawAlpha = (100 - this.smoothedFocus) * 0.85;
 
         this.smoothedAlpha = this.smoothedAlpha === undefined ? rawAlpha : (this.alphaEMA * rawAlpha) + ((1 - this.alphaEMA) * this.smoothedAlpha);
         this.smoothedBeta = this.smoothedBeta === undefined ? rawBeta : (this.alphaEMA * rawBeta) + ((1 - this.alphaEMA) * this.smoothedBeta);
