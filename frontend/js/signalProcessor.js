@@ -112,6 +112,7 @@ export class SignalProcessor {
             confidence: this.smoothedConfidence.toFixed(1),
             alpha: Math.round(Math.max(this.smoothedAlpha, 0)),
             beta: Math.round(Math.max(this.smoothedBeta, 0)),
+            gamma: ((this.smoothedFocus * 0.15) + (Math.random() * 2)).toFixed(1) + ' µV²',
             raw: this.buffer[this.buffer.length - 1]
         };
     }

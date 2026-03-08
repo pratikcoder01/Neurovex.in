@@ -312,6 +312,50 @@
 
                     </div>
 
+                    <!-- Virtual Bulb Widget -->
+                    <div
+                        class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col items-center justify-center relative overflow-hidden group">
+                        <!-- Background Glow Illusion -->
+                        <div class="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-amber-100 opacity-0 transition-opacity duration-700"
+                            id="bulb-bg-glow"></div>
+
+                        <div class="w-full flex justify-between items-center mb-6 z-10 border-b border-slate-100 pb-2">
+                            <h3
+                                class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <span class="material-icons text-sm">emoji_objects</span> Virtual Bulb
+                            </h3>
+                            <span
+                                class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded font-mono font-bold text-[10px] transition-colors"
+                                id="bulb-cmd-label">WAITING</span>
+                        </div>
+
+                        <div class="flex items-center gap-6 z-10 w-full">
+                            <!-- Bulb Visual Container -->
+                            <div class="relative shrink-0">
+                                <!-- Outer Glow Aura -->
+                                <div id="bulb-aura"
+                                    class="absolute -inset-2 bg-amber-400 rounded-full blur-xl opacity-0 transition-opacity duration-500 mix-blend-multiply">
+                                </div>
+
+                                <div id="bulb-graphic"
+                                    class="w-16 h-16 rounded-full bg-slate-100 border-2 border-slate-200 flex items-center justify-center transition-all duration-[600ms] relative z-10 transform origin-bottom">
+                                    <span id="bulb-icon"
+                                        class="material-icons text-3xl text-slate-300 transition-colors duration-[600ms]">lightbulb</span>
+                                </div>
+                            </div>
+
+                            <!-- Info text -->
+                            <div class="flex-1">
+                                <h4 class="text-xl font-bold text-slate-800 tracking-tight transition-colors duration-500"
+                                    id="bulb-status-heading">Bulb Off</h4>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Focus above threshold triggers
+                                    <code class="bg-slate-100 text-pink-600 px-1 py-0.5 rounded">BULB_ON</code>.
+                                    Relaxation triggers <code
+                                        class="bg-slate-100 text-pink-600 px-1 py-0.5 rounded">BULB_OFF</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -374,6 +418,10 @@
 
                     document.querySelectorAll('.arrow-btn').forEach(b => b.disabled = false);
                     setSafetyBox(true, "Hardware Link Active.");
+
+                    // Reset bulb state
+                    isBulbOn = false;
+                    setBulbState(false, true); // force update
                 }
             } else {
                 await serialEngine.disconnect(); // safely handles stop logic
@@ -397,12 +445,68 @@
 
         // Loop: Raw Data -> Processor -> Brain Engine
         let lastHWUITime = 0;
+
+        // Virtual Bulb UI Elements
+        const bulbGraphic = document.getElementById('bulb-graphic');
+        const bulbAura = document.getElementById('bulb-aura');
+        const bulbIcon = document.getElementById('bulb-icon');
+        const bulbBgGlow = document.getElementById('bulb-bg-glow');
+        const bulbCmdLabel = document.getElementById('bulb-cmd-label');
+        const bulbStatusHeading = document.getElementById('bulb-status-heading');
+        let isBulbOn = false;
+
+        function setBulbState(on, force = false) {
+            if (isBulbOn === on && !force) return;
+            isBulbOn = on;
+
+            if (on) {
+                // Animate On
+                bulbGraphic.className = "w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 border-2 border-amber-200 flex items-center justify-center transition-all duration-[600ms] ease-out relative z-10 transform scale-110 shadow-[0_0_30px_rgba(251,191,36,0.5)]";
+                bulbIcon.className = "material-icons text-3xl text-white drop-shadow-md transition-colors duration-[600ms]";
+                bulbAura.classList.remove('opacity-0');
+                bulbAura.classList.add('opacity-70', 'animate-pulse');
+                bulbBgGlow.classList.remove('opacity-0');
+                bulbBgGlow.classList.add('opacity-100');
+
+                bulbStatusHeading.innerText = "Bulb On";
+                bulbStatusHeading.className = "text-xl font-bold text-amber-600 tracking-tight transition-colors duration-500";
+
+                bulbCmdLabel.innerText = "TX: BULB_ON";
+                bulbCmdLabel.className = "bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded font-mono text-[10px] animate-pulse";
+
+                if (isConnected) carCtrl.sendCommand("BULB_ON");
+            } else {
+                // Animate Off
+                bulbGraphic.className = "w-16 h-16 rounded-full bg-slate-100 border-2 border-slate-200 flex items-center justify-center transition-all duration-[600ms] ease-in relative z-10 transform scale-100";
+                bulbIcon.className = "material-icons text-3xl text-slate-300 transition-colors duration-[600ms]";
+                bulbAura.classList.add('opacity-0');
+                bulbAura.classList.remove('opacity-70', 'animate-pulse');
+                bulbBgGlow.classList.add('opacity-0');
+                bulbBgGlow.classList.remove('opacity-100');
+
+                bulbStatusHeading.innerText = "Bulb Off";
+                bulbStatusHeading.className = "text-xl font-bold text-slate-800 tracking-tight transition-colors duration-500";
+
+                bulbCmdLabel.innerText = "TX: BULB_OFF";
+                bulbCmdLabel.className = "bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded font-mono text-[10px]";
+
+                if (isConnected) carCtrl.sendCommand("BULB_OFF");
+            }
+        }
+
         serialEngine.onData((rawVal) => {
             processor.feed(rawVal);
             const stats = processor.computeStats();
             if (stats) {
                 safetyMgr.updateSignal(stats.confidence);
                 brainEngine.processSignal(stats);
+
+                // Bulb Logic: Independent of Car modes, just reacts to raw processed stats
+                if (stats.focus >= brainEngine.focusThreshold && stats.confidence > 60) {
+                    setBulbState(true);
+                } else if (stats.alpha > stats.beta || stats.focus < 40) {
+                    setBulbState(false);
+                }
 
                 const now = Date.now();
                 if (now - lastHWUITime > 100) {

@@ -13,6 +13,9 @@ const int MOTOR_B_DIR1 = 27;
 const int MOTOR_B_DIR2 = 26;
 const int MOTOR_B_PWM  = 25;
 
+// --- Virtual Bulb Pin (Built-in LED) ---
+const int BULB_PIN = 2;
+
 void setup() {
     Serial.begin(BAUD_RATE);
 
@@ -24,6 +27,9 @@ void setup() {
     pinMode(MOTOR_B_DIR1, OUTPUT);
     pinMode(MOTOR_B_DIR2, OUTPUT);
     pinMode(MOTOR_B_PWM, OUTPUT);
+    
+    pinMode(BULB_PIN, OUTPUT);
+    digitalWrite(BULB_PIN, LOW); // Bulb off by default
     
     stopMotors();
     
@@ -54,6 +60,10 @@ void handleCommand(String cmd) {
         moveRight();
     } else if (cmd == "STOP" || cmd == "ESTOP") {
         stopMotors();
+    } else if (cmd == "BULB_ON") {
+        digitalWrite(BULB_PIN, HIGH);
+    } else if (cmd == "BULB_OFF") {
+        digitalWrite(BULB_PIN, LOW);
     }
 }
 
