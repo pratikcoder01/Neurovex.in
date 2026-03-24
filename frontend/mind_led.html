@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind LED Control | Neurovex</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        background: {
+                            dark: '#0f172a'
+                        },
+                        surface: {
+                            dark: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* LED Animations */
+        @keyframes subtlePulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        
+        .led-glowing-on {
+            box-shadow: 0 0 40px 10px rgba(52, 211, 153, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.5) !important;
+            animation: subtlePulse 2s infinite ease-in-out;
+            background: radial-gradient(circle at 30% 30%, #a7f3d0, #10b981) !important;
+            border-color: #059669 !important;
+        }
+
+        .led-off {
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5) !important;
+            background: radial-gradient(circle at 30% 30%, #64748b, #334155) !important;
+            border-color: #1e293b !important;
+        }
+        
+        /* Circular Progress Meter */
+        .circular-chart {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            max-height: 250px;
+        }
+        .circle-bg {
+            fill: none;
+            stroke: #334155;
+            stroke-width: 2.5;
+        }
+        .circle {
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.3s ease, stroke 0.3s ease;
+        }
+        .percentage {
+            fill: #f8fafc;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            font-size: 0.5em;
+            text-anchor: middle;
+        }
+        .meter-label {
+            fill: #94a3b8;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.15em;
+            text-anchor: middle;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-slate-200 h-screen flex flex-col overflow-hidden antialiased">
+    <!-- Header -->
+    <header class="bg-surface-dark border-b border-slate-700 h-16 flex items-center justify-between px-6 flex-shrink-0 z-20 shadow-md">
+        <div class="flex items-center gap-4 cursor-pointer group" onclick="window.location.href='index.html'">
+            <img src="./assets/images/logo.jpeg" alt="Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 shadow-sm group-hover:scale-105 transition-transform">
+            <span class="font-bold text-xl tracking-tight text-white group-hover:text-primary transition-colors">Neurovex</span>
+            <div class="h-6 w-px bg-slate-700 mx-2"></div>
+            <div class="text-sm font-medium text-slate-400">Mind LED Control</div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="bg-slate-800 rounded-lg px-3 py-1.5 flex items-center gap-2 border border-slate-700">
+                <span id="backend-status-dot" class="w-2 h-2 rounded-full bg-rose-500"></span>
+                <span id="backend-status-text" class="text-xs font-mono font-bold text-slate-400">DISCONNECTED</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
+        <!-- Desktop Sidebar Navigation -->
+        <aside class="w-64 bg-surface-dark border-r border-slate-700 p-4 flex-col z-10 hidden md:flex shrink-0">
+            <div class="space-y-1 mt-4">
+                <a href="./dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 font-medium rounded-xl hover:bg-slate-800 hover:text-white transition-colors">
+                    <span class="material-icons-outlined text-xl">dashboard</span> Overview
+                </a>
+                <a href="./hardware.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 font-medium rounded-xl hover:bg-slate-800 hover:text-white transition-colors">
+                    <span class="material-icons-outlined text-xl">memory</span> Hardware
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-primary bg-primary/10 font-medium rounded-xl transition-colors">
+                    <span class="material-icons text-xl">lightbulb</span> Mind LED
+                </a>
+                <a href="./games.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 font-medium rounded-xl hover:bg-slate-800 hover:text-white transition-colors">
+                    <span class="material-icons-outlined text-xl">sports_esports</span> Games
+                </a>
+            </div>
+        </aside>
+
+        <!-- Mobile Bottom Tab Bar -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-dark/95 backdrop-blur-md border-t border-slate-700 z-50 flex justify-around items-center h-16 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+            <a href="./hardware.html" class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-white transition-colors">
+                <span class="material-icons-outlined text-xl mb-1">memory</span>
+                <span class="text-[10px] font-medium">Hardware</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center w-full h-full text-primary transition-colors relative">
+                <div class="absolute -top-3 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)] border-4 border-surface-dark">
+                    <span class="material-icons text-xl">lightbulb</span>
+                </div>
+                <span class="text-[10px] font-bold mt-5 text-primary">Mind LED</span>
+            </a>
+            <a href="./games.html" class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-white transition-colors">
+                <span class="material-icons-outlined text-xl mb-1">sports_esports</span>
+                <span class="text-[10px] font-medium">Games</span>
+            </a>
+        </nav>
+
+        <!-- Main Content Area -->
+        <section class="flex-1 bg-slate-900 p-4 pb-24 md:p-8 overflow-y-auto relative flex flex-col items-center">
+            
+            <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+                
+                <!-- Left Column: Focus Meter -->
+                <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-xl flex flex-col items-center justify-center">
+                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 w-full text-left">Live Focus Score</h2>
+                    
+                    <svg viewBox="0 0 36 36" class="circular-chart text-emerald-500">
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path class="circle" id="focus-circle" stroke-dasharray="0, 100" stroke="currentColor" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <text x="18" y="19" class="percentage" id="focus-text">0%</text>
+                        <text x="18" y="24" class="meter-label">Focus</text>
+                    </svg>
+
+                    <div class="mt-8 w-full p-4 bg-slate-900/50 rounded-xl border border-slate-700 text-center">
+                        <p class="text-xs text-slate-400 mb-1">Activation Threshold</p>
+                        <p class="text-lg font-mono font-bold text-emerald-400">≥ 90%</p>
+                    </div>
+                </div>
+
+                <!-- Right Column: LED Status -->
+                <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-xl flex flex-col items-center justify-center relative overflow-hidden">
+                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-8 w-full text-left z-10">Target Device: LED</h2>
+
+                    <!-- Virtual LED Element -->
+                    <div class="relative mb-8 z-10 w-full flex justify-center">
+                        <!-- LED Dome Base -->
+                        <div class="w-32 h-32 rounded-full led-off border-[6px] transition-all duration-700 ease-in-out relative flex items-center justify-center shadow-2xl" id="virtual-led">
+                            <span class="material-icons text-5xl text-white/30 transition-opacity" id="led-icon">tungsten</span>
+                        </div>
+                    </div>
+
+                    <!-- Status Display -->
+                    <div class="z-10 text-center w-full">
+                        <h3 class="text-3xl font-bold font-mono tracking-tight text-slate-500 mb-2 transition-colors duration-500" id="led-status-text">LED IS OFF</h3>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-700 shadow-inner">
+                            <span class="w-2 h-2 rounded-full bg-slate-500" id="tx-indicator"></span>
+                            <span class="text-[10px] font-mono font-bold text-slate-400 tracking-wider" id="tx-label">WAITING FOR TRIGGER</span>
+                        </div>
+                    </div>
+
+                    <!-- Event Log -->
+                    <div class="mt-8 w-full p-3 bg-slate-900/80 rounded-lg border border-slate-700 shadow-inner h-24 overflow-y-auto font-mono text-xs z-10" id="event-log">
+                        <div class="text-slate-500 mb-1">>>> System initialized. Waiting for connection...</div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- Instructions Box -->
+            <div class="max-w-4xl w-full mt-6 bg-blue-900/20 border border-blue-800/50 p-6 rounded-2xl flex items-start gap-4">
+                <span class="material-icons text-blue-400 mt-1">info</span>
+                <div>
+                    <h4 class="text-sm font-bold text-blue-300 mb-1">How it Works</h4>
+                    <p class="text-sm text-blue-200/80 leading-relaxed">
+                        This interface connects to a Python backend via WebSockets. The backend processes live EEG signals. 
+                        When your focus score reaches or exceeds <span class="font-bold text-white">90%</span>, it triggers a toggle command. 
+                        A debounce of 2-3 seconds prevents rapid switching. The command is also sent to the ESP32 to turn a physical LED <span class="text-emerald-400 font-bold">ON</span> or <span class="text-slate-400 font-bold">OFF</span>.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script>
+        // UI Elements
+        const focusCircle = document.getElementById('focus-circle');
+        const focusText = document.getElementById('focus-text');
+        const virtualLed = document.getElementById('virtual-led');
+        const ledStatusText = document.getElementById('led-status-text');
+        const ledIcon = document.getElementById('led-icon');
+        const txIndicator = document.getElementById('tx-indicator');
+        const txLabel = document.getElementById('tx-label');
+        const backendDot = document.getElementById('backend-status-dot');
+        const backendText = document.getElementById('backend-status-text');
+        const eventLog = document.getElementById('event-log');
+
+        let currentLedState = false;
+
+        function logEvent(msg, type='info') {
+            const div = document.createElement('div');
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+            
+            let color = 'text-slate-400';
+            if(type === 'success') color = 'text-emerald-400';
+            if(type === 'error') color = 'text-rose-400';
+            if(type === 'trigger') color = 'text-amber-400';
+
+            div.className = `mb-1 ${color}`;
+            div.innerText = `[${time}] ${msg}`;
+            eventLog.appendChild(div);
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+
+        function updateFocusUI(score) {
+            // Circle config: dasharray max is 100.
+            focusCircle.style.strokeDasharray = `${score}, 100`;
+            focusText.innerText = `${score}%`;
+            
+            // Color mapping based on score
+            if (score >= 90) {
+                focusCircle.style.stroke = "#10b981"; // Emerald
+                focusCircle.classList.add("drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]");
+            } else if (score >= 60) {
+                focusCircle.style.stroke = "#3b82f6"; // Blue
+                focusCircle.classList.remove("drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]");
+            } else {
+                focusCircle.style.stroke = "#64748b"; // Slate
+                focusCircle.classList.remove("drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]");
+            }
+        }
+
+        function setVirtualLed(isOn) {
+            if (currentLedState === isOn) return;
+            currentLedState = isOn;
+
+            if (isOn) {
+                virtualLed.classList.remove('led-off');
+                virtualLed.classList.add('led-glowing-on');
+                ledStatusText.innerText = "LED IS ON";
+                ledStatusText.classList.replace('text-slate-500', 'text-emerald-400');
+                ledIcon.classList.replace('text-white/30', 'text-white/90');
+                txIndicator.className = "w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]";
+                txLabel.innerText = "STATE: ON";
+                txLabel.className = "text-[10px] font-mono font-bold text-emerald-400 tracking-wider";
+                logEvent("LED toggled ON", "success");
+            } else {
+                virtualLed.classList.remove('led-glowing-on');
+                virtualLed.classList.add('led-off');
+                ledStatusText.innerText = "LED IS OFF";
+                ledStatusText.classList.replace('text-emerald-400', 'text-slate-500');
+                ledIcon.classList.replace('text-white/90', 'text-white/30');
+                txIndicator.className = "w-2 h-2 rounded-full bg-slate-500";
+                txLabel.innerText = "STATE: OFF";
+                txLabel.className = "text-[10px] font-mono font-bold text-slate-400 tracking-wider";
+                logEvent("LED toggled OFF", "info");
+            }
+        }
+
+        // Connect to Python Backend WebSocket
+        function connectWebSocket() {
+            logEvent("Connecting to Python Backend...", "info");
+            // Standard port for led_controller.py
+            const ws = new WebSocket("ws://localhost:8765"); 
+
+            ws.onopen = () => {
+                backendDot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-[pulse_2s_infinite]";
+                backendText.innerText = "CONNECTED";
+                backendText.className = "text-xs font-mono font-bold text-emerald-400";
+                logEvent("Connected to Backend WebSocket successfully.", "success");
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    
+                    if (data.type === "telemetry") {
+                        updateFocusUI(data.focus_score);
+                        setVirtualLed(data.led_state === "ON");
+                    } else if (data.type === "trigger") {
+                        logEvent(`Focus detected (${data.focus_score}%) -> LED toggled!`, "trigger");
+                    } else if (data.type === "status") {
+                        logEvent(data.message, "info");
+                    }
+                } catch (e) {
+                    console.error("Malformed ws message", e);
+                }
+            };
+
+            ws.onclose = () => {
+                backendDot.className = "w-2 h-2 rounded-full bg-rose-500";
+                backendText.innerText = "DISCONNECTED";
+                backendText.className = "text-xs font-mono font-bold text-slate-400";
+                logEvent("WebSocket Connection Lost. Retrying in 5s...", "error");
+                setTimeout(connectWebSocket, 5000);
+            };
+
+            ws.onerror = (err) => {
+                console.error("WS Error:", err);
+            };
+        }
+
+        // Initialize display
+        updateFocusUI(0);
+        
+        // Start Connection
+        connectWebSocket();
+
+    </script>
+</body>
+</html>

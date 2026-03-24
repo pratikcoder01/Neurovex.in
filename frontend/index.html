@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Neurovex: Medical-Grade Brain-Computer Interface for Assistive Technology and Research.">
+    <title>Neurovex | Neurovex</title>
+
+
+    <link href="./stitch/css/stitch-base.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="./stitch/js/stitch-theme.js"></script>
+
+
+
+    <link href="./assets/css/style.css" rel="stylesheet">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body class="bg-background-light text-text-main antialiased selection:bg-primary selection:text-white">
+
+
+    <nav id="navbar"
+        class="fixed top-0 z-50 w-full transition-all duration-300 border-b border-transparent bg-surface-light/80 backdrop-blur-md">
+        <div class="navbar">
+
+            <div class="nav-left">
+                <a href="#" class="flex items-center gap-2 group relative z-50">
+                    <img src="./assets/images/logo.jpeg" alt="Neurovex Logo"
+                        class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 shadow-sm group-hover:scale-105 transition-transform">
+                    <span
+                        class="font-bold text-xl tracking-tight text-text-main group-hover:text-primary transition-colors">Neurovex</span>
+                </a>
+            </div>
+
+
+            <div class="nav-links hidden lg:flex items-center">
+                <a href="#how-it-works"
+                    class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">How It
+                    Works</a>
+                <a href="#use-cases"
+                    class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">Use
+                    Cases</a>
+                <a href="./hardware.html"
+                    class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">Hardware
+                    Control</a>
+                <a href="#live-demo"
+                    class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">Live
+                    Demo</a>
+                <a href="#study-focus"
+                    class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">Study Focus
+                    Mode</a>
+                <a href="#games"
+                    class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">Neurovex
+                    Games</a>
+                <a href="#research"
+                    class="nav-link text-sm font-medium text-text-sub hover:text-primary transition-colors">Safety &
+                    Ethics</a>
+            </div>
+
+
+            <div class="nav-right hidden lg:flex items-center">
+
+
+
+                <div class="divider h-6 w-px bg-border-light mx-2"></div>
+
+
+                <a href="./signin.html"
+                    class="sign-in text-sm font-medium text-text-sub hover:text-primary transition-colors">Sign In</a>
+
+
+                <a href="./signup.html"
+                    class="get-started-btn inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg shadow-lg text-sm font-semibold text-white bg-primary hover:bg-primary-dark transition-all hover:-translate-y-0.5">
+                    Get Started
+                </a>
+
+
+                <a href="./profile.html"
+                    class="profile-avatar p-2 rounded-full text-text-sub hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                    aria-label="User Profile">
+                    <span class="material-icons text-xl">person</span>
+                </a>
+            </div>
+
+
+            <div class="flex items-center gap-4 lg:hidden">
+
+                <button id="mobile-menu-btn" class="text-text-main p-2 focus:outline-none relative z-50"
+                    aria-label="Open Menu">
+                    <span class="material-icons text-2xl">menu</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-white z-40 transform translate-x-full transition-transform duration-300 lg:hidden flex flex-col pt-24 px-6 pb-8 gap-5 overflow-y-auto">
+        <a href="#how-it-works"
+            class="mobile-link text-lg font-medium text-slate-800 hover:text-primary border-b border-slate-100 pb-3">How
+            It
+            Works</a>
+        <a href="#use-cases"
+            class="mobile-link text-lg font-medium text-slate-800 hover:text-primary border-b border-slate-100 pb-3">Use
+            Cases</a>
+        <a href="./hardware.html"
+            class="mobile-link text-lg font-medium text-slate-800 hover:text-primary border-b border-slate-100 pb-3">Hardware
+            Control</a>
+        <a href="#live-demo"
+            class="mobile-link text-lg font-medium text-slate-800 hover:text-primary border-b border-slate-100 pb-3">Live
+            Demo</a>
+        <a href="#study-focus"
+            class="mobile-link text-lg font-medium text-slate-800 hover:text-primary border-b border-slate-100 pb-3">Study
+            Focus
+            Mode</a>
+        <a href="#games"
+            class="mobile-link text-lg font-medium text-slate-800 hover:text-primary border-b border-slate-100 pb-3">Neurovex
+            Games</a>
+        <a href="#research"
+            class="mobile-link text-lg font-medium text-slate-800 hover:text-primary border-b border-slate-100 pb-3">Safety
+            &
+            Ethics</a>
+
+        <div class="flex flex-col gap-3 mt-4 mb-4 border-t border-slate-100 pt-6">
+            <a href="./signin.html"
+                class="mobile-link text-center py-3 text-slate-700 font-bold border border-slate-200 hover:bg-slate-50 rounded-xl transition-all">
+                Sign In
+            </a>
+            <a href="./signup.html"
+                class="mobile-link text-center py-3 text-white font-bold bg-primary hover:bg-blue-600 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all">
+                Sign Up <span class="material-icons text-sm">rocket_launch</span>
+            </a>
+            <a href="./profile.html"
+                class="mobile-link text-center py-3 text-slate-700 font-bold border border-slate-200 hover:bg-slate-50 rounded-xl flex items-center justify-center gap-2 transition-all mt-2">
+                <span class="material-icons-outlined">person</span> Profile
+            </a>
+        </div>
+    </div>
+
+
+
+    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <div
+                class="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/5 blur-3xl animate-pulse-slow">
+            </div>
+            <div class="absolute bottom-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-medical-teal/5 blur-3xl"
+                style="animation-delay: 2s"></div>
+        </div>
+
+        <div
+            class="relative z-10 container-fluid flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-8 items-center pt-8 lg:pt-0">
+
+            <div class="text-left reveal-on-scroll">
+                <div
+                    class="inline-flex items-center px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-semibold uppercase tracking-wider mb-6">
+                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+                    Research Demo • v1.0
+                </div>
+
+                <h1 class="text-2xl lg:text-4xl font-bold tracking-tight text-gradient-medical mb-6 leading-[1.1]"
+                    style="font-size: 2rem !important; line-height: 1.2 !important;">
+                    Neurovex
+                </h1>
+
+                <p class="text-xl text-text-sub mb-8 font-light max-w-lg leading-relaxed">
+                    Control devices using your brain — no surgery, non-invasive EEG.
+                    The first open-source assistive platform designed for accessibility and research applications.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#live-demo"
+                        class="inline-flex items-center justify-center px-8 py-4 text-base font-semibold rounded-lg shadow-lg shadow-primary/20 text-white bg-primary hover:bg-primary-dark transition-all transform hover:-translate-y-1">
+                        Try Live Demo
+                        <span class="material-icons ml-2 text-sm">arrow_downward</span>
+                    </a>
+                    <a href="./community.html"
+                        class="inline-flex items-center justify-center px-8 py-4 text-base font-medium rounded-lg text-text-main bg-surface-light border border-border-light hover:border-primary/50 transition-all shadow-sm">
+                        View Research
+                    </a>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-border-light">
+                    <p class="text-xs font-semibold text-text-muted uppercase tracking-widest mb-3">Powered By</p>
+                    <div class="flex gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+
+                        <div class="font-display font-bold text-lg text-text-sub">NeuroTech<span
+                                class="text-primary">Lab</span></div>
+                        <div class="font-display font-bold text-lg text-text-sub">Open<span
+                                class="text-medical-teal">BCI</span></div>
+                        <div class="font-display font-bold text-lg text-text-sub">IEEE<span
+                                class="text-text-muted">Bio</span></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="relative w-full h-[350px] lg:h-[600px] flex flex-col items-center justify-center reveal-on-scroll"
+                style="transition-delay: 200ms">
+
+                <div id="brain-container"
+                    class="w-full h-full absolute inset-0 z-10 cursor-grab active:cursor-grabbing"></div>
+
+
+                <div
+                    class="absolute bottom-10 z-20 px-4 py-2 bg-surface-light/80 backdrop-blur rounded-full border border-border-light shadow-sm flex items-center gap-3">
+                    <span class="flex h-3 w-3 relative">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                    </span>
+                    <span class="text-xs font-mono text-text-sub">Live neural signal simulation (Demo Mode)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="how-it-works" class="py-24 bg-surface-highlight border-y border-border-light relative overflow-hidden">
+        <div class="container-fluid relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal-on-scroll">
+                <h2 class="text-3xl font-bold text-text-main mb-4">How Neurovex Works</h2>
+                <p class="text-lg text-text-sub">From brainwaves to action in four milliseconds.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div
+                    class="bg-surface-light p-6 rounded-xl border border-border-light shadow-sm hover:shadow-md transition-all reveal-on-scroll group">
+                    <div
+                        class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mb-4 text-primary font-bold text-xl group-hover:scale-110 transition-transform">
+                        1</div>
+                    <h3 class="font-semibold text-text-main mb-2">Signal Capture</h3>
+                    <p class="text-sm text-text-sub">Non-invasive EEG sensors detect micro-voltage fluctuations on the
+                        scalp.</p>
+                </div>
+
+                <div class="bg-surface-light p-6 rounded-xl border border-border-light shadow-sm hover:shadow-md transition-all reveal-on-scroll group"
+                    style="transition-delay: 100ms">
+                    <div
+                        class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg flex items-center justify-center mb-4 text-indigo-500 font-bold text-xl group-hover:scale-110 transition-transform">
+                        2</div>
+                    <h3 class="font-semibold text-text-main mb-2">Filters & Denoise</h3>
+                    <p class="text-sm text-text-sub">Hardware & software filters remove muscle artifacts (EMG) and
+                        electrical noise.</p>
+                </div>
+
+                <div class="bg-surface-light p-6 rounded-xl border border-border-light shadow-sm hover:shadow-md transition-all reveal-on-scroll group"
+                    style="transition-delay: 200ms">
+                    <div
+                        class="w-12 h-12 bg-teal-50 dark:bg-teal-900/20 rounded-lg flex items-center justify-center mb-4 text-medical-teal font-bold text-xl group-hover:scale-110 transition-transform">
+                        3</div>
+                    <h3 class="font-semibold text-text-main mb-2">Pattern AI</h3>
+                    <p class="text-sm text-text-sub">Neural networks classify intention (Focus, Relax, Motor Imagery) in
+                        real-time.</p>
+                </div>
+
+                <div class="bg-surface-light p-6 rounded-xl border border-border-light shadow-sm hover:shadow-md transition-all reveal-on-scroll group"
+                    style="transition-delay: 300ms">
+                    <div
+                        class="w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center mb-4 text-safe-emerald font-bold text-xl group-hover:scale-110 transition-transform">
+                        4</div>
+                    <h3 class="font-semibold text-text-main mb-2">Assistive Output</h3>
+                    <p class="text-sm text-text-sub">Commands are sent to wheelchairs, home automation, or digital
+                        interfaces.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="use-cases" class="py-24 bg-background-light">
+        <div class="container-fluid">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal-on-scroll">
+                <div>
+                    <h2 class="text-3xl font-bold text-text-main mb-4">Clinical Applications</h2>
+                    <p class="text-lg text-text-sub max-w-xl">Designed for research labs and daily assistive use.</p>
+                </div>
+                <a href="./community.html"
+                    class="hidden md:inline-flex text-primary font-medium items-center hover:underline mt-4 md:mt-0">
+                    Explore Research Library <span class="material-icons text-sm ml-1">arrow_forward</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
+
+                <div
+                    class="group relative overflow-hidden rounded-2xl bg-surface-light border border-border-light shadow-sm hover:shadow-lg transition-all reveal-on-scroll">
+                    <div class="p-8">
+                        <div
+                            class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6">
+                            <span class="material-icons">wheelchair_pickup</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-text-main mb-2">Motor Control</h3>
+                        <p class="text-text-sub">Direct neural interface for electric wheelchairs and prosthetic limbs
+                            using motor imagery.</p>
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 w-full h-1 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left">
+                    </div>
+                </div>
+
+
+                <div class="group relative overflow-hidden rounded-2xl bg-surface-light border border-border-light shadow-sm hover:shadow-lg transition-all reveal-on-scroll"
+                    style="transition-delay: 100ms">
+                    <div class="p-8">
+                        <div
+                            class="w-12 h-12 rounded-full bg-medical-teal/10 flex items-center justify-center text-medical-teal mb-6">
+                            <span class="material-icons">home_iot_device</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-text-main mb-2">Smart Home</h3>
+                        <p class="text-text-sub">Control lights, temperature, and locks purely through focus levels and
+                            blink artifacts.</p>
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 w-full h-1 bg-medical-teal transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left">
+                    </div>
+                </div>
+
+
+                <div class="group relative overflow-hidden rounded-2xl bg-surface-light border border-border-light shadow-sm hover:shadow-lg transition-all reveal-on-scroll"
+                    style="transition-delay: 200ms">
+                    <div class="p-8">
+                        <div
+                            class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent mb-6">
+                            <span class="material-icons">psychology</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-text-main mb-2">Cognitive Therapy</h3>
+                        <p class="text-text-sub">Real-time neurofeedback for ADHD management and post-stroke cognitive
+                            rehabilitation.</p>
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 w-full h-1 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="live-eeg-section py-24 bg-background-light">
+        <div class="container-fluid text-center max-w-4xl mx-auto">
+
+            <div
+                class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wider mb-6">
+                <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+                LIVE MONITORING
+            </div>
+
+
+            <h2 class="text-4xl md:text-5xl font-bold text-text-main mb-6">Live EEG Monitoring</h2>
+
+
+            <p class="text-lg text-gray-500 mb-16 max-w-2xl mx-auto">Real-time brainwave visualization and analysis</p>
+
+
+            <div class="control-card bg-white rounded-2xl shadow-lg p-10 max-w-md mx-auto">
+                <h3 class="text-2xl font-semibold text-text-main mb-8">Control Center</h3>
+
+
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+
+                    <a href="./dashboard.html"
+                        class="monitor-btn flex items-center justify-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200">
+                        <span class="material-icons mr-2">monitor_heart</span>
+                        Monitor
+                    </a>
+
+
+                    <a href="./hardware.html"
+                        class="hardware-btn flex items-center justify-center px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors duration-200">
+                        <span class="material-icons mr-2">settings_remote</span>
+                        Hardware Control
+                    </a>
+                </div>
+
+
+                <p class="text-sm text-gray-500">Monitor brainwaves or control hardware devices</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="live-demo" class="py-24 bg-surface-highlight border-y border-border-light">
+        <div class="container-fluid">
+            <div class="dashboard-grid">
+
+                <div class="lg:col-span-4 reveal-on-scroll">
+                    <div
+                        class="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-6">
+                        Interactive Simulation
+                    </div>
+                    <h2 class="text-3xl font-bold text-text-main mb-6">Live EEG Analysis</h2>
+                    <p class="text-text-sub mb-8">
+                        Experience how Neurovex visualizes brainwaves in real-time. This simulation generates signals
+                        mimicking Beta (Focus) and Alpha (Relax) waves.
+                    </p>
+
+                    <div class="space-y-4">
+                        <p class="text-sm font-semibold text-text-main uppercase tracking-widest">Select Mental State:
+                        </p>
+                        <div class="flex gap-4">
+                            <button id="btn-focus"
+                                class="flex-1 py-3 px-4 rounded-lg border border-primary bg-primary/5 text-primary font-medium hover:bg-primary hover:text-white transition-all active-state">
+                                Focus / Alert
+                            </button>
+                            <button id="btn-relax"
+                                class="flex-1 py-3 px-4 rounded-lg border border-border-light bg-surface-light text-text-sub font-medium hover:border-medical-teal hover:text-medical-teal transition-all">
+                                Relax / Calm
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        class="mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800/50 flex gap-3">
+                        <span class="material-icons text-yellow-600 dark:text-yellow-400">info</span>
+                        <p class="text-xs text-yellow-800 dark:text-yellow-200">
+                            <strong>Note:</strong> Connect actual Neurovex hardware to view real-time biological data.
+                            This is a browser-based simulation.
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="lg:col-span-8 reveal-on-scroll" style="transition-delay: 200ms">
+                    <div
+                        class="bg-surface-light rounded-xl shadow-lg border border-border-light p-6 h-full flex flex-col">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 id="val-channel-count" class="font-mono text-sm font-bold text-text-sub">CHANNEL: --
+                            </h3>
+                            <div class="flex items-center gap-2">
+                                <span id="ind-signal-status" class="w-2 h-2 rounded-full bg-gray-400"></span>
+                                <span id="val-signal-status" class="text-xs font-mono text-text-muted">SIGNAL:
+                                    DISCONNECTED</span>
+                            </div>
+                        </div>
+
+
+                        <div
+                            class="relative flex-1 bg-background-light rounded-lg border border-border-light overflow-hidden mb-6 h-64">
+                            <canvas id="sim-canvas" class="w-full h-full"></canvas>
+
+                            <div class="absolute inset-0 pointer-events-none opacity-20"
+                                style="background-image: linear-gradient(#ccc 1px, transparent 1px), linear-gradient(90deg, #ccc 1px, transparent 1px); background-size: 20px 20px;">
+                            </div>
+                        </div>
+
+
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="p-4 bg-background-light rounded-lg text-center">
+                                <div class="text-xs text-text-muted mb-1">ATTENTION</div>
+                                <div id="val-attention" class="text-2xl font-bold text-primary">0%</div>
+                            </div>
+                            <div class="p-4 bg-background-light rounded-lg text-center">
+                                <div class="text-xs text-text-muted mb-1">RELAXATION</div>
+                                <div id="val-relaxation" class="text-2xl font-bold text-medical-teal">0%</div>
+                            </div>
+                            <div class="p-4 bg-background-light rounded-lg text-center">
+                                <div class="text-xs text-text-muted mb-1">FATIGUE</div>
+                                <div id="val-fatigue" class="text-2xl font-bold text-text-sub">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="study-focus" class="py-24 bg-surface-highlight border-y border-border-light">
+        <div class="container-fluid">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal-on-scroll">
+                <h2 class="text-3xl font-bold text-text-main mb-4">Study Focus Mode</h2>
+                <p class="text-lg text-text-sub">Optimize your learning sessions with real-time focus monitoring and
+                    adaptive feedback.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-center">
+
+                <div class="feature-card card-hover reveal-on-scroll">
+                    <div class="feature-icon bg-primary/10 text-primary">
+                        <span class="material-icons">visibility</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-text-main mb-2">Focus Tracking</h3>
+                    <p class="text-text-sub mb-4">Monitor attention levels in real-time and receive gentle notifications
+                        when focus drifts.</p>
+                </div>
+
+
+                <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 100ms">
+                    <div class="feature-icon bg-medical-teal/10 text-medical-teal">
+                        <span class="material-icons">schedule</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-text-main mb-2">Study Sessions</h3>
+                    <p class="text-text-sub mb-4">Structured 25-minute focus intervals with 5-minute breaks based on
+                        cognitive performance.</p>
+                </div>
+
+
+                <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 200ms">
+                    <div class="feature-icon bg-accent/10 text-accent">
+                        <span class="material-icons">analytics</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-text-main mb-2">Performance Analytics</h3>
+                    <p class="text-text-sub mb-4">Track improvement over time with detailed cognitive performance
+                        metrics and insights.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="games" class="py-24 bg-background-light">
+        <div class="container-fluid">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal-on-scroll">
+                <h2 class="text-3xl font-bold text-text-main mb-4">Neurovex Games</h2>
+                <p class="text-lg text-text-sub">Train your brain control skills through engaging games and interactive
+                    challenges.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div class="feature-card card-hover reveal-on-scroll">
+                    <div class="feature-icon bg-primary/10 text-primary">
+                        <span class="material-icons">psychology</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-text-main mb-2">Mind Control</h3>
+                    <p class="text-sm text-text-sub mb-4">Control game elements using focus and relaxation states.</p>
+                    <a href="./games.html" class="inline-flex items-center text-primary font-medium hover:underline">
+                        Play Now <span class="material-icons text-sm ml-1">arrow_forward</span>
+                    </a>
+                </div>
+
+
+                <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 100ms">
+                    <div class="feature-icon bg-medical-teal/10 text-medical-teal">
+                        <span class="material-icons">grid_view</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-text-main mb-2">Pattern Match</h3>
+                    <p class="text-sm text-text-sub mb-4">Train pattern recognition and cognitive flexibility.</p>
+                    <a href="./games.html"
+                        class="inline-flex items-center text-medical-teal font-medium hover:underline">
+                        Play Now <span class="material-icons text-sm ml-1">arrow_forward</span>
+                    </a>
+                </div>
+
+
+                <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 200ms">
+                    <div class="feature-icon bg-accent/10 text-accent">
+                        <span class="material-icons">speed</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-text-main mb-2">Reaction Time</h3>
+                    <p class="text-sm text-text-sub mb-4">Improve response speed and mental processing.</p>
+                    <a href="./games.html" class="inline-flex items-center text-accent font-medium hover:underline">
+                        Play Now <span class="material-icons text-sm ml-1">arrow_forward</span>
+                    </a>
+                </div>
+
+
+                <div class="feature-card card-hover reveal-on-scroll" style="transition-delay: 300ms">
+                    <div class="feature-icon bg-safe-emerald/10 text-safe-emerald">
+                        <span class="material-icons">emoji_events</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-text-main mb-2">Leaderboard</h3>
+                    <p class="text-sm text-text-sub mb-4">Compete with others and track your progress.</p>
+                    <a href="./games.html"
+                        class="inline-flex items-center text-safe-emerald font-medium hover:underline">
+                        View Stats <span class="material-icons text-sm ml-1">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hardware Section -->
+    <section id="hardware-integration" class="py-24 bg-surface-dark text-white relative overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 z-0 opacity-20 pointer-events-none"
+            style="background-image: radial-gradient(circle at 1px 1px, #cbd5e1 1px, transparent 0); background-size: 32px 32px;">
+        </div>
+        <div
+            class="absolute top-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary/20 blur-[100px] pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-[-10%] left-[-10%] w-[30vw] h-[30vw] rounded-full bg-emerald-500/20 blur-[80px] pointer-events-none">
+        </div>
+
+        <div class="container-fluid relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+                <!-- Left: Text content -->
+                <div class="reveal-on-scroll">
+                    <div
+                        class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-6">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
+                        Physical Actuation
+                    </div>
+
+                    <h2 class="text-4xl lg:text-5xl font-bold tracking-tight mb-6">Control the Physical World.</h2>
+                    <p class="text-lg text-slate-300 font-light mb-8 leading-relaxed max-w-lg">
+                        Go beyond the screen. Neurovex translates your cognitive states into concrete physical actions.
+                        Drive a robotic car forward using pure concentration, or halt it by entering a relaxed alpha
+                        state.
+                    </p>
+
+                    <div class="space-y-6 mb-10">
+                        <div class="flex gap-4 items-start">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+                                <span class="material-icons text-blue-400">memory</span>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-bold mb-1">ESP32 & Web Serial Integration</h3>
+                                <p class="text-sm text-slate-400">Directly communicate with microcontrollers via USB
+                                    using high-baud-rate browser APIs. Zero latency, local execution.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 items-start">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                                <span class="material-icons text-emerald-400">electric_car</span>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-bold mb-1">Dual-Motor Control Matrix</h3>
+                                <p class="text-sm text-slate-400">Drive L298N motor drivers directly through neural
+                                    thresholds. Includes emergency stop protocols and manual overrides.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="./hardware.html"
+                        class="inline-flex items-center justify-center px-8 py-4 text-base font-semibold rounded-xl text-white bg-primary hover:bg-blue-600 shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-all transform hover:-translate-y-1">
+                        Open Hardware Hub
+                        <span class="material-icons ml-2 text-sm">arrow_forward</span>
+                    </a>
+                </div>
+
+                <!-- Right: Visual Graphic -->
+                <div class="relative w-full h-full min-h-[400px] flex items-center justify-center reveal-on-scroll group"
+                    style="transition-delay: 200ms;">
+
+                    <!-- Floating Dashboard Illusion -->
+                    <div
+                        class="w-full max-w-sm bg-gradient-to-tr from-slate-800 to-slate-900 rounded-3xl border border-white/10 shadow-2xl p-6 transform -rotate-3 group-hover:rotate-0 transition-transform duration-700">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-6">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                            </div>
+                            <div class="text-xs font-mono text-slate-400">COM3 : 115200 BAUD</div>
+                        </div>
+
+                        <!-- Code / Data visualization -->
+                        <div class="space-y-3 font-mono text-xs">
+                            <div class="text-slate-500">> Establishing handshake... <span
+                                    class="text-emerald-400">OK</span></div>
+                            <div class="text-slate-500">> ESP32 Firmware Loaded: <span
+                                    class="text-amber-400">v1.0.4</span></div>
+                            <div class="text-slate-500">> Calibrating baseline... <span
+                                    class="text-blue-400 animate-pulse">WAIT</span></div>
+
+                            <div class="p-3 bg-black/30 rounded-lg border border-white/5 mt-4">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-slate-400">CMDStream_TX</span>
+                                    <span class="text-emerald-400 font-bold">FORWARD</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                                    <div class="w-[75%] h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-black/30 rounded-lg border border-white/5">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-slate-400">Virtual_Bulb_State</span>
+                                    <span class="text-amber-400 font-bold">ON</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                                    <div class="w-[100%] h-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="research" class="py-24 bg-background-light">
+        <div class="container-fluid text-center reveal-on-scroll" style="max-width: 64rem">
+            <span class="material-icons text-4xl text-text-muted mb-4">verified_user</span>
+            <h2 class="text-2xl font-bold text-text-main mb-4">Safety & Ethics First</h2>
+            <p class="text-text-sub mb-8">
+                Neurovex strictly adheres to the <strong class="text-text-main">Asilomar Principles for AI</strong> and
+                medical safety standards.
+                Our hardware includes galvanic isolation, emergency physical disconnects, and privacy-first local
+                processing.
+                No brain data leaves your device without explicit consent.
+            </p>
+            <div class="h-px w-24 bg-border-light mx-auto mb-8"></div>
+            <p class="text-sm text-text-muted">
+                Neurovex is a Final Year Project for research and educational purposes. Not FDA cleared for critical
+                life-support systems.
+            </p>
+        </div>
+    </section>
+
+    <footer class="bg-surface-dark border-t border-white/10 py-12">
+        <div class="container-fluid flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+            <div class="flex items-center gap-4 mb-4 md:mb-0">
+                <span class="font-bold text-white">Neurovex Project</span>
+                <span>•</span>
+                <span>© 2026 Academic License</span>
+            </div>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-white transition-colors">Documentation</a>
+                <a href="#" class="hover:text-white transition-colors">GitHub</a>
+                <a href="#" class="hover:text-white transition-colors">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js?v=2"></script>
+
+
+    <script type="module" src="./stitch/js/brain-vis.js"></script>
+    <script type="module" src="./assets/js/main.js"></script>
+</body>
+
+</html>

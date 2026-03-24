@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware Control | Neurovex</title>
+
+    <link href="./stitch/css/stitch-base.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="./stitch/js/stitch-theme.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        .mode-btn {
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: #0f172a;
+            color: white;
+            border-color: #0f172a;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .mode-btn.inactive {
+            background: #f8fafc;
+            color: #64748b;
+            border-color: #e2e8f0;
+        }
+
+        .arrow-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: #334155;
+            font-size: 32px;
+            transition: all 0.15s;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            user-select: none;
+        }
+
+        .arrow-btn:active:not(:disabled) {
+            transform: translateY(2px) scale(0.95);
+            background: #e2e8f0;
+        }
+
+        .arrow-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .arrow-btn.active-press {
+            background: #3b82f6;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: 2px solid #3b82f6;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type=range]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: 2px solid #3b82f6;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light font-display text-slate-800 h-screen flex flex-col overflow-hidden antialiased">
+
+    <!-- Header -->
+    <header
+        class="bg-surface-light border-b border-slate-200 h-16 flex items-center justify-between px-6 flex-shrink-0 z-20 shadow-sm">
+        <div class="flex items-center gap-4 cursor-pointer group" onclick="window.location.href='index.html'">
+            <img src="./assets/images/logo.jpeg" alt="Logo"
+                class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 shadow-sm group-hover:scale-105 transition-transform">
+            <span
+                class="font-bold text-xl tracking-tight text-slate-900 group-hover:text-primary transition-colors">Neurovex</span>
+            <div class="h-6 w-px bg-slate-200 mx-2"></div>
+            <div class="text-sm font-medium text-slate-500">Hardware Control</div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="bg-slate-100 rounded-lg px-3 py-1.5 flex items-center gap-2 border border-slate-200">
+                <span id="hw-status-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                <span id="hw-status-text" class="text-xs font-mono font-bold text-slate-500">DISCONNECTED</span>
+            </div>
+
+            <button id="connect-hw-btn"
+                class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow-sm flex items-center gap-2 transition-all">
+                <span class="material-icons">cable</span> Connect Car
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
+
+        <!-- Desktop Sidebar Navigation -->
+        <aside class="w-64 bg-surface-light border-r border-slate-200 p-4 flex-col z-10 hidden md:flex shrink-0">
+            <div class="space-y-1 mt-4">
+                <a href="./dashboard.html"
+                    class="flex items-center gap-3 px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-slate-100 transition-colors">
+                    <span class="material-icons-outlined text-xl">dashboard</span> Overview
+                </a>
+                <a href="#"
+                    class="flex items-center gap-3 px-4 py-3 text-primary bg-primary/5 font-medium rounded-xl transition-colors">
+                    <span class="material-icons text-xl">memory</span> Hardware
+                </a>
+                <a href="./games.html"
+                    class="flex items-center gap-3 px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-slate-100 transition-colors">
+                    <span class="material-icons-outlined text-xl">sports_esports</span> Games
+                </a>
+                <a href="./mind_led.html"
+                    class="flex items-center gap-3 px-4 py-3 text-slate-600 font-medium rounded-xl hover:bg-slate-100 transition-colors">
+                    <span class="material-icons-outlined text-xl">lightbulb</span> Mind LED
+                </a>
+            </div>
+        </aside>
+
+        <!-- Mobile Bottom Tab Bar -->
+        <nav
+            class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-200 z-50 flex justify-around items-center h-16 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+            <a href="./dashboard.html"
+                class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-slate-600 transition-colors">
+                <span class="material-icons-outlined text-xl mb-1">dashboard</span>
+                <span class="text-[10px] font-medium">Overview</span>
+            </a>
+            <a href="#"
+                class="flex flex-col items-center justify-center w-full h-full text-primary transition-colors relative">
+                <div
+                    class="absolute -top-3 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-lg border-4 border-slate-50">
+                    <span class="material-icons text-xl">memory</span>
+                </div>
+                <span class="text-[10px] font-bold mt-5 text-primary">Hardware</span>
+            </a>
+            <a href="./games.html"
+                class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-slate-600 transition-colors">
+                <span class="material-icons-outlined text-xl mb-1">sports_esports</span>
+                <span class="text-[10px] font-medium">Games</span>
+            </a>
+            <a href="./mind_led.html"
+                class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-slate-600 transition-colors">
+                <span class="material-icons-outlined text-xl mb-1">lightbulb</span>
+                <span class="text-[10px] font-medium">Mind LED</span>
+            </a>
+        </nav>
+
+        <!-- Main Content Area -->
+        <section class="flex-1 bg-slate-50 p-4 pb-24 md:p-8 overflow-y-auto relative">
+            <div class="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
+                style="background-image: radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0); background-size: 32px 32px;">
+            </div>
+
+            <div class="max-w-5xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                <!-- LEFT COLUMN: Control Hub -->
+                <div class="space-y-6">
+                    <!-- Master Toggle -->
+                    <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex">
+                        <button id="mode-manual-btn"
+                            class="mode-btn active flex-1 py-3 px-4 rounded-xl font-bold flex justify-center items-center gap-2">
+                            <span class="material-icons">gamepad</span> Manual Mode
+                        </button>
+                        <button id="mode-brain-btn"
+                            class="mode-btn inactive flex-1 py-3 px-4 rounded-xl font-bold flex justify-center items-center gap-2">
+                            <span class="material-icons">psychology</span> Brain Control
+                        </button>
+                    </div>
+
+                    <!-- Manual Controls Panel -->
+                    <div id="panel-manual"
+                        class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center min-h-[350px]">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-start-2">
+                                <button id="btn-fw" class="arrow-btn" disabled><span
+                                        class="material-icons">arrow_upward</span></button>
+                            </div>
+                            <div class="row-start-2 col-start-1">
+                                <button id="btn-lt" class="arrow-btn" disabled><span
+                                        class="material-icons">arrow_back</span></button>
+                            </div>
+                            <div class="row-start-2 col-start-2">
+                                <button id="btn-stop"
+                                    class="arrow-btn bg-slate-100 text-rose-500 border-slate-200 hover:bg-rose-50"
+                                    disabled><span class="material-icons">stop_circle</span></button>
+                            </div>
+                            <div class="row-start-2 col-start-3">
+                                <button id="btn-rt" class="arrow-btn" disabled><span
+                                        class="material-icons">arrow_forward</span></button>
+                            </div>
+                            <div class="row-start-3 col-start-2">
+                                <button id="btn-bw" class="arrow-btn" disabled><span
+                                        class="material-icons">arrow_downward</span></button>
+                            </div>
+                        </div>
+                        <p class="text-xs font-medium text-slate-400 mt-6 text-center uppercase tracking-widest">W/A/S/D
+                            or Click to Move</p>
+                    </div>
+
+                    <!-- Brain Controls Panel -->
+                    <div id="panel-brain"
+                        class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hidden min-h-[350px] flex-col">
+
+                        <div class="flex bg-slate-100 p-1 rounded-xl mb-6">
+                            <button id="sub-mode-focus"
+                                class="flex-1 py-2 text-sm font-bold bg-white shadow-sm rounded-lg text-slate-800">Focus
+                                Thrust</button>
+                            <button id="sub-mode-relax"
+                                class="flex-1 py-2 text-sm font-bold text-slate-500 rounded-lg">Relax Stop</button>
+                        </div>
+
+                        <div class="flex-1">
+                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Activation
+                                Threshold</h3>
+                            <div class="flex items-center gap-4 mb-2">
+                                <span class="text-slate-500 text-xs font-mono">50</span>
+                                <input type="range" id="thresh-slider" min="50" max="80" value="65"
+                                    class="w-full h-2 bg-slate-200 rounded-lg appearance-none outline-none">
+                                <span class="text-slate-500 text-xs font-mono">80</span>
+                            </div>
+                            <div class="text-center font-mono text-xl font-bold text-primary mb-8" id="thresh-val">65%
+                            </div>
+
+                            <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl flex items-start gap-3">
+                                <span class="material-icons text-blue-500">info</span>
+                                <p class="text-xs text-blue-700 leading-relaxed font-medium" id="brain-rules-text">Car
+                                    moves Forward when your Focus exceeds 65% for 0.5s consecutively.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Telemetry & Safety -->
+                <div class="space-y-6">
+
+                    <!-- Emergency Stop -->
+                    <button id="estop-btn"
+                        class="w-full bg-rose-50 border-2 border-rose-200 p-6 rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-rose-100 transition-colors group">
+                        <span
+                            class="material-icons text-4xl text-rose-500 group-hover:scale-110 transition-transform">report</span>
+                        <span class="font-bold tracking-widest text-rose-600 text-lg">EMERGENCY STOP</span>
+                    </button>
+
+                    <!-- Safe Status Box -->
+                    <div id="safety-box"
+                        class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex items-center gap-3">
+                        <span class="material-icons text-emerald-500">verified_user</span>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold text-emerald-700">System Safe</div>
+                            <div id="safety-subtext" class="text-xs text-emerald-600">All logic conditions optimal.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Signal Telemetry -->
+                    <div class="bg-slate-900 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+
+                        <!-- Graph overlay illusion -->
+                        <div class="absolute bottom-0 left-0 right-0 h-24 opacity-10"
+                            style="background: repeating-linear-gradient(0deg, transparent, transparent 19px, #fff 20px);">
+                        </div>
+
+                        <h3
+                            class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-700 pb-2">
+                            Live Telemetry</h3>
+
+                        <div class="grid grid-cols-2 gap-6 relative z-10">
+                            <div>
+                                <div class="text-xs font-mono text-slate-400 mb-1">RAW FOCUS</div>
+                                <div class="text-4xl font-mono font-bold tracking-tighter text-blue-400"
+                                    id="live-focus">--%</div>
+                                <div class="w-full bg-slate-800 rounded-full h-1.5 mt-2">
+                                    <div class="bg-blue-400 h-1.5 rounded-full transition-all duration-300"
+                                        id="live-focus-bar" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="text-xs font-mono text-slate-400 mb-1">CONFIDENCE</div>
+                                <div class="text-4xl font-mono font-bold tracking-tighter text-emerald-400"
+                                    id="live-conf">--%</div>
+                                <div class="w-full bg-slate-800 rounded-full h-1.5 mt-2">
+                                    <div class="bg-emerald-400 h-1.5 rounded-full transition-all duration-300"
+                                        id="live-conf-bar" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="text-xs font-mono text-slate-400 mb-1">ALPHA (RELAX)</div>
+                                <div class="text-2xl font-mono font-bold text-purple-400" id="live-alpha">--%</div>
+                            </div>
+
+                            <div>
+                                <div class="text-xs font-mono text-slate-400 mb-1">BETA (ACTIVE)</div>
+                                <div class="text-2xl font-mono font-bold text-amber-400" id="live-beta">--%</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Core App Logic -->
+    <script type="module">
+        import { SerialEngine } from './js/hardware/serialEngine.js';
+        import { CarController } from './js/hardware/carController.js';
+        import { BrainControlEngine } from './js/hardware/brainControlEngine.js';
+        import { SafetyManager } from './js/hardware/safetyManager.js';
+        import { SignalProcessor } from './js/signalProcessor.js';
+
+        // 1. Initialize Modules
+        const serialEngine = new SerialEngine();
+        const processor = new SignalProcessor();
+
+        const carCtrl = new CarController(serialEngine);
+        const brainEngine = new BrainControlEngine(carCtrl);
+        const safetyMgr = new SafetyManager(carCtrl, brainEngine);
+
+        // 2. UI Elements
+        let isConnected = false;
+        let isBrainMode = false;
+
+        const connectBtn = document.getElementById('connect-hw-btn');
+        const hwDot = document.getElementById('hw-status-dot');
+        const hwText = document.getElementById('hw-status-text');
+
+        const modeManBtn = document.getElementById('mode-manual-btn');
+        const modeBrainBtn = document.getElementById('mode-brain-btn');
+        const panelMan = document.getElementById('panel-manual');
+        const panelBrain = document.getElementById('panel-brain');
+
+        const subFocus = document.getElementById('sub-mode-focus');
+        const subRelax = document.getElementById('sub-mode-relax');
+        const slider = document.getElementById('thresh-slider');
+        const ruleText = document.getElementById('brain-rules-text');
+
+        const estopBtn = document.getElementById('estop-btn');
+        const safetyBox = document.getElementById('safety-box');
+        const safetySub = document.getElementById('safety-subtext');
+
+        // 3. Connect & Hardware Loop
+        connectBtn.addEventListener('click', async () => {
+            if (!isConnected) {
+                const connected = await serialEngine.connect();
+                if (connected) {
+                    isConnected = true;
+                    safetyMgr.setConnected(true);
+
+                    if (!isBrainMode) carCtrl.setLocked(false);
+                    else brainEngine.start();
+
+                    connectBtn.innerHTML = '<span class="material-icons">cable</span> Disconnect';
+                    connectBtn.classList.replace('bg-primary', 'bg-slate-700');
+                    hwDot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+                    hwText.innerText = 'CONNECTED (USB)';
+
+                    document.querySelectorAll('.arrow-btn').forEach(b => b.disabled = false);
+                    setSafetyBox(true, "Hardware Link Active.");
+                }
+            } else {
+                await serialEngine.disconnect(); // safely handles stop logic
+            }
+        });
+
+        serialEngine.onDisconnect(() => {
+            isConnected = false;
+            safetyMgr.setConnected(false);
+            carCtrl.setLocked(true);
+            brainEngine.stop();
+
+            connectBtn.innerHTML = '<span class="material-icons">cable</span> Connect Car';
+            connectBtn.classList.replace('bg-slate-700', 'bg-primary');
+            hwDot.className = 'w-2 h-2 rounded-full bg-rose-500';
+            hwText.innerText = 'OFFLINE';
+
+            document.querySelectorAll('.arrow-btn').forEach(b => b.disabled = true);
+            clearTelemetry();
+        });
+
+        // Loop: Raw Data -> Processor -> Brain Engine
+        let lastHWUITime = 0;
+
+        serialEngine.onData((rawVal) => {
+            processor.feed(rawVal);
+            const stats = processor.computeStats();
+            if (stats) {
+                safetyMgr.updateSignal(stats.confidence);
+                brainEngine.processSignal(stats);
+
+                // Bulb Logic removed
+
+                const now = Date.now();
+                if (now - lastHWUITime > 100) {
+                    updateTelemetryUI(stats);
+                    lastHWUITime = now;
+                }
+            }
+        });
+
+        // 4. UI Modes & Settings
+        modeManBtn.addEventListener('click', () => {
+            if (isBrainMode) {
+                isBrainMode = false;
+                brainEngine.stop();
+                if (isConnected) carCtrl.setLocked(false);
+                carCtrl.stop(); // reset motion
+
+                modeManBtn.className = 'mode-btn active flex-1 py-3 px-4 rounded-xl font-bold flex justify-center items-center gap-2';
+                modeBrainBtn.className = 'mode-btn inactive flex-1 py-3 px-4 rounded-xl font-bold flex justify-center items-center gap-2';
+                panelMan.classList.remove('hidden');
+                panelBrain.classList.add('hidden');
+                panelBrain.classList.remove('flex');
+            }
+        });
+
+        modeBrainBtn.addEventListener('click', () => {
+            if (!isBrainMode) {
+                isBrainMode = true;
+                carCtrl.setLocked(true); // Brain logic overrides
+                if (isConnected) brainEngine.start();
+
+                modeBrainBtn.className = 'mode-btn active flex-1 py-3 px-4 rounded-xl font-bold flex justify-center items-center gap-2';
+                modeManBtn.className = 'mode-btn inactive flex-1 py-3 px-4 rounded-xl font-bold flex justify-center items-center gap-2';
+                panelBrain.classList.remove('hidden');
+                panelBrain.classList.add('flex');
+                panelMan.classList.add('hidden');
+            }
+        });
+
+        // Brain Settings
+        slider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            document.getElementById('thresh-val').innerText = val + '%';
+            brainEngine.setThreshold(val);
+            ruleText.innerText = brainEngine.currentMode === 'focus'
+                ? `Car moves Forward when your Focus exceeds ${val}% for 0.5s consecutively.`
+                : `Car Stops when your Focus exceeds ${val}%. (Relaxation lowers focus)`;
+        });
+
+        subFocus.addEventListener('click', () => {
+            brainEngine.setMode('focus');
+            subFocus.className = 'flex-1 py-2 text-sm font-bold bg-white shadow-sm rounded-lg text-slate-800';
+            subRelax.className = 'flex-1 py-2 text-sm font-bold text-slate-500 rounded-lg';
+            slider.dispatchEvent(new Event('input')); // trigger text update
+        });
+
+        subRelax.addEventListener('click', () => {
+            brainEngine.setMode('relax');
+            subRelax.className = 'flex-1 py-2 text-sm font-bold bg-white shadow-sm rounded-lg text-slate-800';
+            subFocus.className = 'flex-1 py-2 text-sm font-bold text-slate-500 rounded-lg';
+            ruleText.innerText = "Car Stops automatically when Alpha waves > Beta waves for 1 sec.";
+        });
+
+        // 5. Manual Driving Events
+        const btnFw = document.getElementById('btn-fw');
+        const btnBw = document.getElementById('btn-bw');
+        const btnLt = document.getElementById('btn-lt');
+        const btnRt = document.getElementById('btn-rt');
+        const btnSt = document.getElementById('btn-stop');
+
+        const bindDriveBtn = (btn, action) => {
+            btn.addEventListener('mousedown', () => { if (!isBrainMode && isConnected) carCtrl[action](); btn.classList.add('active-press'); });
+            btn.addEventListener('mouseup', () => { if (!isBrainMode && isConnected) carCtrl.stop(); btn.classList.remove('active-press'); });
+            btn.addEventListener('mouseleave', () => { if (btn.classList.contains('active-press')) { carCtrl.stop(); btn.classList.remove('active-press'); } });
+        }
+
+        bindDriveBtn(btnFw, 'forward');
+        bindDriveBtn(btnBw, 'backward');
+        bindDriveBtn(btnLt, 'left');
+        bindDriveBtn(btnRt, 'right');
+
+        // Stop is absolute click
+        btnSt.addEventListener('click', () => carCtrl.stop());
+
+        // WASD
+        document.addEventListener('keydown', (e) => {
+            if (isBrainMode || !isConnected) return;
+            const key = e.key.toLowerCase();
+            if (key === 'w') { carCtrl.forward(); btnFw.classList.add('active-press'); }
+            if (key === 's') { carCtrl.backward(); btnBw.classList.add('active-press'); }
+            if (key === 'a') { carCtrl.left(); btnLt.classList.add('active-press'); }
+            if (key === 'd') { carCtrl.right(); btnRt.classList.add('active-press'); }
+            if (key === ' ') { carCtrl.stop(); btnSt.classList.add('active-press'); }
+        });
+        document.addEventListener('keyup', (e) => {
+            if (isBrainMode || !isConnected) return;
+            const key = e.key.toLowerCase();
+            if (['w', 's', 'a', 'd', ' '].includes(key)) {
+                carCtrl.stop();
+                [btnFw, btnBw, btnLt, btnRt, btnSt].forEach(b => b.classList.remove('active-press'));
+            }
+        });
+
+        // 6. Safety & ESTOP
+        estopBtn.addEventListener('click', () => {
+            safetyMgr.emergencyStop("User Manual Trigger");
+            setSafetyBox(false, "USER EMERGENCY STOP. Please reconnect hardware.");
+            if (isConnected) serialEngine.disconnect();
+        });
+
+        document.addEventListener('neurovex:safetyAlert', (e) => {
+            setSafetyBox(false, `FAULT: ${e.detail}. Auto-locked.`);
+        });
+
+        function setSafetyBox(isSafe, msg) {
+            safetySub.innerText = msg;
+            if (isSafe) {
+                safetyBox.className = "bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex items-center gap-3";
+                safetyBox.querySelector('span').className = "material-icons text-emerald-500";
+                safetyBox.querySelector('span').innerText = "verified_user";
+                safetyBox.querySelector('.text-sm').innerText = "System Safe";
+                safetyBox.querySelector('.text-sm').className = "text-sm font-bold text-emerald-700";
+            } else {
+                safetyBox.className = "bg-rose-50 border border-rose-200 p-4 rounded-xl flex items-center gap-3";
+                safetyBox.querySelector('span').className = "material-icons text-rose-500";
+                safetyBox.querySelector('span').innerText = "warning";
+                safetyBox.querySelector('.text-sm').innerText = "SAFETY LOCK ENGAGED";
+                safetyBox.querySelector('.text-sm').className = "text-sm font-bold text-rose-700";
+            }
+        }
+
+        function updateTelemetryUI(stats) {
+            document.getElementById('live-focus').innerText = stats.focus + '%';
+            document.getElementById('live-focus-bar').style.width = stats.focus + '%';
+
+            document.getElementById('live-conf').innerText = stats.confidence + '%';
+            document.getElementById('live-conf-bar').style.width = stats.confidence + '%';
+
+            document.getElementById('live-conf-bar').className = `h-1.5 rounded-full transition-all duration-300 ${stats.confidence < 60 ? 'bg-rose-500' : 'bg-emerald-400'}`;
+
+            document.getElementById('live-alpha').innerText = stats.alpha + '%';
+            document.getElementById('live-beta').innerText = stats.beta + '%';
+        }
+
+        function clearTelemetry() {
+            document.getElementById('live-focus').innerText = '--%';
+            document.getElementById('live-focus-bar').style.width = '0%';
+            document.getElementById('live-conf').innerText = '--%';
+            document.getElementById('live-conf-bar').style.width = '0%';
+            document.getElementById('live-alpha').innerText = '--%';
+            document.getElementById('live-beta').innerText = '--%';
+        }
+
+    </script>
+</body>
+
+</html>
