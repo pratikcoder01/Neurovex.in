@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -9,16 +9,15 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
                         primary: '#3b82f6',
                         background: {
-                            dark: '#0f172a'
+                            light: '#f8fafc'
                         },
                         surface: {
-                            dark: '#1e293b'
+                            light: '#ffffff'
                         }
                     }
                 }
@@ -47,16 +46,16 @@
         }
         
         .led-glowing-on {
-            box-shadow: 0 0 40px 10px rgba(52, 211, 153, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 0 40px 10px rgba(16, 185, 129, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.8) !important;
             animation: subtlePulse 2s infinite ease-in-out;
             background: radial-gradient(circle at 30% 30%, #a7f3d0, #10b981) !important;
             border-color: #059669 !important;
         }
 
         .led-off {
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5) !important;
-            background: radial-gradient(circle at 30% 30%, #64748b, #334155) !important;
-            border-color: #1e293b !important;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2) !important;
+            background: radial-gradient(circle at 30% 30%, #e2e8f0, #cbd5e1) !important;
+            border-color: #94a3b8 !important;
         }
         
         /* Circular Progress Meter */
@@ -68,7 +67,7 @@
         }
         .circle-bg {
             fill: none;
-            stroke: #334155;
+            stroke: #e2e8f0;
             stroke-width: 2.5;
         }
         .circle {
@@ -78,14 +77,14 @@
             transition: stroke-dasharray 0.3s ease, stroke 0.3s ease;
         }
         .percentage {
-            fill: #f8fafc;
+            fill: #334155;
             font-family: 'JetBrains Mono', monospace;
             font-weight: bold;
             font-size: 0.5em;
             text-anchor: middle;
         }
         .meter-label {
-            fill: #94a3b8;
+            fill: #64748b;
             font-family: 'Inter', sans-serif;
             font-size: 0.15em;
             text-anchor: middle;
@@ -95,68 +94,68 @@
     </style>
 </head>
 
-<body class="bg-background-dark text-slate-200 h-screen flex flex-col overflow-hidden antialiased">
+<body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden antialiased">
     <!-- Header -->
-    <header class="bg-surface-dark border-b border-slate-700 h-16 flex items-center justify-between px-6 flex-shrink-0 z-20 shadow-md">
+    <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-6 flex-shrink-0 z-20 shadow-sm">
         <div class="flex items-center gap-4 cursor-pointer group" onclick="window.location.href='index.html'">
-            <img src="./assets/images/logo.jpeg" alt="Logo" class="w-9 h-9 rounded-lg object-contain bg-white p-0.5 shadow-sm group-hover:scale-105 transition-transform">
-            <span class="font-bold text-xl tracking-tight text-white group-hover:text-primary transition-colors">Neurovex</span>
-            <div class="h-6 w-px bg-slate-700 mx-2"></div>
-            <div class="text-sm font-medium text-slate-400">Mind LED Control</div>
+            <img src="./assets/images/logo.jpeg" alt="Logo" class="w-9 h-9 rounded-lg object-contain bg-slate-50 p-0.5 shadow-sm group-hover:scale-105 transition-transform">
+            <span class="font-bold text-xl tracking-tight text-slate-900 group-hover:text-primary transition-colors">Neurovex</span>
+            <div class="h-6 w-px bg-slate-300 mx-2"></div>
+            <div class="text-sm font-medium text-slate-500">Mind LED Control</div>
         </div>
         <div class="flex items-center gap-4">
-            <div class="bg-slate-800 rounded-lg px-3 py-1.5 flex items-center gap-2 border border-slate-700">
+            <div class="bg-slate-50 rounded-lg px-3 py-1.5 flex items-center gap-2 border border-slate-200">
                 <span id="backend-status-dot" class="w-2 h-2 rounded-full bg-rose-500"></span>
-                <span id="backend-status-text" class="text-xs font-mono font-bold text-slate-400">DISCONNECTED</span>
+                <span id="backend-status-text" class="text-xs font-mono font-bold text-slate-500">DISCONNECTED</span>
             </div>
         </div>
     </header>
 
     <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
         <!-- Desktop Sidebar Navigation -->
-        <aside class="w-64 bg-surface-dark border-r border-slate-700 p-4 flex-col z-10 hidden md:flex shrink-0">
+        <aside class="w-64 bg-white border-r border-slate-200 p-4 flex-col z-10 hidden md:flex shrink-0">
             <div class="space-y-1 mt-4">
-                <a href="./dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 font-medium rounded-xl hover:bg-slate-800 hover:text-white transition-colors">
+                <a href="./dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 font-medium rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-colors">
                     <span class="material-icons-outlined text-xl">dashboard</span> Overview
                 </a>
-                <a href="./hardware.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 font-medium rounded-xl hover:bg-slate-800 hover:text-white transition-colors">
+                <a href="./hardware.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 font-medium rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-colors">
                     <span class="material-icons-outlined text-xl">memory</span> Hardware
                 </a>
                 <a href="#" class="flex items-center gap-3 px-4 py-3 text-primary bg-primary/10 font-medium rounded-xl transition-colors">
                     <span class="material-icons text-xl">lightbulb</span> Mind LED
                 </a>
-                <a href="./games.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 font-medium rounded-xl hover:bg-slate-800 hover:text-white transition-colors">
+                <a href="./games.html" class="flex items-center gap-3 px-4 py-3 text-slate-500 font-medium rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-colors">
                     <span class="material-icons-outlined text-xl">sports_esports</span> Games
                 </a>
             </div>
         </aside>
 
         <!-- Mobile Bottom Tab Bar -->
-        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-dark/95 backdrop-blur-md border-t border-slate-700 z-50 flex justify-around items-center h-16 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
-            <a href="./hardware.html" class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-white transition-colors">
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-50 flex justify-around items-center h-16 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+            <a href="./hardware.html" class="flex flex-col items-center justify-center w-full h-full text-slate-500 hover:text-slate-900 transition-colors">
                 <span class="material-icons-outlined text-xl mb-1">memory</span>
                 <span class="text-[10px] font-medium">Hardware</span>
             </a>
             <a href="#" class="flex flex-col items-center justify-center w-full h-full text-primary transition-colors relative">
-                <div class="absolute -top-3 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)] border-4 border-surface-dark">
+                <div class="absolute -top-3 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)] border-4 border-white">
                     <span class="material-icons text-xl">lightbulb</span>
                 </div>
                 <span class="text-[10px] font-bold mt-5 text-primary">Mind LED</span>
             </a>
-            <a href="./games.html" class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-white transition-colors">
+            <a href="./games.html" class="flex flex-col items-center justify-center w-full h-full text-slate-500 hover:text-slate-900 transition-colors">
                 <span class="material-icons-outlined text-xl mb-1">sports_esports</span>
                 <span class="text-[10px] font-medium">Games</span>
             </a>
         </nav>
 
         <!-- Main Content Area -->
-        <section class="flex-1 bg-slate-900 p-4 pb-24 md:p-8 overflow-y-auto relative flex flex-col items-center">
+        <section class="flex-1 bg-slate-50 p-4 pb-24 md:p-8 overflow-y-auto relative flex flex-col items-center">
             
             <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
                 
                 <!-- Left Column: Focus Meter -->
-                <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-xl flex flex-col items-center justify-center">
-                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 w-full text-left">Live Focus Score</h2>
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col items-center justify-center">
+                    <h2 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-6 w-full text-left">Live Focus Score</h2>
                     
                     <svg viewBox="0 0 36 36" class="circular-chart text-emerald-500">
                         <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
@@ -165,35 +164,35 @@
                         <text x="18" y="24" class="meter-label">Focus</text>
                     </svg>
 
-                    <div class="mt-8 w-full p-4 bg-slate-900/50 rounded-xl border border-slate-700 text-center">
-                        <p class="text-xs text-slate-400 mb-1">Activation Threshold</p>
-                        <p class="text-lg font-mono font-bold text-emerald-400">≥ 90%</p>
+                    <div class="mt-8 w-full p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                        <p class="text-xs text-slate-500 mb-1">Activation Threshold</p>
+                        <p class="text-lg font-mono font-bold text-emerald-600">≥ 90%</p>
                     </div>
                 </div>
 
                 <!-- Right Column: LED Status -->
-                <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-xl flex flex-col items-center justify-center relative overflow-hidden">
-                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-8 w-full text-left z-10">Target Device: LED</h2>
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col items-center justify-center relative overflow-hidden">
+                    <h2 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-8 w-full text-left z-10">Target Device: LED</h2>
 
                     <!-- Virtual LED Element -->
                     <div class="relative mb-8 z-10 w-full flex justify-center">
                         <!-- LED Dome Base -->
-                        <div class="w-32 h-32 rounded-full led-off border-[6px] transition-all duration-700 ease-in-out relative flex items-center justify-center shadow-2xl" id="virtual-led">
-                            <span class="material-icons text-5xl text-white/30 transition-opacity" id="led-icon">tungsten</span>
+                        <div class="w-32 h-32 rounded-full led-off border-[6px] transition-all duration-700 ease-in-out relative flex items-center justify-center shadow-lg" id="virtual-led">
+                            <span class="material-icons text-5xl text-slate-400 transition-colors" id="led-icon">tungsten</span>
                         </div>
                     </div>
 
                     <!-- Status Display -->
                     <div class="z-10 text-center w-full">
-                        <h3 class="text-3xl font-bold font-mono tracking-tight text-slate-500 mb-2 transition-colors duration-500" id="led-status-text">LED IS OFF</h3>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-700 shadow-inner">
-                            <span class="w-2 h-2 rounded-full bg-slate-500" id="tx-indicator"></span>
-                            <span class="text-[10px] font-mono font-bold text-slate-400 tracking-wider" id="tx-label">WAITING FOR TRIGGER</span>
+                        <h3 class="text-3xl font-bold font-mono tracking-tight text-slate-400 mb-2 transition-colors duration-500" id="led-status-text">LED IS OFF</h3>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 shadow-inner">
+                            <span class="w-2 h-2 rounded-full bg-slate-400" id="tx-indicator"></span>
+                            <span class="text-[10px] font-mono font-bold text-slate-500 tracking-wider" id="tx-label">WAITING FOR TRIGGER</span>
                         </div>
                     </div>
 
                     <!-- Event Log -->
-                    <div class="mt-8 w-full p-3 bg-slate-900/80 rounded-lg border border-slate-700 shadow-inner h-24 overflow-y-auto font-mono text-xs z-10" id="event-log">
+                    <div class="mt-8 w-full p-3 bg-slate-50 rounded-lg border border-slate-200 shadow-inner h-24 overflow-y-auto font-mono text-xs z-10" id="event-log">
                         <div class="text-slate-500 mb-1">>>> System initialized. Waiting for connection...</div>
                     </div>
                 </div>
@@ -201,14 +200,14 @@
             </div>
             
             <!-- Instructions Box -->
-            <div class="max-w-4xl w-full mt-6 bg-blue-900/20 border border-blue-800/50 p-6 rounded-2xl flex items-start gap-4">
-                <span class="material-icons text-blue-400 mt-1">info</span>
+            <div class="max-w-4xl w-full mt-6 bg-blue-50 border border-blue-200 p-6 rounded-2xl flex items-start gap-4">
+                <span class="material-icons text-blue-500 mt-1">info</span>
                 <div>
-                    <h4 class="text-sm font-bold text-blue-300 mb-1">How it Works</h4>
-                    <p class="text-sm text-blue-200/80 leading-relaxed">
+                    <h4 class="text-sm font-bold text-blue-800 mb-1">How it Works</h4>
+                    <p class="text-sm text-blue-700 leading-relaxed">
                         This interface connects to a Python backend via WebSockets. The backend processes live EEG signals. 
-                        When your focus score reaches or exceeds <span class="font-bold text-white">90%</span>, it triggers a toggle command. 
-                        A debounce of 2-3 seconds prevents rapid switching. The command is also sent to the ESP32 to turn a physical LED <span class="text-emerald-400 font-bold">ON</span> or <span class="text-slate-400 font-bold">OFF</span>.
+                        When your focus score reaches or exceeds <span class="font-bold text-blue-900">90%</span>, it triggers a toggle command. 
+                        A debounce of 2-3 seconds prevents rapid switching. The command is also sent to the ESP32 to turn a physical LED <span class="text-emerald-600 font-bold">ON</span> or <span class="text-slate-500 font-bold">OFF</span>.
                     </p>
                 </div>
             </div>
@@ -235,10 +234,10 @@
             const div = document.createElement('div');
             const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
             
-            let color = 'text-slate-400';
-            if(type === 'success') color = 'text-emerald-400';
-            if(type === 'error') color = 'text-rose-400';
-            if(type === 'trigger') color = 'text-amber-400';
+            let color = 'text-slate-500';
+            if(type === 'success') color = 'text-emerald-600';
+            if(type === 'error') color = 'text-rose-600';
+            if(type === 'trigger') color = 'text-amber-600';
 
             div.className = `mb-1 ${color}`;
             div.innerText = `[${time}] ${msg}`;
@@ -253,14 +252,14 @@
             
             // Color mapping based on score
             if (score >= 90) {
-                focusCircle.style.stroke = "#10b981"; // Emerald
-                focusCircle.classList.add("drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]");
+                focusCircle.style.stroke = "#059669"; // Emerald 600
+                focusCircle.classList.add("drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]");
             } else if (score >= 60) {
-                focusCircle.style.stroke = "#3b82f6"; // Blue
-                focusCircle.classList.remove("drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]");
+                focusCircle.style.stroke = "#3b82f6"; // Blue 500
+                focusCircle.classList.remove("drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]");
             } else {
-                focusCircle.style.stroke = "#64748b"; // Slate
-                focusCircle.classList.remove("drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]");
+                focusCircle.style.stroke = "#94a3b8"; // Slate 400
+                focusCircle.classList.remove("drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]");
             }
         }
 
@@ -272,21 +271,21 @@
                 virtualLed.classList.remove('led-off');
                 virtualLed.classList.add('led-glowing-on');
                 ledStatusText.innerText = "LED IS ON";
-                ledStatusText.classList.replace('text-slate-500', 'text-emerald-400');
-                ledIcon.classList.replace('text-white/30', 'text-white/90');
+                ledStatusText.classList.replace('text-slate-400', 'text-emerald-600');
+                ledIcon.classList.replace('text-slate-400', 'text-white');
                 txIndicator.className = "w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]";
                 txLabel.innerText = "STATE: ON";
-                txLabel.className = "text-[10px] font-mono font-bold text-emerald-400 tracking-wider";
+                txLabel.className = "text-[10px] font-mono font-bold text-emerald-600 tracking-wider";
                 logEvent("LED toggled ON", "success");
             } else {
                 virtualLed.classList.remove('led-glowing-on');
                 virtualLed.classList.add('led-off');
                 ledStatusText.innerText = "LED IS OFF";
-                ledStatusText.classList.replace('text-emerald-400', 'text-slate-500');
-                ledIcon.classList.replace('text-white/90', 'text-white/30');
-                txIndicator.className = "w-2 h-2 rounded-full bg-slate-500";
+                ledStatusText.classList.replace('text-emerald-600', 'text-slate-400');
+                ledIcon.classList.replace('text-white', 'text-slate-400');
+                txIndicator.className = "w-2 h-2 rounded-full bg-slate-400";
                 txLabel.innerText = "STATE: OFF";
-                txLabel.className = "text-[10px] font-mono font-bold text-slate-400 tracking-wider";
+                txLabel.className = "text-[10px] font-mono font-bold text-slate-500 tracking-wider";
                 logEvent("LED toggled OFF", "info");
             }
         }
@@ -300,7 +299,7 @@
             ws.onopen = () => {
                 backendDot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-[pulse_2s_infinite]";
                 backendText.innerText = "CONNECTED";
-                backendText.className = "text-xs font-mono font-bold text-emerald-400";
+                backendText.className = "text-xs font-mono font-bold text-emerald-600";
                 logEvent("Connected to Backend WebSocket successfully.", "success");
             };
 
@@ -324,7 +323,7 @@
             ws.onclose = () => {
                 backendDot.className = "w-2 h-2 rounded-full bg-rose-500";
                 backendText.innerText = "DISCONNECTED";
-                backendText.className = "text-xs font-mono font-bold text-slate-400";
+                backendText.className = "text-xs font-mono font-bold text-slate-500";
                 logEvent("WebSocket Connection Lost. Retrying in 5s...", "error");
                 setTimeout(connectWebSocket, 5000);
             };
