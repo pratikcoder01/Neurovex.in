@@ -171,6 +171,11 @@
                     <span class="material-icons-outlined text-xl mb-1">lightbulb</span>
                     <span class="text-[10px] font-medium">Mind LED</span>
                 </a>
+                <a href="./brain_report.html"
+                    class="flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-slate-600 transition-colors">
+                    <span class="material-icons-outlined text-xl mb-1">analytics</span>
+                    <span class="text-[10px] font-medium">Report</span>
+                </a>
             </nav>
 
             <!-- Desktop Only Navigation -->
@@ -189,6 +194,11 @@
                     class="flex items-center justify-center w-full py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg text-sm font-medium transition-colors border border-blue-200">
                     <span class="material-icons-outlined text-sm mr-2">lightbulb</span>
                     Mind LED Control
+                </a>
+                <a href="./brain_report.html"
+                    class="flex items-center justify-center w-full py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg text-sm font-medium transition-colors border border-indigo-200">
+                    <span class="material-icons-outlined text-sm mr-2">analytics</span>
+                    Brain Report
                 </a>
             </div>
         </aside>
@@ -229,6 +239,31 @@
 
         <aside
             class="w-full lg:w-80 bg-surface-light border-t lg:border-t-0 lg:border-l border-slate-200 flex flex-col z-10 lg:overflow-y-auto scroller flex-shrink-0">
+            
+            <!-- NEW: Session Controls -->
+            <div class="p-5 border-b border-slate-100 bg-slate-50">
+                <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-3 flex items-center gap-1">
+                    <span class="material-icons text-sm text-indigo-500">radio_button_checked</span> Session Recording
+                </h3>
+                <select id="session-duration" class="w-full mb-3 text-sm p-2 rounded-lg border border-slate-200 text-slate-700 bg-white font-medium focus:outline-none focus:border-indigo-400">
+                    <option value="15" class="font-bold text-indigo-600">🚀 Demo Mode (15 sec)</option>
+                    <option value="120">Short Session (2 min)</option>
+                    <option value="300">Deep Work (5 min)</option>
+                    <option value="600">Extended (10 min)</option>
+                </select>
+                <div class="flex gap-2">
+                    <button id="btn-start-session" onclick="startSession()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-1 shadow-sm">
+                        <span class="material-icons-outlined text-sm">play_arrow</span> Start
+                    </button>
+                    <button id="btn-stop-session" onclick="stopSession()" class="flex-1 bg-rose-500 hover:bg-rose-600 text-white font-medium py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-1 opacity-50 cursor-not-allowed shadow-sm" disabled>
+                        <span class="material-icons-outlined text-sm">stop</span> Stop
+                    </button>
+                </div>
+                <div id="recording-anim" class="hidden items-center justify-center gap-2 mt-3 text-xs font-medium text-rose-500">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> Recording in progress...
+                </div>
+            </div>
+
             <div class="p-5 border-b border-slate-100">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Brain State (AI)</h3>
 
@@ -504,6 +539,60 @@
                 drawWave();
             }
         });
+
+        // --- Session Recording Hook ---
+        let isRecordingSession = false;
+        let recordInterval;
+
+        function startSession() {
+            const duration = document.getElementById("session-duration").value;
+            fetch("http://localhost:8000/api/session/start?duration_sec=" + duration, { method: "POST" })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("btn-start-session").disabled = true;
+                    document.getElementById("btn-start-session").classList.add("opacity-50", "cursor-not-allowed");
+                    document.getElementById("btn-stop-session").disabled = false;
+                    document.getElementById("btn-stop-session").classList.remove("opacity-50", "cursor-not-allowed");
+                    document.getElementById("recording-anim").classList.replace("hidden", "flex");
+                    
+                    isRecordingSession = true;
+                    
+                    // Push mock data ticks (simulate hardware EEG pipeline)
+                    recordInterval = setInterval(() => {
+                        const mockData = {
+                            timestamp: Date.now(),
+                            alpha: Math.random() * 20 + 5,
+                            beta: Math.random() * 30 + 10,
+                            theta: Math.random() * 15 + 5,
+                            delta: Math.random() * 40 + 10,
+                            focus_score: Math.random() * 50 + 50
+                        };
+                        fetch("http://localhost:8000/api/eeg/record", {
+                            method: "POST", 
+                            headers: {"Content-Type": "application/json"},
+                            body: JSON.stringify(mockData)
+                        });
+                    }, 1000);
+
+                    // Auto stop handling
+                    setTimeout(() => {
+                        if (isRecordingSession) stopSession();
+                    }, (parseInt(duration) + 1) * 1000);
+                });
+        }
+
+        function stopSession() {
+            fetch("http://localhost:8000/api/session/stop", { method: "POST" })
+                .then(res => res.json())
+                .then(data => {
+                    isRecordingSession = false;
+                    clearInterval(recordInterval);
+                    document.getElementById("recording-anim").classList.replace("flex", "hidden");
+                    
+                    // Redirect directly to report page
+                    window.location.href = "brain_report.html";
+                });
+        }
     </script>
 </body>
 

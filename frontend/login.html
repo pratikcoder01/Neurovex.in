@@ -318,9 +318,13 @@
                 </div>
 
                 
+                <!-- Login Error Text -->
+                <div id="login-error" style="display: none; color: #ef4444; font-size: 13px; text-align: center; margin-bottom: 16px;">
+                    Invalid credentials. Use pratik / neurovex123
+                </div>
+
                 <button type="submit" class="btn-primary"
-                    onclick="event.preventDefault(); window.location.href='dashboard.html'">Sign In to
-                    Platform</button>
+                    onclick="handleLogin(event)">Sign In to Platform</button>
 
                 
                 <div class="divider">
@@ -341,6 +345,22 @@
 
     </div>
 
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('login-error');
+            
+            // Simple Auth Check
+            if (email === 'pratik' && password === 'neurovex123') {
+                errorDiv.style.display = 'none';
+                window.location.href = 'dashboard.html';
+            } else {
+                errorDiv.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 
 </html>

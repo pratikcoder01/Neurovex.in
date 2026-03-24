@@ -21,7 +21,12 @@ app.add_middleware(
 )
 
 import hardware_api
+from session_manager import SessionManager
+
 app.include_router(hardware_api.router)
+
+# Initialize Session Manager
+session_mgr = SessionManager()
 
 # Models
 class SessionStartStatus(BaseModel):
@@ -44,13 +49,36 @@ def start_session(session: SessionStartStatus):
     # supabase.table('sessions').insert({"user_id": session.user_id}).execute()
     return {"message": "Session initialized", "session_id": "dummy-uuid"}
 
-# Endpoint to securely dump batch records to DB to limit overhead
-@app.post("/api/eeg/batch")
-def upload_eeg_batch(payload: EEGBatchPayload):
-    """ Accepts batches of EEG data and pushes to Supabase database """
-    # Make batch processing payload formatting
-    # supabase.rpc('insert_eeg_batch', {'payload_data': payload.data_points}).execute()
-    return {"status": "success", "count_inserted": len(payload.data_points)}
+# Endpoint to safely record live EEG tick into RAM
+@app.post("/api/eeg/record")
+def record_eeg_data(data: dict):
+    """ Receives live EEG data point (alpha, beta, theta, delta, focus_score) """
+    if session_mgr.is_recording:
+        session_mgr.record_data(data)
+    return {"status": "ok"}
+
+# Endpoints for Session Management
+@app.post("/api/session/start")
+def start_active_session(duration_sec: int = 120):
+    """ Starts a recording session. Supports Demo Mode (15s) or standard times. """
+    return session_mgr.start_session(duration_sec)
+
+@app.post("/api/session/stop")
+def stop_active_session():
+    """ Stops recording and generates calculations & CSV. """
+    return session_mgr.stop_session()
+
+@app.get("/api/session/report")
+def get_current_report():
+    """ Returns the most recent generated brain report """
+    if not session_mgr.current_report:
+        return {"status": "error", "message": "No reports generated yet."}
+    return session_mgr.current_report
+
+@app.get("/api/session/history")
+def get_session_history():
+    """ Returns the list of previous sessions """
+    return {"history": session_mgr.history}
 
 # Optional Real-time relay
 @app.websocket("/ws/telemetry")
