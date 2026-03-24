@@ -418,15 +418,16 @@
             btn.innerHTML = 'Authenticating...';
             btn.disabled = true;
 
-            const { data, error } = await signIn(email, password);
-
-            if (error) {
-                alert("Login failed: " + error.message);
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            } else {
-                window.location.href = 'dashboard.html';
-            }
+            // Simple Auth Override
+            setTimeout(() => {
+                if (email === 'pratik' && password === 'neurovex123') {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert("Login failed: Invalid credentials. Use pratik / neurovex123");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }, 500); // Small delay to show the authenticating state
         });
     </script>
 </body>
