@@ -108,6 +108,9 @@
                 <span id="backend-status-dot" class="w-2 h-2 rounded-full bg-rose-500"></span>
                 <span id="backend-status-text" class="text-xs font-mono font-bold text-slate-500">DISCONNECTED</span>
             </div>
+            <button id="connect-hw-btn" class="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow-sm flex items-center gap-2 transition-all">
+                <span class="material-icons">cable</span> Connect Hardware
+            </button>
         </div>
     </header>
 
@@ -215,7 +218,14 @@
         </section>
     </main>
 
-    <script>
+    <script type="module">
+        import { SerialEngine } from './js/hardware/serialEngine.js';
+        import { SignalProcessor } from './js/signalProcessor.js';
+
+        // Initialize Modules
+        const serialEngine = new SerialEngine();
+        const processor = new SignalProcessor();
+
         // UI Elements
         const focusCircle = document.getElementById('focus-circle');
         const focusText = document.getElementById('focus-text');
@@ -290,43 +300,77 @@
             }
         }
 
-        // Software-Only Simulation Setup
-        let mockFocusScore = 40;
+        // Hardware Connection & Logic Setup
         let lastToggleTime = 0;
         const DEBOUNCE_MS = 2500;
+        let isConnected = false;
 
-        function startSoftwareSimulation() {
-            logEvent("Starting Software-Only LED Simulation...", "info");
-            backendDot.className = "w-2 h-2 rounded-full bg-blue-500 animate-[pulse_2s_infinite]";
-            backendText.innerText = "SOFTWARE MODE";
-            backendText.className = "text-xs font-mono font-bold text-blue-600";
-            logEvent("Simulation Live. Simulating focus scores...", "success");
+        const connectBtn = document.getElementById('connect-hw-btn');
+        
+        connectBtn.addEventListener('click', async () => {
+            if (!isConnected) {
+                logEvent("Connecting to hardware over Web Serial...", "info");
+                const connected = await serialEngine.connect();
+                if (connected) {
+                    isConnected = true;
+                    connectBtn.innerHTML = '<span class="material-icons">cable</span> Disconnect';
+                    connectBtn.classList.replace('bg-primary', 'bg-slate-700');
+                    backendDot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-[pulse_2s_infinite]";
+                    backendText.innerText = "CONNECTED (USB)";
+                    backendText.className = "text-xs font-mono font-bold text-emerald-600";
+                    logEvent("Hardware Connected. Streaming signals...", "success");
+                } else {
+                    logEvent("Failed to connect to hardware.", "error");
+                }
+            } else {
+                await serialEngine.disconnect();
+            }
+        });
 
-            setInterval(() => {
-                // Generate realistic wandering focus score
-                const change = (Math.random() - 0.4) * 15; // slightly skewed up
-                mockFocusScore = Math.max(20, Math.min(99, mockFocusScore + change));
-                const currentScore = Math.round(mockFocusScore);
-                
-                updateFocusUI(currentScore);
+        serialEngine.onDisconnect(() => {
+            isConnected = false;
+            connectBtn.innerHTML = '<span class="material-icons">cable</span> Connect Hardware';
+            connectBtn.classList.replace('bg-slate-700', 'bg-primary');
+            backendDot.className = "w-2 h-2 rounded-full bg-rose-500";
+            backendText.innerText = "DISCONNECTED";
+            backendText.className = "text-xs font-mono font-bold text-slate-500";
+            updateFocusUI(0);
+            setVirtualLed(false);
+            logEvent("Hardware disconnected.", "error");
+        });
 
-                // Apply Threshold Logic
-                if (currentScore >= 90) {
-                    const now = Date.now();
-                    if (now - lastToggleTime > DEBOUNCE_MS) {
-                        setVirtualLed(!currentLedState);
-                        lastToggleTime = now;
-                        logEvent(`Focus hit ${currentScore}%! Action triggered.`, "trigger");
+        // Loop: Raw Data -> Processor -> LED Engine
+        let lastHWUITime = 0;
+        serialEngine.onData((rawVal) => {
+            processor.feed(rawVal);
+            const stats = processor.computeStats();
+            
+            if (stats) {
+                const now = Date.now();
+                if (now - lastHWUITime > 100) {
+                    updateFocusUI(stats.focus);
+                    lastHWUITime = now;
+                }
+
+                if (stats.confidence > 20) {
+                    // Apply Threshold Logic (Focus >= 90)
+                    if (stats.focus >= 90) {
+                        if (now - lastToggleTime > DEBOUNCE_MS) {
+                            const newLedState = !currentLedState;
+                            setVirtualLed(newLedState);
+                            // Send physical hardware command over serial
+                            serialEngine.send(newLedState ? "LED_ON" : "LED_OFF");
+                            
+                            lastToggleTime = now;
+                            logEvent(`Focus hit ${stats.focus}%! Action triggered.`, "trigger");
+                        }
                     }
                 }
-            }, 600);
-        }
+            }
+        });
 
         // Initialize display
         updateFocusUI(0);
-        
-        // Start Simulation instead of WebSocket
-        startSoftwareSimulation();
 
     </script>
 </body>
